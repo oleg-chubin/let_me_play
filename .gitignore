@@ -52,3 +52,20 @@ docs/_build/
 
 # PyBuilder
 target/
+
+.idea/
+venv/
+local_settings.py
+*.pyc
+let_me_play/static
+let_me_play/media/*
+let_me_app/static/css/bootstrap.css
+let_me_app/static/css/bootstrap.css.map
+let_me_app/static/css/bootstrap.min.css
+let_me_app/static/css/bootstrap-theme.css
+let_me_app/static/css/bootstrap-theme.css.map
+let_me_app/static/css/bootstrap-theme.min.css
+let_me_app/static/js/bootstrap.js
+let_me_app/static/js/bootstrap.min.js
+let_me_app/static/js/npm.js
+db.sqlite3
