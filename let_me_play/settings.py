@@ -39,10 +39,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'let_me_app',
     'annoying',
     'sorl.thumbnail',
     'social.apps.django_app.default',
+
+    'let_me_app',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -203,3 +204,5 @@ try:
     from .local_settings import *
 except ImportError:
     pass
+
+AUTH_USER_MODEL = 'let_me_app.User'
