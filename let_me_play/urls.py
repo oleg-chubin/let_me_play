@@ -11,13 +11,8 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url('', include('social.apps.django_app.urls', namespace='social')),
-    url(r'^$', 'let_me_app.views.login'),
-    url(r'^home/$', 'let_me_app.views.home'),
-    url(r'^done/$', 'let_me_app.views.done', name='done'),
-    url(r'^logout/$', 'let_me_app.views.logout'),
-    url(r'^signup/$', 'let_me_app.views.signup', name="signup"),
-    url(r'^email-sent/', 'let_me_app.views.validation_sent'),
-    url(r'^email/$', 'let_me_app.views.require_email', name='require_email'),
+    url('', include('let_me_auth.urls', namespace='let_me_auth')),
+#    url(r'^email/$', 'let_me_app.views.require_email', name='require_email'),
 )
 
 if settings.DEBUG:

@@ -1,12 +1,11 @@
-from django.contrib.auth.models import AbstractBaseUser, Group, PermissionsMixin
+from django.contrib.auth.models import Group
 from django.utils.translation import ugettext as _
 from django.db import models
-from django.utils.http import urlquote
-from django.core.mail import send_mail
 from django.utils import timezone
+from django.conf import settings
 
-from .managers import UserManager
 
+UserModel = settings.AUTH_USER_MODEL
 
 class PriceStatuses:
     NEW = 1
@@ -41,61 +40,20 @@ class Followable(models.Model):
     pass
 
 
-class User(AbstractBaseUser, Followable, PermissionsMixin):
-    email = models.EmailField(_('email address'), unique=True)
-    first_name = models.CharField(_('first name'), max_length=30, blank=True)
-    last_name = models.CharField(_('last name'), max_length=30, blank=True)
-    is_staff = models.BooleanField(_('staff status'), default=False,
-        help_text=_('Designates whether the user can log into this admin '
-                    'site.'))
-    is_active = models.BooleanField(_('active'), default=True,
-        help_text=_('Designates whether this user should be treated as '
-                    'active. Unselect this instead of deleting accounts.'))
-    date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
-
-    objects = UserManager()
-
-    USERNAME_FIELD = 'email'
-
-    class Meta:
-        verbose_name = _('user')
-        verbose_name_plural = _('users')
-
-    def get_absolute_url(self):
-        return "/users/%s/" % urlquote(self.email)
-
-    def email_user(self, subject, message, from_email=None):
-        """
-        Sends an email to this User.
-        """
-        send_mail(subject, message, from_email, [self.email])
-
-    def get_full_name(self):
-        """
-        Returns the first_name plus the last_name, with a space in between.
-        """
-        full_name = '%s %s' % (self.first_name, self.last_name)
-        return full_name.strip() or self.email
-
-    def get_short_name(self):
-        "Returns the short name for the user."
-        return self.first_name or self.email
-
-
 class InternalMessage(models.Model):
-    sender = models.ForeignKey(User, related_name='outgoing_messages')
-    recipient = models.ForeignKey(User, related_name='incoming_messages')
+    sender = models.ForeignKey(UserModel, related_name='outgoing_messages')
+    recipient = models.ForeignKey(UserModel, related_name='incoming_messages')
     created_at = models.DateTimeField(_('date created'), default=timezone.now)
     text = models.TextField(_("text"))
 
 
 class Peeper(models.Model):
     followable = models.ForeignKey(Followable, related_name='followers')
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(UserModel)
 
 
 class PrivateComment(Followable):
-    user = models.ForeignKey(User, related_name='my_comments')
+    user = models.ForeignKey(UserModel, related_name='my_comments')
     followable = models.ForeignKey(Followable, related_name='users_comments')
     created_at = models.DateTimeField(_('date created'), default=timezone.now)
     text = models.TextField(_("text"))
@@ -145,7 +103,8 @@ class InventoryList(models.Model):
     name = models.CharField(max_length=256)
 
 
-class Staff(User):
+class StaffProfile(Followable):
+    user = models.OneToOneField(UserModel)
     description = models.TextField()
 
 
@@ -156,7 +115,7 @@ class Event(Followable):
     court = models.ForeignKey(Court)
     invoice = models.ForeignKey(Invoice, null=True, blank=True)
     inventory_list = models.ForeignKey(InventoryList, null=True, blank=True)
-    staff = models.ManyToManyField(Staff)
+    staff = models.ManyToManyField(StaffProfile)
 
 
 class Equipment(models.Model):
@@ -171,7 +130,7 @@ class Inventory(models.Model):
 
 class Proposal(models.Model):
     comment = models.TextField(max_length=256, default='')
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(UserModel)
     event = models.ForeignKey(Event)
     status = models.IntegerField(choices=ProposalStatuses.CHOICES,
                                  default=ProposalStatuses.ACTIVE)
@@ -181,7 +140,7 @@ class Application(models.Model):
     comment = models.TextField(max_length=256, default='')
     event = models.ForeignKey(Event)
     inventory_list = models.ForeignKey(InventoryList, null=True, blank=True)
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(UserModel)
     status = models.IntegerField(choices=ApplicationStatuses.CHOICES,
                                  default=ApplicationStatuses.ACTIVE)
 
@@ -196,7 +155,7 @@ class Receipt(models.Model):
 class Visit(models.Model):
     inventory_list = models.ForeignKey(InventoryList, null=True, blank=True)
     receipt = models.ForeignKey(Receipt, null=True, blank=True)
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(UserModel)
     event = models.ForeignKey(Event)
 
 
