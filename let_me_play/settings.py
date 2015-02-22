@@ -135,6 +135,7 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/done/'
 SOCIAL_AUTH_STRATEGY = 'social.strategies.django_strategy.DjangoStrategy'
 SOCIAL_AUTH_STORAGE = 'social.apps.django_app.default.models.DjangoStorage'
+SOCIAL_AUTH_USER_FIELDS = ['email']
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/home/'
 SOCIAL_AUTH_LOGIN_URL = '/login/'
 # SOCIAL_AUTH_EMAIL_FORM_URL = '/signup-email'
@@ -146,8 +147,8 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_uid',
     'social.pipeline.social_auth.auth_allowed',
     'social.pipeline.social_auth.social_user',
-    'social.pipeline.user.get_username',
-    'let_me_auth.pipeline.require_email',
+#    'social.pipeline.user.get_username',
+#    'let_me_auth.pipeline.require_email',
     'social.pipeline.mail.mail_validation',
     'social.pipeline.user.create_user',
     'social.pipeline.social_auth.associate_user',

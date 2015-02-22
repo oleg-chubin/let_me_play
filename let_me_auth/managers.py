@@ -5,6 +5,7 @@ Created on Feb 21, 2015
 '''
 from django.contrib.auth.models import BaseUserManager
 from django.utils import timezone
+from django.db.models import get_model
 
 
 class UserManager(BaseUserManager):
@@ -24,6 +25,8 @@ class UserManager(BaseUserManager):
                           date_joined=now, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
+        UserSocialAuth = get_model('default', 'UserSocialAuth')
+        UserSocialAuth.objects.create(user=user, uid=email, provider='email')
         return user
 
     def create_user(self, email=None, password=None, **extra_fields):
