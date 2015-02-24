@@ -39,10 +39,12 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'let_me_app',
     'annoying',
     'sorl.thumbnail',
     'social.apps.django_app.default',
+
+    'let_me_app',
+    'let_me_auth',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -133,19 +135,20 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/done/'
 SOCIAL_AUTH_STRATEGY = 'social.strategies.django_strategy.DjangoStrategy'
 SOCIAL_AUTH_STORAGE = 'social.apps.django_app.default.models.DjangoStorage'
+SOCIAL_AUTH_USER_FIELDS = ['email']
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/home/'
-SOCIAL_AUTH_LOGIN_URL = '/'
+SOCIAL_AUTH_LOGIN_URL = '/login/'
 # SOCIAL_AUTH_EMAIL_FORM_URL = '/signup-email'
 SOCIAL_AUTH_EMAIL_FORM_HTML = 'email_signup.html'
-SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION = 'let_me_app.mail.send_validation'
+SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION = 'let_me_auth.mail.send_validation'
 SOCIAL_AUTH_EMAIL_VALIDATION_URL = '/email-sent/'
 SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_details',
     'social.pipeline.social_auth.social_uid',
     'social.pipeline.social_auth.auth_allowed',
     'social.pipeline.social_auth.social_user',
-    'social.pipeline.user.get_username',
-    'let_me_app.pipeline.require_email',
+#    'social.pipeline.user.get_username',
+#    'let_me_auth.pipeline.require_email',
     'social.pipeline.mail.mail_validation',
     'social.pipeline.user.create_user',
     'social.pipeline.social_auth.associate_user',
@@ -198,6 +201,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Parse database configuration from $DATABASE_URL
 DATABASES['default'] = dj_database_url.config()
+
+AUTH_USER_MODEL = 'let_me_auth.User'
 
 try:
     from .local_settings import *

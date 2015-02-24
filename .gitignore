@@ -69,3 +69,6 @@ let_me_app/static/js/bootstrap.js
 let_me_app/static/js/bootstrap.min.js
 let_me_app/static/js/npm.js
 db.sqlite3
+
+.pydevproject
+.project
