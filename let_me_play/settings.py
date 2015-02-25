@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'sorl.thumbnail',
     'social.apps.django_app.default',
 
+    'floppyforms',
     'let_me_app',
     'let_me_auth',
 )

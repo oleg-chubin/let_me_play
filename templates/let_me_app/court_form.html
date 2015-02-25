@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load floppyforms %}
+
+{% block navbar %}
+    {% include "navbar.html" %}
+{% endblock %}
+
+{% block main %}
+<div class="row">
+  <form class="form-horizontal">
+    {% form form using "floppyforms/layouts/bootstrap.html" %}
+
+    {% for formset in inlines %}
+      {% for form in formset.forms %}
+          {% form form using "floppyforms/layouts/bootstrap.html" %}
+      {% endfor %}
+    {% endfor %}
+  </form>
+</div>
+
+{% endblock %}
