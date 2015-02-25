@@ -7,6 +7,17 @@ from django.conf import settings
 
 UserModel = settings.AUTH_USER_MODEL
 
+
+class ReadStatuses:
+    READ = 1
+    UNREAD = 2
+
+    CHOICES = (
+        (READ, _("Read")),
+        (UNREAD, _("Unread")),
+    )
+
+
 class PriceStatuses:
     NEW = 1
     PAID = 2
