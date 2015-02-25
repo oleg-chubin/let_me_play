@@ -8,7 +8,7 @@ from django.conf import settings
 UserModel = settings.AUTH_USER_MODEL
 
 
-class ReadStatuses:
+class ReadStates:
     READ = 1
     UNREAD = 2
 
@@ -56,6 +56,8 @@ class InternalMessage(models.Model):
     recipient = models.ForeignKey(UserModel, related_name='incoming_messages')
     created_at = models.DateTimeField(_('date created'), default=timezone.now)
     text = models.TextField(_("text"))
+    state = models.IntegerField(choices=ReadStates.CHOICES,
+                                default=ReadStates.UNREAD)
 
 
 class Peeper(models.Model):
