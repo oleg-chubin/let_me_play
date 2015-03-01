@@ -79,9 +79,9 @@ class Changelog(Followable):
 
 
 class Site(Followable):
-    name = models.CharField(max_length=128)
-    description = models.TextField(_("text"))
-    address = models.TextField(_("text"))
+    name = models.CharField(_("name"), max_length=128)
+    description = models.TextField(_("description"))
+    address = models.TextField(_("address"))
     map_image = models.ImageField(_('map image'), null=True, blank=True)
 
 

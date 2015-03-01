@@ -8,14 +8,10 @@
 {% block main %}
 <div class="row">
 <div class="col-md-9">
-  <form class="form-horizontal">
+  <form method="post" action="" class="form-horizontal">
+    {% csrf_token %}
     {% form form using "floppyforms/layouts/bootstrap.html" %}
-
-    {% for formset in inlines %}
-      {% for form in formset.forms %}
-          {% form form using "floppyforms/layouts/bootstrap.html" %}
-      {% endfor %}
-    {% endfor %}
+      <input type="submit" name="submit" id="submit" value="Submit" class="btn btn-info pull-right">
   </form>
   </div>
 </div>
