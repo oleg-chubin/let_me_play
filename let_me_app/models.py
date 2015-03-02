@@ -82,7 +82,9 @@ class Site(Followable):
     name = models.CharField(_("name"), max_length=128)
     description = models.TextField(_("description"))
     address = models.TextField(_("address"))
-    map_image = models.ImageField(_('map image'), null=True, blank=True)
+    map_image = models.ImageField(
+        _('map image'), upload_to="map_images", null=True, blank=True
+    )
 
 
 class Court(Followable):
@@ -171,4 +173,8 @@ class Visit(models.Model):
     user = models.ForeignKey(UserModel)
     event = models.ForeignKey(Event)
 
+
+class GalleryImage(models.Model):
+    followable = models.ForeignKey(Followable)
+    image = models.ImageField(_('image'), upload_to="images")
 

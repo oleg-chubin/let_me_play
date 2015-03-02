@@ -64,9 +64,9 @@
                 <button type="button" class="btn btn-default">
                   <span class="glyphicon glyphicon-comment"></span> Comment
                 </button>
-                <button type="button" class="btn btn-default">
+                <a class="btn btn-default" href="{% url 'let_me_app:site-update' pk=object.id %}">
                   <span class="glyphicon glyphicon-edit"></span> Edit
-                </button>
+                </a>
 
               </span>
           </div>

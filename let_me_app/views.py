@@ -1,13 +1,21 @@
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from extra_views.generic import GenericInlineFormSet
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.core.urlresolvers import reverse
 from . import models, forms
 
 
-class SiteCreate(CreateView):
+class SiteCreateView(CreateView):
+    model = models.Site
+    form_class = forms.SiteForm
+
+    def get_success_url(self):
+        return reverse('let_me_app:site-details', kwargs={'pk': self.object.id})
+
+
+class SiteUpdateView(UpdateView):
     model = models.Site
     form_class = forms.SiteForm
 

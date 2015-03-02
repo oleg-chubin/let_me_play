@@ -40,7 +40,7 @@ class SiteForm(forms.ModelForm):
         model = models.Site
         widgets = {
             'name': forms.TextInput,
-            'map_image': forms.ClearableFileInput,
+            'map_image': forms.FileInput,
             'description': forms.Textarea,
             'address': forms.Textarea
         }

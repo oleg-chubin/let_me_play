@@ -8,7 +8,7 @@
 {% block main %}
 <div class="row">
 <div class="col-md-9">
-  <form method="post" action="" class="form-horizontal">
+  <form method="post" action="" enctype="multipart/form-data" class="form-horizontal">
     {% csrf_token %}
     {% form form using "floppyforms/layouts/bootstrap.html" %}
       <input type="submit" name="submit" id="submit" value="Submit" class="btn btn-info pull-right">
