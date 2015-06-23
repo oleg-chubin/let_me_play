@@ -1,0 +1,20 @@
+.margin10 {
+    margin-bottom:10px;
+    margin-right:10px;
+}
+.btn-blog {
+    color: #ffffff;
+    background-color: #37d980;
+    border-color: #37d980;
+    border-radius:0;
+    margin-bottom:10px
+}
+.btn-blog:hover,
+.btn-blog:focus,
+.btn-blog:active,
+.btn-blog.active,
+.open .dropdown-toggle.btn-blog {
+    color: white;
+    background-color:#34ca78;
+    border-color: #34ca78;
+}

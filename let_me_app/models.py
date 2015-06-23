@@ -71,11 +71,22 @@ class Site(Followable):
     address = models.TextField(_("text"))
     map_image = models.ImageField(_('map image'), null=True, blank=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Court(Followable):
     site = models.ForeignKey(Site)
     admin_group = models.ForeignKey(Group)
     description = models.TextField(_("text"))
+
+    SHORT_DESCR_LEN = 20
+
+    def __str__(self):
+        description = self.description
+        if len(description) > self.SHORT_DESCR_LEN:
+            description = "{}...".format(description)
+        return "{} ({})".format(self.site, description)
 
 
 class Occasion(models.Model):
@@ -98,6 +109,9 @@ class Invoice(models.Model):
     status = models.IntegerField(choices=PriceStatuses.CHOICES,
                                  default=PriceStatuses.NEW)
 
+    def __str__(self):
+        return "{} ({})".format(self.name, self.total_sum)
+
 
 class InventoryList(models.Model):
     name = models.CharField(max_length=256)
@@ -115,17 +129,26 @@ class Event(Followable):
     court = models.ForeignKey(Court)
     invoice = models.ForeignKey(Invoice, null=True, blank=True)
     inventory_list = models.ForeignKey(InventoryList, null=True, blank=True)
-    staff = models.ManyToManyField(StaffProfile)
+    staff = models.ManyToManyField(StaffProfile, blank=True)
+
+    def __str__(self):
+        return "{} ({})".format(self.name, self.start_at)
 
 
 class Equipment(models.Model):
     name = models.CharField(max_length=256)
+
+    def __str__(self):
+        return self.name
 
 
 class Inventory(models.Model):
     equipment = models.ForeignKey(Equipment)
     amount = models.IntegerField()
     inventory_list = models.ForeignKey(InventoryList)
+
+    def __str__(self):
+        return "{} ({})".format(self.equipment, self.amount)
 
 
 class Proposal(models.Model):
