@@ -40,10 +40,17 @@ class Followable(models.Model):
     pass
 
 
+class ChatParticipant(models.Model):
+    user = models.ForeignKey(UserModel)
+    chat = models.ForeignKey('InternalMessage')
+
+    class Meta:
+        unique_together = ('user', 'chat')
+
+
 class InternalMessage(models.Model):
-    sender = models.ForeignKey(UserModel, related_name='outgoing_messages')
-    recipient = models.ForeignKey(UserModel, related_name='incoming_messages')
     created_at = models.DateTimeField(_('date created'), default=timezone.now)
+    last_update = models.DateTimeField(auto_now=True)
     text = models.TextField(_("text"))
 
 

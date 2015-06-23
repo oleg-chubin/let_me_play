@@ -21,3 +21,10 @@ def get_event_actions_for_user(user, event_object):
     if applications.count():
         result.extend(["cancel_application"])
     return result or ['apply_for_event']
+
+
+def get_my_chats(user):
+    if user.is_anonymous():
+        return models.InternalMessage.objects.none()
+    return models.InternalMessage.objects.filter(
+        chatparticipant__user=user).order_by('last_update')
