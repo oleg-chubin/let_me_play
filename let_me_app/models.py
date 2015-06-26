@@ -174,6 +174,12 @@ class Application(models.Model):
     status = models.IntegerField(choices=ApplicationStatuses.CHOICES,
                                  default=ApplicationStatuses.ACTIVE)
 
+    def __str__(self):
+        return "{} user's ({}) application for event {}".format(
+            dict(ApplicationStatuses.CHOICES)[self.status],
+            self.user, self.event
+        )
+
 
 class Receipt(models.Model):
     date = models.DateTimeField(auto_now_add=True)

@@ -1,5 +1,6 @@
 from django.views.generic.detail import DetailView
 from django.views.generic.base import View as BaseView
+from django.views.generic.edit import CreateView
 from django import http
 from django.core.urlresolvers import reverse
 
@@ -66,6 +67,28 @@ class CancelApplicationView(EventActionMixin, BaseView):
     def process_object(self, application):
         application.status = models.ApplicationStatuses.CANCELED
         application.save()
+
+
+class CreateApplicationView(BaseView):
+    def post(self, request, *args, **kwargs):
+        if request.user.is_anonymous():
+            return http.HttpResponseForbidden()
+
+        events = models.Event.objects.filter(id=kwargs['event'])
+        if not events:
+            return http.HttpResponseNotFound()
+
+        comment = request.POST['comment']
+        application = models.Application.objects.create(
+            event=events[0],
+            user=request.user,
+            status=models.ApplicationStatuses.ACTIVE,
+            comment=comment
+        )
+
+        return http.HttpResponseRedirect(
+            reverse('let_me_app:view_event', kwargs={'pk': kwargs['event']})
+        )
 
 
 class DeclineProposalEventView(EventActionMixin, BaseView):
