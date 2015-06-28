@@ -1,0 +1,6 @@
+<form method="post" action="{% url 'let_me_app:dismiss_visit' event=object.id user=visitor.id %}">
+{% csrf_token %}
+<button type="submit" class="btn btn-link">
+<span class="glyphicon glyphicon glyphicon-remove"></span>
+</button>
+</form>

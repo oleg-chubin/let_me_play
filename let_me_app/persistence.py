@@ -16,10 +16,18 @@ def get_event_actions_for_user(user, event_object):
     applications = models.Application.objects.filter(
         user=user, event=event_object, status=models.ApplicationStatuses.ACTIVE
     )
+    visits = models.Visit.objects.filter(
+        user=user,
+        event=event_object,
+        status=models.VisitStatuses.PENDING
+    )
+    visit_exists = visits.exists()
     if proposals.count():
         result.extend(['decline_proposal', 'accept_proposal'])
     if applications.count():
         result.extend(["cancel_application"])
+    if visit_exists:
+        result.append('cancel_visit')
     return result or ['apply_for_event']
 
 

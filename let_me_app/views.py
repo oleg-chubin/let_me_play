@@ -37,6 +37,11 @@ class EventView(DetailView):
         result['active_applications'] =event.application_set.filter(
             status=models.ApplicationStatuses.ACTIVE
         )
+        result['active_visits'] =event.visit_set.filter(
+            status__in=(
+                models.VisitStatuses.PENDING, models.VisitStatuses.COMPLETED
+            )
+        )
         return result
 
 
@@ -151,4 +156,31 @@ class AcceptApplicationView(EventActionMixin, BaseView):
         persistence.create_event_visit(
             application.event, application.user, None
         )
+
+
+class CancelVisitView(EventActionMixin, BaseView):
+    def get_queryset(self, request, *args, **kwargs):
+        return models.Visit.objects.filter(
+            event_id=kwargs['event'],
+            user_id=self.request.user,
+            status=models.VisitStatuses.PENDING
+        )
+
+    def process_object(self, application):
+        application.status = models.VisitStatuses.CANCELED
+        application.save()
+
+
+class DismissVisitorEventView(EventActionMixin, BaseView):
+    def get_queryset(self, request, *args, **kwargs):
+        return models.Visit.objects.filter(
+            event_id=kwargs['event'],
+            user=kwargs['user'],
+            status=models.VisitStatuses.PENDING
+        )
+
+    def process_object(self, visit):
+        visit.status = models.VisitStatuses.DECLINED
+        visit.save()
+
 

@@ -52,6 +52,14 @@ class EventFactory(factory.django.DjangoModelFactory):
     court = factory.SubFactory(CourtFactory)
 
 
+class VisitFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.Visit
+
+    user = factory.SubFactory(UserFactory)
+    event = factory.SubFactory(EventFactory)
+
+
 class ApplicationFactory(factory.django.DjangoModelFactory):
     comment = factory.Sequence(lambda n: 'comment_{0}'.format(n))
     user = factory.SubFactory(UserFactory)
