@@ -165,6 +165,11 @@ class Proposal(models.Model):
     status = models.IntegerField(choices=ProposalStatuses.CHOICES,
                                  default=ProposalStatuses.ACTIVE)
 
+    def __str__(self):
+        return "{} proposal for user's ({}) for event {}".format(
+            dict(ProposalStatuses.CHOICES)[self.status], self.user, self.event
+        )
+
 
 class Application(models.Model):
     comment = models.TextField(max_length=256, default='')

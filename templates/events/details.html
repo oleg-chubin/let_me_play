@@ -27,6 +27,25 @@
    <li> {{ visit.user }} </li>
    {% endfor %}
    </ul>
+   {% if is_admin %}
+   <h2> Applications </h2>
+   <ul>
+   {% for application in active_applications %}
+     <li>
+       {{ application.user.email }} ({{ application.comment }})
+
+       <div class="ui-group-buttons marginBottom10">
+         {% with application.user as applicant %}
+            {% include "events/buttons/accept_application.html" %}
+         {% endwith %}
+         <div class="or"></div>
+         {% include "events/buttons/decline_application.html" %}
+       </div>
+     </li>
+   {% endfor %}
+   </ul>
+   {% endif %}
+
  </article>
  <div class="ui-group-buttons pull-right marginBottom10">
    {% for action in event_actions %}

@@ -9,6 +9,7 @@ from extra_views.generic import GenericInlineFormSet
 
 from . import models
 from let_me_app.persistence import get_event_actions_for_user
+from let_me_app import persistence
 
 
 class OccasionInline(InlineFormSet):
@@ -30,7 +31,12 @@ class EventView(DetailView):
 
     def get_context_data(self, **kwargs):
         result = super(EventView, self).get_context_data(**kwargs)
-        result['event_actions'] = get_event_actions_for_user(self.request.user, result['object'])
+        event = result['object']
+        result['event_actions'] = get_event_actions_for_user(self.request.user, event)
+        result['is_admin'] = event.court.admin_group.user_set.filter(email=self.request.user.email).exists()
+        result['active_applications'] =event.application_set.filter(
+            status=models.ApplicationStatuses.ACTIVE
+        )
         return result
 
 
@@ -103,6 +109,46 @@ class DeclineProposalEventView(EventActionMixin, BaseView):
         proposal.status = models.ProposalStatuses.DECLINED
         proposal.save()
 
-class AcceptProposalView(DetailView):
-    pass
+
+class AcceptProposalView(EventActionMixin, BaseView):
+    def get_queryset(self, request, *args, **kwargs):
+        return models.Proposal.objects.filter(
+            event_id=kwargs['event'],
+            user=request.user,
+            status=models.ProposalStatuses.ACTIVE
+        )
+
+    def process_object(self, proposal):
+        proposal.status = models.ProposalStatuses.ACCEPTED
+        proposal.save()
+        persistence.create_event_visit(proposal.event, proposal.user, None)
+
+
+class DeclineApplicationEventView(EventActionMixin, BaseView):
+    def get_queryset(self, request, *args, **kwargs):
+        return models.Application.objects.filter(
+            event_id=kwargs['event'],
+            user=request.user,
+            status=models.ApplicationStatuses.ACTIVE
+        )
+
+    def process_object(self, application):
+        application.status = models.ApplicationStatuses.DECLINED
+        application.save()
+
+
+class AcceptApplicationView(EventActionMixin, BaseView):
+    def get_queryset(self, request, *args, **kwargs):
+        return models.Application.objects.filter(
+            event_id=kwargs['event'],
+            user_id=kwargs['user'],
+            status=models.ApplicationStatuses.ACTIVE
+        )
+
+    def process_object(self, application):
+        application.status = models.ApplicationStatuses.ACCEPTED
+        application.save()
+        persistence.create_event_visit(
+            application.event, application.user, None
+        )
 

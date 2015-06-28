@@ -28,3 +28,10 @@ def get_my_chats(user):
         return models.InternalMessage.objects.none()
     return models.InternalMessage.objects.filter(
         chatparticipant__user=user).order_by('last_update')
+
+
+def create_event_visit(event, user, inventory_list):
+    visit = models.Visit.objects.create(
+        event=event, user=user, inventory_list=inventory_list
+    )
+    return visit

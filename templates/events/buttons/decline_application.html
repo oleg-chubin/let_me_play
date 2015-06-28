@@ -1,0 +1,6 @@
+<form method="post" action="{% url 'let_me_app:decline_application' event=object.id %}">
+{% csrf_token %}
+<button type="submit" class="btn btn-danger">
+   <span class="glyphicon glyphicon-thumbs-down"></span>
+</button>
+</form>
