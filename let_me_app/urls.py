@@ -1,0 +1,26 @@
+from django.conf.urls import patterns, include, url
+from . import views
+
+urlpatterns = patterns('',
+    url(r'^view/event/(?P<pk>[0-9]+)/$',
+        views.EventView.as_view(),
+        name='view_event'),
+    url(r'^create/application/for/event/(?P<event>[0-9]+)/$',
+        views.CreateApplicationView.as_view(),
+        name="create_application"),
+    url(r'^cancel/application/for/event/(?P<event>[0-9]+)/$',
+        views.CancelApplicationView.as_view(),
+        name="cancel_application"),
+    url(r'^decline/proposal/for/event/(?P<event>[0-9]+)/$',
+        views.DeclineProposalEventView.as_view(),
+        name="decline_proposal"),
+    url(r'^accept/proposal/for/event/(?P<event>[0-9]+)/$',
+        views.AcceptProposalView.as_view(),
+        name="accept_proposal"),
+    url(r'^decline/application/for/event/(?P<event>[0-9]+)/$',
+        views.DeclineApplicationEventView.as_view(),
+        name="decline_application"),
+    url(r'^accept/user/(?P<user>[0-9]+)/application/for/event/(?P<event>[0-9]+)/$',
+        views.AcceptApplicationView.as_view(),
+        name="accept_application"),
+)

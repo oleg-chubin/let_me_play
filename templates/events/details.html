@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block extra_head %}
+<link href="{% static "css/event.css" %}" rel="stylesheet">
+<link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block main %}
+<h1>{{ object.name }} </h1>
+ <img src="{{ MEDIA_URL }}{{object.court.site.map_image}}" alt="court map" class="pull-left img-responsive postImg img-thumbnail margin10">
+ <article>
+   <h2> Description </h2>
+   <p>
+     {{ object.description }}
+   </p>
+   <h2> Inventory </h2>
+   <ul>
+   {% for inventory in object.inventory_list.inventory_set.all %}
+   <li> {{ inventory.equipment }} ({{ inventory.amount }}) </li>
+   {% endfor %}
+   </ul>
+   <h2> Visitors </h2>
+   <ul>
+   {% for visit in object.visit_set.all %}
+   <li> {{ visit.user }} </li>
+   {% endfor %}
+   </ul>
+   {% if is_admin %}
+   <h2> Applications </h2>
+   <ul>
+   {% for application in active_applications %}
+     <li>
+       {{ application.user.email }} ({{ application.comment }})
+
+       <div class="ui-group-buttons marginBottom10">
+         {% with application.user as applicant %}
+            {% include "events/buttons/accept_application.html" %}
+         {% endwith %}
+         <div class="or"></div>
+         {% include "events/buttons/decline_application.html" %}
+       </div>
+     </li>
+   {% endfor %}
+   </ul>
+   {% endif %}
+
+ </article>
+ <div class="ui-group-buttons pull-right marginBottom10">
+   {% for action in event_actions %}
+     {% include "events/buttons/"|add:action|add:'.html' %}
+     {% if not forloop.last %}
+       <div class="or"></div>
+     {% endif %}
+   {% endfor %}
+ </div>
+
+{% include "events/modals/apply_for_event.html" %}
+
+{% endblock %}
