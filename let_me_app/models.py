@@ -33,6 +33,20 @@ class ProposalStatuses:
     )
 
 
+class VisitStatuses:
+    PENDING = 1
+    COMPLETED = 2
+    CANCELED = 3
+    DECLINED = 4
+
+    CHOICES = (
+        (PENDING, _("Pending")),
+        (COMPLETED, _("Completed")),
+        (CANCELED, _("Canceled")),
+        (DECLINED, _("Declined")),
+    )
+
+
 ApplicationStatuses = ProposalStatuses
 
 
@@ -198,5 +212,7 @@ class Visit(models.Model):
     receipt = models.ForeignKey(Receipt, null=True, blank=True)
     user = models.ForeignKey(UserModel)
     event = models.ForeignKey(Event)
+    status = models.IntegerField(choices=VisitStatuses.CHOICES,
+                                 default=VisitStatuses.PENDING)
 
 

@@ -62,6 +62,20 @@ class EventUserActionTestCase(TestCase):
         result = get_event_actions_for_user(user, event)
         self.assertEqual(result, [])
 
+    def test_visit_exists_cancel_visit(self):
+        event = factories.EventFactory()
+        user = factories.UserFactory()
+        visit = factories.VisitFactory(event=event, user=user)
+        result = get_event_actions_for_user(user, event)
+        self.assertIn('cancel_visit', result)
+
+    def test_visit_exists_no_create_application(self):
+        event = factories.EventFactory()
+        user = factories.UserFactory()
+        visit = factories.VisitFactory(event=event, user=user)
+        result = get_event_actions_for_user(user, event)
+        self.assertNotIn('apply_for_event', result)
+
 
 class TestChatList(TestCase):
     def test_get_for_anonymous(self):
