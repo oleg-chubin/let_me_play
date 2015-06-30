@@ -29,7 +29,9 @@
   <body>
     {% block login %}{% endblock %}
 
-    {% block navbar %}{% endblock %}
+    {% block navbar %}
+      {% include "navbar.html" %}
+    {% endblock %}
 
     <div class="container">
           {% block main %}{% endblock %}

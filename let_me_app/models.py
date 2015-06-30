@@ -38,12 +38,14 @@ class VisitStatuses:
     COMPLETED = 2
     CANCELED = 3
     DECLINED = 4
+    MISSED = 5
 
     CHOICES = (
         (PENDING, _("Pending")),
         (COMPLETED, _("Completed")),
         (CANCELED, _("Canceled")),
         (DECLINED, _("Declined")),
+        (MISSED, _("Missed")),
     )
 
 
