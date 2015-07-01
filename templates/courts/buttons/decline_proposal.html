@@ -1,0 +1,4 @@
+<form method="post" action="{% url 'let_me_app:decline_proposal' event=object.id %}">
+{% csrf_token %}
+<button type="submit" class="btn btn-danger">Decline proposal</button>
+</form>

@@ -3,6 +3,7 @@ from django.views.generic.base import View as BaseView
 from django.views.generic.edit import CreateView
 from django import http
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import Group
 
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from extra_views.generic import GenericInlineFormSet
@@ -52,7 +53,13 @@ class EventActionMixin(object):
     def process_object(self, obj):
         pass
 
+    def check_permissions(self, request, *args, **kwargs):
+        return True
+
     def post(self, request, *args, **kwargs):
+        if not self.check_permissions(request, *args, **kwargs):
+            return http.HttpResponseForbidden()
+
         query = self.get_queryset(request, *args, **kwargs)
         query = query.select_for_update()
         objects = query.all()
@@ -184,3 +191,44 @@ class DismissVisitorEventView(EventActionMixin, BaseView):
         visit.save()
 
 
+class CancelEventView(EventActionMixin, BaseView):
+    def check_permissions(self, request, *args, **kwargs):
+        return Group.objects.filter(
+            court__event=kwargs['event'], user=request.user).exists()
+
+    def get_queryset(self, request, *args, **kwargs):
+        return models.Event.objects.filter(
+            id=kwargs['event'], status=models.VisitStatuses.PENDING
+        )
+
+    def process_object(self, event):
+        event.status = models.EventStatuses.CANCELED
+        event.save()
+
+
+class CompleteEventView(EventActionMixin, BaseView):
+    def check_permissions(self, request, *args, **kwargs):
+        return Group.objects.filter(
+            court__event=kwargs['event'], user=request.user).exists()
+
+    def get_queryset(self, request, *args, **kwargs):
+        return models.Event.objects.filter(
+            id=kwargs['event'], status=models.VisitStatuses.PENDING
+        )
+
+    def process_object(self, event):
+        event.status = models.EventStatuses.COMPLETED
+        event.save()
+
+
+class CourtDetailView(DetailView):
+    template_name = 'courts/details.html'
+    model = models.Court
+
+    def get_context_data(self, **kwargs):
+        result = super(CourtDetailView, self).get_context_data(**kwargs)
+        court = result['object']
+        result['is_admin'] = court.admin_group.user_set.filter(
+            email=self.request.user.email).exists()
+#        result['event_actions'] = get_event_actions_for_user(self.request.user, event)
+        return result

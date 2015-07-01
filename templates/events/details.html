@@ -8,7 +8,25 @@
 {% endblock %}
 
 {% block main %}
-<h1>{{ object.name }} </h1>
+<h1>
+  {{ object.name }}
+  {% ifequal object.status 1 %}
+    {% if is_admin %}
+      <div class="ui-group-buttons marginBottom10">
+        {% include "events/buttons/complete_event.html" %}
+        <div class="or"></div>
+        {% include "events/buttons/cancel_event.html" %}
+      </div>
+    {% endif %}
+  {% else %}
+     {% ifequal object.status 2 %}
+       <span class="label label-primary">Completed</span>
+     {% else %}
+       <span class="label label-default">Cancelled</span>
+     {% endifequal %}
+  {% endifequal %}
+
+</h1>
  <img src="{{ MEDIA_URL }}{{object.court.site.map_image}}" alt="court map" class="pull-left img-responsive postImg img-thumbnail margin10">
  <article>
    <h2> Description </h2>
@@ -53,17 +71,19 @@
        </li>
      {% endfor %}
      </ul>
-   {% endif %}
+  {% endif %}
 
- </article>
- <div class="ui-group-buttons pull-right marginBottom10">
-   {% for action in event_actions %}
-     {% include "events/buttons/"|add:action|add:'.html' %}
-     {% if not forloop.last %}
-       <div class="or"></div>
-     {% endif %}
-   {% endfor %}
- </div>
+</article>
+  {% ifequal object.status 1 %}
+    <div class="ui-group-buttons pull-right marginBottom10">
+      {% for action in event_actions %}
+        {% include "events/buttons/"|add:action|add:'.html' %}
+        {% if not forloop.last %}
+          <div class="or"></div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endifequal %}
 
 {% include "events/modals/apply_for_event.html" %}
 
