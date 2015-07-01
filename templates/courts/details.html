@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block extra_head %}
+{% endblock %}
+
+{% block main %}
+<h1>{{ object.site.name }} court details </h1>
+ <img src="{{ MEDIA_URL }}{{object.site.map_image}}" alt="map" class="pull-left img-responsive postImg img-thumbnail margin10">
+ <article>
+   <h2> Description </h2>
+   <p>
+     {{ object.description }}
+   </p>
+   <h2> Events </h2>
+   <ul>
+     {% for event in object.event_set.all %}
+     <li>
+       <a href="{% url "let_me_app:view_event" pk=event.id %}"> {{ event.name }} ({{ event.start_at }}) </a>
+       {% ifequal event.status 1 %}
+         <span class="label label-success">Pending</span>
+       {% else %}
+         {% ifequal event.status 2 %}
+           <span class="label label-primary">Completed</span>
+         {% else %}
+           <span class="label label-default">Cancelled</span>
+         {% endifequal %}
+       {% endifequal %}
+
+     </li>
+     {% endfor %}
+    </ul>
+    {% if is_admin %}
+      <h2> Admin group </h2>
+      <ul>
+        {% for group_user in object.admin_group.user_set.all %}
+        <li>
+          {{ group_user.email }}
+        </li>
+        {% endfor %}
+    {% endif %}
+ </article>
+
+ <div class="ui-group-buttons pull-right marginBottom10">
+   {% for action in event_actions %}
+     {% include "events/buttons/"|add:action|add:'.html' %}
+     {% if not forloop.last %}
+       <div class="or"></div>
+     {% endif %}
+   {% endfor %}
+ </div>
+
+{% include "events/modals/apply_for_event.html" %}
+
+{% endblock %}

@@ -47,6 +47,18 @@ class VisitStatuses:
     )
 
 
+class EventStatuses:
+    PENDING = 1
+    COMPLETED = 2
+    CANCELED = 3
+
+    CHOICES = (
+        (PENDING, _("Pending")),
+        (COMPLETED, _("Completed")),
+        (CANCELED, _("Canceled")),
+    )
+
+
 ApplicationStatuses = ProposalStatuses
 
 
@@ -151,6 +163,9 @@ class Event(Followable):
     invoice = models.ForeignKey(Invoice, null=True, blank=True)
     inventory_list = models.ForeignKey(InventoryList, null=True, blank=True)
     staff = models.ManyToManyField(StaffProfile, blank=True)
+    status = models.IntegerField(
+        choices=EventStatuses.CHOICES, default=EventStatuses.PENDING
+    )
 
     def __str__(self):
         return "{} ({})".format(self.name, self.start_at)

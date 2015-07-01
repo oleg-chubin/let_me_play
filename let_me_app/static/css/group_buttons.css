@@ -16,13 +16,13 @@
     top:50%;
     left:50%;
     content:'or';
-    background-color:#5a5a5a;
+    background-color:#fff;
     margin-top:-.1em;
     margin-left:-.9em;
     width:1.8em;
     height:1.8em;
     line-height:1.55;
-    color:#fff;
+    color:#020202;
     font-style:normal;
     font-weight:400;
     text-align:center;
@@ -42,8 +42,8 @@
     width:.3em;
     height:2.84em;
     background-color:rgba(0,0,0,0);
-    border-top:.6em solid #5a5a5a;
-    border-bottom:.6em solid #5a5a5a
+    border-top:.6em solid #fff;
+    border-bottom:.6em solid #fff
 }
 .ui-group-buttons .or.or-lg{
     height:1.3em;
