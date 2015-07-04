@@ -7,32 +7,50 @@
 {% block extra_head %}
 <link href="{% static "css/event.css" %}" rel="stylesheet">
 <link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
+<link href="{% static "css/chat.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block main %}
     <div class="well">
-        <div class="media">
-          <div class="media-body">
-            <ul class="text-right list-inline">
-              {% for participant in object.chatparticipant_set.all %}
-                  <li>{{ participant.user }}</li>
-              {% endfor %}
-            </ul>
-            {% with recent_message=object|recent_chat_message %}
-              <a href="{% url "let_me_app:chat_details" pk=object.id">
-                <h4>{{ recent_message.author }}</h4>
-              </a>
-              <p> {{ recent_message.text }} </p>
-            {% endwith %}
-            <ul class="list-inline list-unstyled">
-              <li>
-                <span>
-                  <i class="glyphicon glyphicon-calendar"></i>
-                  {{ object.last_update }}
-                </span>
-              </li>
-            </ul>
+       <form action="{% url "let_me_app:post_chat_message" pk=object.id %}" method="post">
+         {% csrf_token %}
+         <div class="input-group">
+           <input id="{{ message_form.message.html_name }}" name="{{ message_form.message.html_name }}" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+           <span class="input-group-btn">
+             <button class="btn btn-warning btn-sm" id="btn-chat">Send</button>
+           </span>
          </div>
-      </div>
+       </form>
+       <ul class="chat">
+          {% for chat_message in object|chat_messages %}
+            <li class="left clearfix">
+              {% ifequal user chat_message.author %}
+                <span class="chat-img  pull-right">
+                  <img src="http://placehold.it/50/55C1E7/fff&text=Me" alt="My Avatar" class="img-circle" />
+                </span>
+              {% else %}
+                <span class="chat-img  pull-left">
+                  <img src="http://placehold.it/50/FA6F57/fff&text=User" alt="User Avatar" class="img-circle" />
+                </span>
+              {% endifequal %}
+              <div class="chat-body clearfix">
+                <div class="header">
+                  {% ifequal user chat_message.author %}
+                    <small class=" text-muted">
+                      <span class="glyphicon glyphicon-time"></span>{{ chat_message.date }}
+                    </small>
+                    <strong class="pull-right primary-font">{{ chat_message.author }}</strong>
+                  {% else %}
+                    <strong class="primary-font">{{ chat_message.author }}</strong>
+                    <small class="pull-right text-muted">
+                      <span class="glyphicon glyphicon-time"></span>{{ chat_message.date }}
+                    </small>
+                  {% endifequal %}
+                </div>
+                <p>{{ chat_message.text }}</p>
+              </div>
+            </li>
+         {% endfor %}
+       </ul>
     </div>
 {% endblock %}

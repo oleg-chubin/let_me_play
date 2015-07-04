@@ -20,9 +20,11 @@
               {% endfor %}
             </ul>
             {% with recent_message=object|recent_chat_message %}
-              <a href="{% url "let_me_app:chat_details" pk=object.id %}">
-                <h4>{{ recent_message.author }}</h4>
-              </a>
+              <h4>
+                <a href="{% url "let_me_app:chat_details" pk=object.id %}">
+                  {{ recent_message.author }}
+                </a>
+              </h4>
               <p> {{ recent_message.text }} </p>
             {% endwith %}
             <ul class="list-inline list-unstyled">

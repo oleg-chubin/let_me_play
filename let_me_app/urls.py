@@ -42,4 +42,6 @@ urlpatterns = patterns('',
     url(r'^view/chat/list/$', views.ChatList.as_view(), name="chat_list"),
     url(r'^view/chat/(?P<pk>[0-9]+)/$',
         views.ChatDetails.as_view(), name="chat_details"),
+    url(r'^post/chat/(?P<pk>[0-9]+)/message/$',
+        views.PostChatMessage.as_view(), name="post_chat_message"),
 )

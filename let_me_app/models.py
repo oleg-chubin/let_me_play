@@ -7,6 +7,11 @@ from django.conf import settings
 
 UserModel = settings.AUTH_USER_MODEL
 
+
+class CF(models.F):
+    ADD = '||'
+
+
 class PriceStatuses:
     NEW = 1
     PAID = 2
