@@ -38,4 +38,8 @@ urlpatterns = patterns('',
     url(r'^dismiss/visitor/(?P<user>[0-9]+)/for/event/(?P<event>[0-9]+)/$',
         views.DismissVisitorEventView.as_view(),
         name="dismiss_visit"),
+
+    url(r'^view/chat/list/$', views.ChatList.as_view(), name="chat_list"),
+    url(r'^view/chat/(?P<pk>[0-9]+)/$',
+        views.ChatDetails.as_view(), name="chat_details"),
 )

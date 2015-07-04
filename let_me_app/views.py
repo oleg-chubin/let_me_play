@@ -1,4 +1,5 @@
 from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
 from django.views.generic.base import View as BaseView
 from django.views.generic.edit import CreateView
 from django import http
@@ -24,6 +25,20 @@ class BookingPolicyInline(GenericInlineFormSet):
 class CreateCourtView(CreateWithInlinesView):
     model = models.Court
     inlines = [BookingPolicyInline, OccasionInline]
+
+
+class ChatList(ListView):
+    template_name = 'chat/list.html'
+    model = models.InternalMessage
+
+    def get_queryset(self, **kwargs):
+        result = super(ChatList, self).get_queryset(**kwargs)
+        return result.filter(chatparticipant__user=self.request.user)
+
+
+class ChatDetails(DetailView):
+    template_name = 'chat/details.html'
+    model = models.InternalMessage
 
 
 class EventView(DetailView):

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% load let_me_chat %}
+
+{% load staticfiles %}
+
+{% block extra_head %}
+<link href="{% static "css/event.css" %}" rel="stylesheet">
+<link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block main %}
+    <div class="well">
+        <div class="media">
+          <div class="media-body">
+            <ul class="text-right list-inline">
+              {% for participant in object.chatparticipant_set.all %}
+                  <li>{{ participant.user }}</li>
+              {% endfor %}
+            </ul>
+            {% with recent_message=object|recent_chat_message %}
+              <a href="{% url "let_me_app:chat_details" pk=object.id">
+                <h4>{{ recent_message.author }}</h4>
+              </a>
+              <p> {{ recent_message.text }} </p>
+            {% endwith %}
+            <ul class="list-inline list-unstyled">
+              <li>
+                <span>
+                  <i class="glyphicon glyphicon-calendar"></i>
+                  {{ object.last_update }}
+                </span>
+              </li>
+            </ul>
+         </div>
+      </div>
+    </div>
+{% endblock %}

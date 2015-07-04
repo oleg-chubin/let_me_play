@@ -71,6 +71,7 @@ class Followable(models.Model):
 class ChatParticipant(models.Model):
     user = models.ForeignKey(UserModel)
     chat = models.ForeignKey('InternalMessage')
+    last_seen = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = ('user', 'chat')
@@ -232,4 +233,8 @@ class Visit(models.Model):
     status = models.IntegerField(choices=VisitStatuses.CHOICES,
                                  default=VisitStatuses.PENDING)
 
+    def __str__(self):
+        return "{} user {} visit to {} ".format(
+            dict(VisitStatuses.CHOICES)[self.status], self.user, self.event
+        )
 
