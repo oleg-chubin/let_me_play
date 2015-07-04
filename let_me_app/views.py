@@ -113,6 +113,15 @@ class EventView(DetailView):
         return result
 
 
+class UserEventListView(ListView):
+    model = models.Visit
+    template_name = "events/user_events.html"
+
+    def get_queryset(self, **kwargs):
+        result = super(UserEventListView, self).get_queryset(**kwargs)
+        return result.filter(user=self.request.user)
+
+
 class EventActionMixin(object):
     def get_queryset(self, request, *args, **kwargs):
         pass

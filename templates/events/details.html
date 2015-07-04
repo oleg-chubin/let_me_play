@@ -7,6 +7,15 @@
 <link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
 {% endblock %}
 
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li><a href="#">Home</a></li>
+  <li><a href="#">Site</a></li>
+  <li><a href="{% url 'let_me_app:view_court' pk=object.court_id %}">Court</a></li>
+  <li class="active">Event</li>
+</ol>
+{% endblock %}
+
 {% block main %}
 <h1>
   {{ object.name }}

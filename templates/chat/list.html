@@ -9,6 +9,13 @@
 <link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
 {% endblock %}
 
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li><a href="#">Home</a></li>
+  <li class="active">Chats</li>
+</ol>
+{% endblock %}
+
 {% block main %}
   {% for object in object_list %}
     <div class="well">

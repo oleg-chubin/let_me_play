@@ -10,8 +10,27 @@
 <link href="{% static "css/chat.css" %}" rel="stylesheet">
 {% endblock %}
 
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li><a href="#">Home</a></li>
+  <li><a href="{% url "let_me_app:chat_list" %}">Chats</a></li>
+  <li class="active">Chat</li>
+</ol>
+{% endblock %}
+
 {% block main %}
-    <div class="well">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+    {% for participant in object.chatparticipant_set.all %}
+      <span class="btn btn-labeled btn-success">
+        {{ participant.user }}
+        <button class="btn-label">
+          <i class="glyphicon glyphicon-remove"></i>
+        </button>
+      </span>
+    {% endfor %}
+    </div>
+    <div class="panel-body">
        <form action="{% url "let_me_app:post_chat_message" pk=object.id %}" method="post">
          {% csrf_token %}
          <div class="input-group">
@@ -53,4 +72,5 @@
          {% endfor %}
        </ul>
     </div>
+  </div>
 {% endblock %}

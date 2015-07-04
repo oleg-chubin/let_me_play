@@ -5,6 +5,14 @@
 {% block extra_head %}
 {% endblock %}
 
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li><a href="#">Home</a></li>
+  <li><a href="#">Site</a></li>
+  <li class="active">Court</li>
+</ol>
+{% endblock %}
+
 {% block main %}
 <h1>{{ object.site.name }} court details </h1>
  <img src="{{ MEDIA_URL }}{{object.site.map_image}}" alt="map" class="pull-left img-responsive postImg img-thumbnail margin10">

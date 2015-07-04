@@ -29,3 +29,18 @@
     color: #777777;
 }
 
+.btn-label
+{
+    position: relative;
+    display: inline-block;
+    background: rgba(0,0,0,0);
+    border: none;
+    border-radius: 3px 0 0 3px;
+    color: #111111;
+}
+
+.btn-labeled {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+

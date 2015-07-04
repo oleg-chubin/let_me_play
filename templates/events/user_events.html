@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% load let_me_chat %}
+
+{% load staticfiles %}
+
+{% block extra_head %}
+<link href="{% static "css/timeline.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li><a href="#">Home</a></li>
+  <li class="active">My events</li>
+</ol>
+{% endblock %}
+
+{% block main %}
+
+<div id="timeline">
+  <div class="row timeline-movement timeline-movement-top">
+    <div class="timeline-badge timeline-future-movement">
+        <a href="#">
+            <span class="glyphicon glyphicon-plus"></span>
+        </a>
+    </div>
+    <div class="timeline-badge timeline-filter-movement">
+        <a href="#">
+            <span class="glyphicon glyphicon-time"></span>
+        </a>
+    </div>
+  </div>
+
+  {% for object in object_list %}
+    <div class="row timeline-movement">
+
+        <div class="timeline-badge">
+            <span class="timeline-balloon-date-day">{{ object.event.start_at|date:"j" }}</span></br>
+            <span class="timeline-balloon-date-month">{{ object.event.start_at|date:"M" }}</span>
+        </div>
+
+
+        <div class="{% if forloop.counter|divisibleby:2 %} col-sm-offset-6 {% endif %} col-sm-6  timeline-item">
+            <div class="row">
+                <div class="{% if forloop.counter|divisibleby:2 %} col-sm-offset-1 {% endif %} col-sm-11">
+                    <div class="timeline-panel credits">
+                        <ul class="timeline-panel-ul">
+                            <li><span class="importo">{{ object.event.name }}</span></li>
+                            <li><span class="causale">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </span> </li>
+                            <li>
+                              <p>
+                                <small class="text-muted">
+                                  <i class="glyphicon glyphicon-time"></i> {{ object.event.start_at|time }}
+                                </small></p> </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+  {% endfor %}
+</div>
+
+{% endblock %}
