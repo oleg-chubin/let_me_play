@@ -31,34 +31,50 @@
     </div>
   </div>
 
-  {% for object in object_list %}
+  {% for event_date, object_group in grouped_objects %}
     <div class="row timeline-movement">
 
-        <div class="timeline-badge">
-            <span class="timeline-balloon-date-day">{{ object.event.start_at|date:"j" }}</span></br>
-            <span class="timeline-balloon-date-month">{{ object.event.start_at|date:"M" }}</span>
-        </div>
-
-
-        <div class="{% if forloop.counter|divisibleby:2 %} col-sm-offset-6 {% endif %} col-sm-6  timeline-item">
+      <div class="timeline-badge">
+        <span class="timeline-balloon-date-day">{{ event_date|date:"j" }}</span></br>
+        <span class="timeline-balloon-date-month">{{ event_date|date:"M" }}</span>
+      </div>
+      {% for object in object_group %}
+          <div class="{% if forloop.counter|divisibleby:2 %} col-sm-offset-6 {% endif %} col-sm-6  timeline-item">
             <div class="row">
                 <div class="{% if forloop.counter|divisibleby:2 %} col-sm-offset-1 {% endif %} col-sm-11">
-                    <div class="timeline-panel credits">
+                    <div class="timeline-panel {% if forloop.counter|divisibleby:2 %} debits {% else %} credits {% endif %}">
                         <ul class="timeline-panel-ul">
-                            <li><span class="importo">{{ object.event.name }}</span></li>
-                            <li><span class="causale">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </span> </li>
+                            <li>
+                              <span class="importo">
+                                <a href="{% url "let_me_app:view_event" pk=object.event_id %}">
+                                  {% if object.event.status == 1 and object.status == 1%}
+                                    {{ object.event.name }}
+                                  {% else %}
+                                  <s>
+                                    {{ object.event.name }}
+                                  </s><span class="label label-default">Inactive</span>
+                                  {% endif %}
+                                </a>
+                              </span>
+                            </li>
+                            <li>
+                              <span class="causale">
+                                {{ object.event.description }}
+                              </span> </li>
                             <li>
                               <p>
                                 <small class="text-muted">
                                   <i class="glyphicon glyphicon-time"></i> {{ object.event.start_at|time }}
-                                </small></p> </li>
+                                </small>
+                              </p>
+                            </li>
                         </ul>
                     </div>
 
                 </div>
             </div>
-        </div>
-
+          </div>
+      {% endfor %}
     </div>
   {% endfor %}
 </div>

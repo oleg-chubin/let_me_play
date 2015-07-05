@@ -50,16 +50,20 @@
    </ul>
    <h2> Visitors </h2>
    <ul>
-   {% for visit in active_visits %}
+   {% for visit in object.visit_set.all %}
    <li>
-     {{ visit.user }}
-     {% with visit.user as visitor %}
-       {% if is_admin %}
-         <div class="ui-group-buttons">
-           {% include "events/buttons/dismiss_visit.html" %}
-         </div>
-       {% endif %}
-     {% endwith %}
+     {% if visit.status == 1 %}
+       {{ visit.user }}
+       {% with visit.user as visitor %}
+         {% if is_admin %}
+           <div class="ui-group-buttons">
+             {% include "events/buttons/dismiss_visit.html" %}
+           </div>
+         {% endif %}
+       {% endwith %}
+     {% else %}
+       <del>{{ visit.user }}</del>
+     {% endif %}
    </li>
    {% endfor %}
    </ul>
