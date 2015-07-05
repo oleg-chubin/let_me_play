@@ -8,6 +8,14 @@ from django.db.models import F
 from functools import wraps
 
 
+def oject_statuses(request):
+    return {
+        'APPLICATION_STATUSES': models.ApplicationStatuses,
+        'PROPOSAL_STATUSES': models.ProposalStatuses,
+        'EVENT_STATUSES': models.EventStatuses,
+        'VISIT_STATUSES': models.VisitStatuses
+    }
+
 def for_authentificated_users(func):
     @wraps(func)
     def wrapped(request):

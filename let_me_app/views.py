@@ -125,6 +125,30 @@ class UserEventListView(ListView):
         return result
 
 
+class UserProposalsListView(ListView):
+    model = models.Proposal
+    template_name = "events/user_proposals.html"
+
+    def get_queryset(self, **kwargs):
+        result = super(UserProposalsListView, self).get_queryset(**kwargs)
+        return result.filter(user=self.request.user).order_by('-event__start_at')
+
+    def get_context_data(self, **kwargs):
+        result = super(UserProposalsListView, self).get_context_data(**kwargs)
+        object_list = result['object_list']
+        grouped_objects = groupby(object_list, lambda x: x.event.start_at.date())
+        result['grouped_objects'] = [(i, [j for j in g]) for i, g in grouped_objects]
+        return result
+
+
+class UserManagedEventListView(ListView):
+    model = models.Event
+    template_name = "events/user_managed_events.html"
+
+    def get_queryset(self, **kwargs):
+        result = super(UserManagedEventListView, self).get_queryset(**kwargs)
+        return result.filter(court__admin_group__user=self.request.user).order_by('-start_at')
+
 class EventActionMixin(object):
     def get_queryset(self, request, *args, **kwargs):
         pass
