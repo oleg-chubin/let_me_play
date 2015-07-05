@@ -1,0 +1,46 @@
+.chat
+{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.chat li
+{
+    margin-top: 10px;
+    padding-top: 5px;
+    border-top: 1px dotted #B3A9A9;
+}
+
+.chat li.left .chat-body
+{
+    margin-left: 60px;
+}
+
+.chat li.right .chat-body
+{
+    margin-right: 60px;
+}
+
+
+.chat li .chat-body p
+{
+    margin: 0;
+    color: #777777;
+}
+
+.btn-label
+{
+    position: relative;
+    display: inline-block;
+    background: rgba(0,0,0,0);
+    border: none;
+    border-radius: 3px 0 0 3px;
+    color: #111111;
+}
+
+.btn-labeled {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+

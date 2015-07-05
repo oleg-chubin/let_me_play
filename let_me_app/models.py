@@ -7,6 +7,11 @@ from django.conf import settings
 
 UserModel = settings.AUTH_USER_MODEL
 
+
+class CF(models.F):
+    ADD = '||'
+
+
 class PriceStatuses:
     NEW = 1
     PAID = 2
@@ -38,12 +43,14 @@ class VisitStatuses:
     COMPLETED = 2
     CANCELED = 3
     DECLINED = 4
+    MISSED = 5
 
     CHOICES = (
         (PENDING, _("Pending")),
         (COMPLETED, _("Completed")),
         (CANCELED, _("Canceled")),
         (DECLINED, _("Declined")),
+        (MISSED, _("Missed")),
     )
 
 
@@ -69,6 +76,7 @@ class Followable(models.Model):
 class ChatParticipant(models.Model):
     user = models.ForeignKey(UserModel)
     chat = models.ForeignKey('InternalMessage')
+    last_seen = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = ('user', 'chat')
@@ -230,4 +238,8 @@ class Visit(models.Model):
     status = models.IntegerField(choices=VisitStatuses.CHOICES,
                                  default=VisitStatuses.PENDING)
 
+    def __str__(self):
+        return "{} user {} visit to {} ".format(
+            dict(VisitStatuses.CHOICES)[self.status], self.user, self.event
+        )
 

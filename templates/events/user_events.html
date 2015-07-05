@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% load let_me_chat %}
+
+{% load staticfiles %}
+
+{% block extra_head %}
+<link href="{% static "css/timeline.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li><a href="#">Home</a></li>
+  <li class="active">My events</li>
+</ol>
+{% endblock %}
+
+{% block main %}
+
+<div id="timeline">
+  <div class="row timeline-movement timeline-movement-top">
+    <div class="timeline-badge timeline-future-movement">
+        <a href="#">
+            <span class="glyphicon glyphicon-plus"></span>
+        </a>
+    </div>
+    <div class="timeline-badge timeline-filter-movement">
+        <a href="#">
+            <span class="glyphicon glyphicon-time"></span>
+        </a>
+    </div>
+  </div>
+
+  {% for event_date, object_group in grouped_objects %}
+    <div class="row timeline-movement">
+
+      <div class="timeline-badge">
+        <span class="timeline-balloon-date-day">{{ event_date|date:"j" }}</span></br>
+        <span class="timeline-balloon-date-month">{{ event_date|date:"M" }}</span>
+      </div>
+      {% for object in object_group %}
+          <div class="{% if forloop.counter|divisibleby:2 %} col-sm-offset-6 {% endif %} col-sm-6  timeline-item">
+            <div class="row">
+                <div class="{% if forloop.counter|divisibleby:2 %} col-sm-offset-1 {% endif %} col-sm-11">
+                    <div class="timeline-panel {% if forloop.counter|divisibleby:2 %} debits {% else %} credits {% endif %}">
+                        <ul class="timeline-panel-ul">
+                            <li>
+                              <span class="importo">
+                                <a href="{% url "let_me_app:view_event" pk=object.event_id %}">
+                                  {% if object.event.status == EVENT_STATUSES.PENDING and object.status == VISIT_STATUSES.PENDING %}
+                                    {{ object.event.name }}
+                                  {% else %}
+                                  <s>
+                                    {{ object.event.name }}
+                                  </s><span class="label label-default">Inactive</span>
+                                  {% endif %}
+                                </a>
+                              </span>
+                            </li>
+                            <li>
+                              <span class="causale">
+                                {{ object.event.description }}
+                              </span> </li>
+                            <li>
+                              <p>
+                                <small class="text-muted">
+                                  <i class="glyphicon glyphicon-time"></i> {{ object.event.start_at|time }}
+                                </small>
+                              </p>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+          </div>
+      {% endfor %}
+    </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

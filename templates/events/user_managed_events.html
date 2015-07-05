@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block extra_head %}
+<link href="{% static "css/event.css" %}" rel="stylesheet">
+<link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li><a href="#">Home</a></li>
+  <li class="active">Managed events</li>
+</ol>
+{% endblock %}
+
+{% block main %}
+  {% for object in object_list %}
+    <div class="well">
+        <div class="media">
+          <span class="pull-left" href="#">
+              <img class="media-object" src="http://placehold.it/50/55C1E7/fff&text=E">
+          </span>
+          <div class="media-body">
+              <h4 class="media-heading">
+                <a href="{% url "let_me_app:view_event" pk=object.id %}">
+                  {% if object.status == EVENT_STATUSES.PENDING %}
+                    {{ object.name }}
+                  {% else %}
+                    <s> {{ object.name }} </s>
+                    {% if object.status == EVENT_STATUSES.CANCELED %}
+                      <span class="label label-default">Cancelled</span>
+                    {% else %}
+                      <span class="label label-primary">Completed</span>
+                    {% endif %}
+                  {% endif %}
+                </a>
+              </h4>
+            <p class="text-right">[some text]</p>
+            <p>{{ object.description|linebreaksbr }}</p>
+            <ul class="list-inline list-unstyled">
+              <li><span><i class="glyphicon glyphicon-calendar"></i> {{ object.start_at }} </span></li>
+              <li>|</li>
+              <li>
+                <span>
+                {% for visit in object.visit_set.all %}
+                   {% if visit.status == VISIT_STATUSES.PENDING or visit.status == VISIT_STATUSES.COMPLETED %}
+                     <i class="glyphicon glyphicon-user"></i>
+                   {% endif %}
+                {% endfor %}
+                </span>
+              </li>
+              <li>|</li>
+              <li>
+                <span>
+                {% for visit in object.proposal_set.all %}
+                   {% if visit.status == PROPOSAL_STATUSES.ACTIVE %}
+                     <i class="glyphicon glyphicon-question-sign"></i>
+                   {% endif %}
+                {% endfor %}
+                </span>
+              </li>
+              <li>|</li>
+              <li>
+                <span>
+                  {% for visit in object.application_set.all %}
+                    {% if visit.status == APPLICATION_STATUSES.ACTIVE %}
+                      <i class="glyphicon glyphicon-exclamation-sign"></i>
+                    {% endif %}
+                  {% endfor %}
+                </span>
+              </li>
+              </ul>
+         </div>
+      </div>
+    </div>
+  {% endfor %}
+{% endblock %}

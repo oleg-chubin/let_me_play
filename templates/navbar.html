@@ -13,36 +13,81 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="#about">Search Courts</a></li>
-            <li><a href="#contact">My Courts</a></li>
-          </ul>
-          <button type="button" class="btn btn-sm navbar-btn">
-            <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>
-            Create court
-          </button>
-
-          <ul class="nav navbar-nav pull-right">
-            {% if user and not user.is_anonymous %}
-              <li class="dropdown">
+            <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <span class="glyphicon glyphicon-user"> </span>
-                  {{ user.get_full_name }}
+                    Events
                   <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
-                  <li><a href="#">Account Settings <span class="glyphicon glyphicon-cog pull-right"></span></a></li>
-                  <li class="divider"></li>
-                  <li><a href="#">User stats <span class="glyphicon glyphicon-stats pull-right"></span></a></li>
-                  <li class="divider"></li>
-                  <li><a href="#">Messages <span class="badge pull-right"> 42 </span></a></li>
-                  <li class="divider"></li>
-                  <li>
-                    <a href="/logout">
-                      Logout<span class="glyphicon glyphicon-log-out pull-right"></span>
-                    </a>
-                  </li>
+                  <li><a href="{% url "let_me_app:user_events" %}">My events</a></li>
+                  <li><a href="{% url "let_me_app:user_managed_events" %}">Events managed</a></li>
                 </ul>
-              </li>
+            </li>
+          </ul>
+
+          <ul class="nav navbar-nav pull-right">
+            {% if user and not user.is_anonymous %}
+              {% with proposals_count=user_active_proposals.count visits_count=user_active_visits.count messages_count=user_messages.count applications_count=user_active_applications.count %}
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <span class="glyphicon glyphicon-user"> </span>
+                    {{ user.get_full_name }}
+                    {% with total_count=proposals_count|add:visits_count|add:messages_count|add:applications_count %}
+                      <span class="label label-info">{{ total_count }} </span>
+                    {% endwith %}
+                    <span class="caret"></span>
+                  </a>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Settings </a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">User stats </span></a></li>
+                    <li class="divider"></li>
+                    <li>
+                      <a href="{% url "let_me_app:chat_list" %}">
+                      Messages
+                      {% if messages_count %}
+                        <span class="badge badge-info">
+                          {{ messages_count }}
+                        </span>
+                      {% endif %}
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url "let_me_app:user_proposals" %}">
+                      Proposals
+                      {% if proposals_count %}
+                        <span class="badge badge-info">
+                          {{ proposals_count }}
+                        </span>
+                      {% endif %}
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url "let_me_app:user_events" %}">
+                        Visits
+                      {% if visits_count %}
+                        <span class="badge badge-info">
+                          {{ visits_count }}
+                        </span>
+                      {% endif %}
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url "let_me_app:user_managed_events" %}">
+                        Applications
+                      {% if applications_count %}
+                        <span class="badge badge-info">
+                          {{ applications_count }}
+                        </span>
+                      {% endif %}
+                      </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li> <a href="/logout"> Logout </a>
+                    </li>
+                  </ul>
+                </li>
+              {% endwith %}
             {% else %}
               <li><a href="/home">You are not logged in.</a></li>
             {% endif %}

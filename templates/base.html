@@ -29,10 +29,13 @@
   <body>
     {% block login %}{% endblock %}
 
-    {% block navbar %}{% endblock %}
+    {% block navbar %}
+      {% include "navbar.html" %}
+    {% endblock %}
 
     <div class="container">
-          {% block main %}{% endblock %}
+      {% block breadcrumbs %}{% endblock %}
+      {% block main %}{% endblock %}
     </div>
     <!-- /.container -->
 
@@ -44,6 +47,6 @@
     <!--<script src="/static/js/bootstrap.min.js"></script>-->
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="/static/js/ie10-viewport-bug-workaround.js"></script>
-    <script src="/static/js/tree.js"></script>
+    <!-- <script src="/static/js/tree.js"></script> -->
   </body>
 </html>

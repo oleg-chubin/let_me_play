@@ -1,16 +1,20 @@
-from django.views.generic.detail import DetailView
-from django.views.generic.base import View as BaseView
-from django.views.generic.edit import CreateView
+from xml.dom import minidom
+from itertools import groupby
+
 from django import http
-from django.core.urlresolvers import reverse
 from django.contrib.auth.models import Group
+from django.core.urlresolvers import reverse
+from django.utils import timezone
+from django.views.generic.base import View as BaseView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, BaseUpdateView
+from django.views.generic.list import ListView
 
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from extra_views.generic import GenericInlineFormSet
 
-from . import models
-from let_me_app.persistence import get_event_actions_for_user
-from let_me_app import persistence
+from let_me_app import persistence, forms, models
+
 
 
 class OccasionInline(InlineFormSet):
@@ -26,6 +30,68 @@ class CreateCourtView(CreateWithInlinesView):
     inlines = [BookingPolicyInline, OccasionInline]
 
 
+class ChatList(ListView):
+    template_name = 'chat/list.html'
+    model = models.InternalMessage
+
+    def get_queryset(self, **kwargs):
+        result = super(ChatList, self).get_queryset(**kwargs)
+        return result.filter(chatparticipant__user=self.request.user)
+
+
+class ChatDetails(DetailView):
+    template_name = 'chat/details.html'
+    model = models.InternalMessage
+
+    def get_context_data(self, *args, **kwargs):
+        result = super(ChatDetails, self).get_context_data(*args, **kwargs)
+
+        for participant in result['object'].chatparticipant_set.all():
+            if participant.user == self.request.user:
+                participant.save()
+
+        result['message_form'] = forms.ChatMessageForm()
+        return result
+
+
+class PostChatMessage(BaseUpdateView):
+    model = models.InternalMessage
+    form_class = forms.ChatMessageForm
+
+    def get(self, *args, **kwargs):
+        return http.HttpResponseRedirect(
+            reverse('let_me_app:chat_details', kwargs={'pk': kwargs['pk']})
+        )
+
+    def get_form_kwargs(self):
+        result = super(PostChatMessage, self).get_form_kwargs()
+        result.pop('instance')
+        return result
+
+    def form_valid(self, form):
+        doc = minidom.Document()
+        message = doc.createElement('message')
+
+        text_node = message.appendChild(doc.createElement('text'))
+        text_node.appendChild(doc.createTextNode(form.cleaned_data['message']))
+        author_node = message.appendChild(doc.createElement('author'))
+        author_node.appendChild(doc.createTextNode(str(self.request.user.id)))
+        date_node = message.appendChild(doc.createElement('date'))
+        date_node.appendChild(doc.createTextNode(str(timezone.now())))
+
+        self.object.text = message.toxml() + models.CF('text')
+        self.object.save()
+
+        return http.HttpResponseRedirect(
+            reverse('let_me_app:chat_details', kwargs={'pk': self.object.id})
+        )
+
+    def form_invalid(self, form):
+        return http.HttpResponseRedirect(
+            reverse('let_me_app:chat_details', kwargs={'pk': kwargs['pk']})
+        )
+
+
 class EventView(DetailView):
     template_name = 'events/details.html'
     model = models.Event
@@ -33,18 +99,55 @@ class EventView(DetailView):
     def get_context_data(self, **kwargs):
         result = super(EventView, self).get_context_data(**kwargs)
         event = result['object']
-        result['event_actions'] = get_event_actions_for_user(self.request.user, event)
-        result['is_admin'] = event.court.admin_group.user_set.filter(email=self.request.user.email).exists()
+        result['event_actions'] = persistence.get_event_actions_for_user(
+            self.request.user, event)
+        result['is_admin'] = event.court.admin_group.user_set.filter(
+            email=self.request.user.email).exists()
         result['active_applications'] =event.application_set.filter(
             status=models.ApplicationStatuses.ACTIVE
         )
-        result['active_visits'] =event.visit_set.filter(
-            status__in=(
-                models.VisitStatuses.PENDING, models.VisitStatuses.COMPLETED
-            )
-        )
         return result
 
+
+class UserEventListView(ListView):
+    model = models.Visit
+    template_name = "events/user_events.html"
+
+    def get_queryset(self, **kwargs):
+        result = super(UserEventListView, self).get_queryset(**kwargs)
+        return result.filter(user=self.request.user).order_by('-event__start_at')
+
+    def get_context_data(self, **kwargs):
+        result = super(UserEventListView, self).get_context_data(**kwargs)
+        object_list = result['object_list']
+        grouped_objects = groupby(object_list, lambda x: x.event.start_at.date())
+        result['grouped_objects'] = [(i, [j for j in g]) for i, g in grouped_objects]
+        return result
+
+
+class UserProposalsListView(ListView):
+    model = models.Proposal
+    template_name = "events/user_proposals.html"
+
+    def get_queryset(self, **kwargs):
+        result = super(UserProposalsListView, self).get_queryset(**kwargs)
+        return result.filter(user=self.request.user).order_by('-event__start_at')
+
+    def get_context_data(self, **kwargs):
+        result = super(UserProposalsListView, self).get_context_data(**kwargs)
+        object_list = result['object_list']
+        grouped_objects = groupby(object_list, lambda x: x.event.start_at.date())
+        result['grouped_objects'] = [(i, [j for j in g]) for i, g in grouped_objects]
+        return result
+
+
+class UserManagedEventListView(ListView):
+    model = models.Event
+    template_name = "events/user_managed_events.html"
+
+    def get_queryset(self, **kwargs):
+        result = super(UserManagedEventListView, self).get_queryset(**kwargs)
+        return result.filter(court__admin_group__user=self.request.user).order_by('-start_at')
 
 class EventActionMixin(object):
     def get_queryset(self, request, *args, **kwargs):
@@ -230,5 +333,5 @@ class CourtDetailView(DetailView):
         court = result['object']
         result['is_admin'] = court.admin_group.user_set.filter(
             email=self.request.user.email).exists()
-#        result['event_actions'] = get_event_actions_for_user(self.request.user, event)
+#        result['event_actions'] = persistence.get_event_actions_for_user(self.request.user, event)
         return result
