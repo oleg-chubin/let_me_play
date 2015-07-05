@@ -8,9 +8,9 @@ from django.conf import settings
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auth', '0001_initial'),
         ('let_me_app', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('auth', '0001_initial'),
     ]
 
     operations = [
@@ -81,18 +81,6 @@ class Migration(migrations.Migration):
             preserve_default=True,
         ),
         migrations.AddField(
-            model_name='internalmessage',
-            name='recipient',
-            field=models.ForeignKey(related_name='incoming_messages', to=settings.AUTH_USER_MODEL),
-            preserve_default=True,
-        ),
-        migrations.AddField(
-            model_name='internalmessage',
-            name='sender',
-            field=models.ForeignKey(related_name='outgoing_messages', to=settings.AUTH_USER_MODEL),
-            preserve_default=True,
-        ),
-        migrations.AddField(
             model_name='event',
             name='court',
             field=models.ForeignKey(to='let_me_app.Court'),
@@ -101,19 +89,19 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='event',
             name='inventory_list',
-            field=models.ForeignKey(blank=True, to='let_me_app.InventoryList', null=True),
+            field=models.ForeignKey(null=True, blank=True, to='let_me_app.InventoryList'),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='event',
             name='invoice',
-            field=models.ForeignKey(blank=True, to='let_me_app.Invoice', null=True),
+            field=models.ForeignKey(null=True, blank=True, to='let_me_app.Invoice'),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='event',
             name='staff',
-            field=models.ManyToManyField(to='let_me_app.StaffProfile'),
+            field=models.ManyToManyField(blank=True, to='let_me_app.StaffProfile'),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -127,6 +115,22 @@ class Migration(migrations.Migration):
             name='site',
             field=models.ForeignKey(to='let_me_app.Site'),
             preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='chatparticipant',
+            name='chat',
+            field=models.ForeignKey(to='let_me_app.InternalMessage'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='chatparticipant',
+            name='user',
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
+            preserve_default=True,
+        ),
+        migrations.AlterUniqueTogether(
+            name='chatparticipant',
+            unique_together=set([('user', 'chat')]),
         ),
         migrations.AddField(
             model_name='changelog',
@@ -155,7 +159,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='application',
             name='inventory_list',
-            field=models.ForeignKey(blank=True, to='let_me_app.InventoryList', null=True),
+            field=models.ForeignKey(null=True, blank=True, to='let_me_app.InventoryList'),
             preserve_default=True,
         ),
         migrations.AddField(

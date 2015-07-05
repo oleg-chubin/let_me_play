@@ -93,14 +93,14 @@ class Peeper(models.Model):
     user = models.ForeignKey(UserModel)
 
 
-class PrivateComment(Followable):
+class PrivateComment(models.Model):
     user = models.ForeignKey(UserModel, related_name='my_comments')
     followable = models.ForeignKey(Followable, related_name='users_comments')
     created_at = models.DateTimeField(_('date created'), default=timezone.now)
     text = models.TextField(_("text"))
 
 
-class Changelog(Followable):
+class Changelog(models.Model):
     followable = models.ForeignKey(Followable, related_name='followable_set')
     created_at = models.DateTimeField(_('date created'), default=timezone.now)
     text = models.TextField(_("text"))
@@ -108,8 +108,8 @@ class Changelog(Followable):
 
 class Site(Followable):
     name = models.CharField(max_length=128)
-    description = models.TextField(_("text"))
-    address = models.TextField(_("text"))
+    description = models.TextField(_("Description"))
+    address = models.TextField(_("Address"))
     map_image = models.ImageField(_('map image'), null=True, blank=True)
 
     def __str__(self):
@@ -119,7 +119,7 @@ class Site(Followable):
 class Court(Followable):
     site = models.ForeignKey(Site)
     admin_group = models.ForeignKey(Group)
-    description = models.TextField(_("text"))
+    description = models.TextField(_("Description"))
 
     SHORT_DESCR_LEN = 20
 
