@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block extra_head %}
+<link href="{% static "css/event.css" %}" rel="stylesheet">
+<link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li><a href="#">Home</a></li>
+  <li class="active">Managed events</li>
+</ol>
+{% endblock %}
+
+{% block main %}
+  {% for object in decoded_list %}
+    {% with filename="dashboard/messages/"|add:object.model|lower|add:".html" %}
+      {% include filename %}
+    {% endwith %}
+  {% endfor %}
+{% endblock %}

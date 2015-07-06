@@ -12,7 +12,9 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url('', include('social.apps.django_app.urls', namespace='social')),
     url('', include('let_me_auth.urls', namespace='let_me_auth')),
-    url('^let/me/', include('let_me_app.urls', namespace='let_me_app'))
+    url('^let/me/', include('let_me_app.urls', namespace='let_me_app')),
+
+    url('^escort/', include('let_me_escort.urls', namespace='let_me_escort')),
 #    url(r'^email/$', 'let_me_app.views.require_email', name='require_email'),
 )
 

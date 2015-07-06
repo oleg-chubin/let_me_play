@@ -1,0 +1,12 @@
+<div class="well">
+  <div class="media">
+    <a class="pull-left" href="#">
+      <img class="media-object" src="{% block "image_url" %} {% endblock %}">
+    </a>
+    <div class="media-body">
+       <h4 class="media-heading">{% block "header" %} {% endblock %}</h4>
+       <p class="text-right">{% block "date" %} {{object.date}} {% endblock %}</p>
+       <p>{% block "description" %} {% endblock %}</p>
+    </div>
+  </div>
+</div>

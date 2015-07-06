@@ -1,0 +1,5 @@
+{% extends 'dashboard/messages/base.html' %}
+{% block "image_url" %} http://placehold.it/100/55C1E7/fff&text=A {% endblock %}
+{% block "header" %}
+    Application {% if object.text == 'created' %} was created {% else %} was updated {% endif %}
+{% endblock %}

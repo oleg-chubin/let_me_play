@@ -1,0 +1,9 @@
+{% extends 'dashboard/messages/base.html' %}
+
+{% block "image_url" %} http://placehold.it/100/e5a547/fff&text=V {% endblock %}
+{% block "header" %}
+    Visit {% if object.text == 'created' %} was created {% else %} was updated {% endif %}
+{% endblock %}
+{% block "description" %}
+  Visit for event {% if object.followable_model == 'Event' %} <a href="{% url "let_me_app:view_event" pk=object.followable %}">xxx</a>{% endif %} was created
+{% endblock %}

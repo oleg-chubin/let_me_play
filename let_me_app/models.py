@@ -72,6 +72,9 @@ ApplicationStatuses = ProposalStatuses
 class Followable(models.Model):
     pass
 
+    def __str__(self):
+        return "followable object {}".format(self.id)
+
 
 class ChatParticipant(models.Model):
     user = models.ForeignKey(UserModel)

@@ -45,6 +45,7 @@ INSTALLED_APPS = (
 
     'let_me_app',
     'let_me_auth',
+    'let_me_escort',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
