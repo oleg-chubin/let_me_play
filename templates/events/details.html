@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load staticfiles %}
+{% load staticfiles let_me_escort %}
 
 {% block extra_head %}
 <link href="{% static "css/event.css" %}" rel="stylesheet">
@@ -18,7 +18,11 @@
 
 {% block main %}
 <h1>
-  {{ object.name }}
+
+  {% followdropdown object "escort/follow_menu.html" %}
+    {{ object.name }}
+  {% endfollowdropdown %}
+
   {% ifequal object.status 1 %}
     {% if is_admin %}
       <div class="ui-group-buttons marginBottom10">
@@ -40,7 +44,7 @@
  <article>
    <h2> Description </h2>
    <p>
-     {{ object.description }}
+     {{ object.description|linebreaksbr }}
    </p>
    <h2> Inventory </h2>
    <ul>
@@ -53,7 +57,9 @@
    {% for visit in object.visit_set.all %}
    <li>
      {% if visit.status == 1 %}
-       {{ visit.user }}
+       {% followdropdown visit.user "escort/follow_menu.html" %}
+         {{ visit.user }}
+       {% endfollowdropdown %}
        {% with visit.user as visitor %}
          {% if is_admin %}
            <div class="ui-group-buttons">
@@ -62,7 +68,11 @@
          {% endif %}
        {% endwith %}
      {% else %}
-       <del>{{ visit.user }}</del>
+       <del>
+         {% followdropdown visit.user "escort/follow_menu.html" %}
+           {{ visit.user }}
+         {% endfollowdropdown %}
+       </del>
      {% endif %}
    </li>
    {% endfor %}

@@ -1,0 +1,9 @@
+{% extends 'dashboard/messages/base.html' %}
+
+{% block "image_url" %} http://placehold.it/50/e53547/fff&text=E {% endblock %}
+{% block "header" %}
+    Event {% if object.text == 'created' %} was created {% else %} was updated {% endif %}
+{% endblock %}
+{% block "description" %}
+  Event <a href="{% url "let_me_app:view_event" pk=object.object.pk %}">{{ object.object.name }} </a> was created
+{% endblock %}

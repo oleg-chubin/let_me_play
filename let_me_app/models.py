@@ -72,6 +72,9 @@ ApplicationStatuses = ProposalStatuses
 class Followable(models.Model):
     pass
 
+    def __str__(self):
+        return "followable object {}".format(self.id)
+
 
 class ChatParticipant(models.Model):
     user = models.ForeignKey(UserModel)
@@ -92,24 +95,34 @@ class Peeper(models.Model):
     followable = models.ForeignKey(Followable, related_name='followers')
     user = models.ForeignKey(UserModel)
 
+    class Meta:
+        unique_together = ('followable', 'user')
 
-class PrivateComment(Followable):
+    def __str__(self):
+        return "{} follows {}".format(self.user, self.followable.id)
+
+
+
+class PrivateComment(models.Model):
     user = models.ForeignKey(UserModel, related_name='my_comments')
     followable = models.ForeignKey(Followable, related_name='users_comments')
     created_at = models.DateTimeField(_('date created'), default=timezone.now)
     text = models.TextField(_("text"))
 
 
-class Changelog(Followable):
+class Changelog(models.Model):
     followable = models.ForeignKey(Followable, related_name='followable_set')
     created_at = models.DateTimeField(_('date created'), default=timezone.now)
     text = models.TextField(_("text"))
 
+    def __str__(self):
+        return "followable {} {}".format(self.followable_id, self.text)
+
 
 class Site(Followable):
     name = models.CharField(max_length=128)
-    description = models.TextField(_("text"))
-    address = models.TextField(_("text"))
+    description = models.TextField(_("Description"))
+    address = models.TextField(_("Address"))
     map_image = models.ImageField(_('map image'), null=True, blank=True)
 
     def __str__(self):
@@ -119,7 +132,7 @@ class Site(Followable):
 class Court(Followable):
     site = models.ForeignKey(Site)
     admin_group = models.ForeignKey(Group)
-    description = models.TextField(_("text"))
+    description = models.TextField(_("Description"))
 
     SHORT_DESCR_LEN = 20
 

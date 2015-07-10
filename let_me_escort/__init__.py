@@ -1,0 +1,1 @@
+default_app_config = 'let_me_escort.apps.EscortAppConfig'
