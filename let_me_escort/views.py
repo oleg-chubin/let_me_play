@@ -4,8 +4,10 @@ Created on Jul 5, 2015
 @author: oleg
 '''
 import json
+from django import http
 from let_me_app import models
 from django.db.models import get_model
+from django.views.generic.base import View as BaseView
 from django.views.generic.list import ListView
 
 class DashboardView(ListView):
@@ -36,3 +38,30 @@ class DashboardView(ListView):
     def get_queryset(self, **kwargs):
         result = super(DashboardView, self).get_queryset(**kwargs)
         return result.filter(followable__followers__user=self.request.user).order_by('-created_at')
+
+
+class FollowMixin(object):
+    def process_object(self, obj):
+        pass
+
+    def post(self, request, *args, **kwargs):
+        query = models.Followable.objects.filter(pk=kwargs['pk'])
+        query = query.select_for_update()
+        objects = query.all()
+        if not objects:
+            return http.HttpResponseNotFound()
+
+        if not self.request.user.is_anonymous():
+            for obj in objects:
+                self.process_object(obj)
+        return http.HttpResponseRedirect(self.request.POST['redirect_to'])
+
+
+class EscortFollowable(FollowMixin, BaseView):
+    def process_object(self, obj):
+        models.Peeper.objects.get_or_create(followable=obj, user=self.request.user)
+
+class StopEscortFollowable(FollowMixin, BaseView):
+    def process_object(self, obj):
+        models.Peeper.objects.filter(followable=obj, user=self.request.user).delete()
+

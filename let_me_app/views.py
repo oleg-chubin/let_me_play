@@ -7,10 +7,10 @@ from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.views.generic.base import View as BaseView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, BaseUpdateView
+from django.views.generic.edit import BaseUpdateView
 from django.views.generic.list import ListView
 
-from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
+from extra_views import CreateWithInlinesView, InlineFormSet
 from extra_views.generic import GenericInlineFormSet
 
 from let_me_app import persistence, forms, models

@@ -4,6 +4,7 @@
 
 {% block extra_head %}
 <link href="{% static "css/event.css" %}" rel="stylesheet">
+<link href="{% static "css/dashboard.css" %}" rel="stylesheet">
 <link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
 {% endblock %}
 
@@ -15,9 +16,11 @@
 {% endblock %}
 
 {% block main %}
+  <div class="qa-message-list" id="wallmessages">
   {% for object in decoded_list %}
     {% with filename="dashboard/messages/"|add:object.model|lower|add:".html" %}
       {% include filename %}
     {% endwith %}
   {% endfor %}
+  </div>
 {% endblock %}

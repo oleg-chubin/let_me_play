@@ -1,0 +1,21 @@
+{{ inner_text }}
+<div class="btn-group show-on-hover">
+  <span data-toggle="dropdown">
+    {% if is_followed %}
+        <i class="glyphicon glyphicon-eye-open"></i>
+    {% else %}
+        <i class="glyphicon glyphicon-eye-close"></i>
+    {% endif %}
+  </span>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <form method="post" action="{{ form_action_url }}">
+        <input type="hidden" name="redirect_to" value="{{ request.path }}">
+        {% csrf_token %}
+      </form>
+      <a href="#" onClick="$(this).parent().find('form').submit()">
+        {% if is_followed %} Not follow {% else %} Follow {% endif %}
+      </a>
+    </li>
+  </ul>
+</div>

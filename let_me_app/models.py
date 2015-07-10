@@ -95,6 +95,13 @@ class Peeper(models.Model):
     followable = models.ForeignKey(Followable, related_name='followers')
     user = models.ForeignKey(UserModel)
 
+    class Meta:
+        unique_together = ('followable', 'user')
+
+    def __str__(self):
+        return "{} follows {}".format(self.user, self.followable.id)
+
+
 
 class PrivateComment(models.Model):
     user = models.ForeignKey(UserModel, related_name='my_comments')
@@ -107,6 +114,9 @@ class Changelog(models.Model):
     followable = models.ForeignKey(Followable, related_name='followable_set')
     created_at = models.DateTimeField(_('date created'), default=timezone.now)
     text = models.TextField(_("text"))
+
+    def __str__(self):
+        return "followable {} {}".format(self.followable_id, self.text)
 
 
 class Site(Followable):
