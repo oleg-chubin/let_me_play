@@ -14,8 +14,8 @@ dist/
 downloads/
 eggs/
 lib/
-media/
-static/
+/media/*
+/static/*
 lib64/
 parts/
 sdist/
