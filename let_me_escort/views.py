@@ -29,7 +29,7 @@ class DashboardView(ListView):
         objects = {}
         for model_name, pks in object_by_models.items():
             model = get_model(model_name)
-            objects[model_name] = {i.pk: i for i in model.objects.filter(pk__in=pks)}
+            objects[model_name] = {i.pk: i for i in model.objects.filter(pk__in=pks).select_related()}
         for data in decoded_list:
             data['object'] = objects[data['model']][data['id']]
         result['decoded_list'] = decoded_list

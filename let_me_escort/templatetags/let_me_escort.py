@@ -5,13 +5,35 @@ Created on Jul 4, 2015
 '''
 from django import template
 from django.core.urlresolvers import reverse
+from let_me_app import models
 
 register = template.Library()
 
 
+URL_MAP = {
+  models.Event: "let_me_app:view_event",
+  models.Court: "let_me_app:view_court",
+}
+
 @register.filter
 def as_status(value, status_choices):
     return dict(status_choices)[value]
+
+
+@register.filter
+def show_followable(followable):
+    for related in followable._meta.get_all_related_objects():
+        if related.field.primary_key:
+            try:
+                return getattr(followable, related.get_accessor_name())
+            except related.model.DoesNotExist:
+                pass
+
+
+@register.filter
+def detail_url(followable):
+    url_name = URL_MAP.get(followable.__class__)
+    return reverse(url_name, kwargs={'pk': followable.id}) if url_name else "#"
 
 
 #@register.inclusion_tag('escort/follow_menu.html')

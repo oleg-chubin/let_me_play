@@ -1,9 +1,16 @@
 {% extends 'dashboard/messages/base.html' %}
 
+{% load let_me_escort %}
+
 {% block "image_url" %} http://placehold.it/50/15a547/fff&text=P {% endblock %}
 {% block "header" %}
     User {{ object.object.user }} now follows {{ object.followable_model }}
 {% endblock %}
 {% block "description" %}
-    User {{ object.object.user }} now follows {{ object.followable_model }}
+  {% with followed=object.object.followable|show_followable %}
+    User {{ object.object.user }} now follows
+    <a href="{{ followed|detail_url }}">
+      {{ followed }}
+    </a>
+  {% endwith %}
 {% endblock %}
