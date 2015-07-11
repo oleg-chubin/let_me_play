@@ -22,6 +22,8 @@ def as_status(value, status_choices):
 
 @register.filter
 def show_followable(followable):
+    if not followable:
+        return "Unknown"
     for related in followable._meta.get_all_related_objects():
         if related.field.primary_key:
             try:

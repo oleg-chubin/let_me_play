@@ -1,0 +1,21 @@
+{% extends 'dashboard/messages/base.html' %}
+
+{% block "image_url" %} http://placehold.it/50/e53547/fff&text=C {% endblock %}
+{% block "header" %}
+    Court {% if object.text == 'created' %} was created {% else %} was updated {% endif %}
+{% endblock %}
+{% block "description" %}
+  {% if object.text == 'created' %}
+    There is new court
+      <a href="{% url "let_me_app:view_court" pk=object.object.pk %}">
+        {{ object.object.name }}
+      </a>
+    for site
+      <a href="#"> {% comment %}{% url "let_me_app:view_court" pk=object.object.court_id %}">{% endcomment %}
+        {{ object.object.name }}
+      </a>
+
+  {% else %}
+      Court was updated
+  {% endif %}
+{% endblock %}
