@@ -8,6 +8,12 @@ from django.core.urlresolvers import reverse
 
 register = template.Library()
 
+
+@register.filter
+def as_status(value, status_choices):
+    return dict(status_choices)[value]
+
+
 #@register.inclusion_tag('escort/follow_menu.html')
 #def dropdown_follow_by_user(followable, user, redirect_to):
 #    is_followed = False

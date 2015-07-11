@@ -5,5 +5,17 @@
     Event {% if object.text == 'created' %} was created {% else %} was updated {% endif %}
 {% endblock %}
 {% block "description" %}
-  Event <a href="{% url "let_me_app:view_event" pk=object.object.pk %}">{{ object.object.name }} </a> was created
+  {% if object.text == 'created' %}
+    There is new event
+      <a href="{% url "let_me_app:view_event" pk=object.object.pk %}">
+        {{ object.object.name }}
+      </a>
+    for court
+      <a href="{% url "let_me_app:view_court" pk=object.object.court_id %}">
+        {{ object.object.court }}
+      </a>
+
+  {% else %}
+      Event was updated
+  {% endif %}
 {% endblock %}

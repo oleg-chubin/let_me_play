@@ -2,8 +2,8 @@
 
 {% block "image_url" %} http://placehold.it/50/15a547/fff&text=P {% endblock %}
 {% block "header" %}
-    object {{object.followable_model}} has new follower
+    User {{ object.object.user }} now follows {{ object.followable_model }}
 {% endblock %}
 {% block "description" %}
-  From now {{object.object.user}} follows {{object.followable_model}}
+    User {{ object.object.user }} now follows {{ object.followable_model }}
 {% endblock %}
