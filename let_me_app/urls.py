@@ -48,6 +48,13 @@ urlpatterns = patterns('',
         views.DismissVisitorEventView.as_view(),
         name="dismiss_visit"),
 
+    url(r'^cancel/proposal/(?P<user>[0-9]+)/for/event/(?P<event>[0-9]+)/$',
+        views.CancelProposalEventView.as_view(),
+        name="cancel_proposal"),
+    url(r'^create/proposal/for/event/(?P<event>[0-9]+)/$',
+        views.CreateProposalView.as_view(),
+        name="create_proposal"),
+
     url(r'^view/chat/list/$', views.ChatList.as_view(), name="chat_list"),
     url(r'^view/chat/(?P<pk>[0-9]+)/$',
         views.ChatDetails.as_view(), name="chat_details"),

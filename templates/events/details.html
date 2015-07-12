@@ -94,6 +94,25 @@
        </li>
      {% endfor %}
      </ul>
+
+     <h2> Proposals </h2>
+     <ul>
+     {% for proposal in object.proposal_set.all %}
+       <li>
+         {% if proposal.status == PROPOSAL_STATUSES.ACTIVE %}
+           {{ proposal.user.email }}
+           <div class="ui-group-buttons">
+             {% with invitee=proposal.user %}
+               {% include "events/buttons/cancel_proposal.html" %}
+             {% endwith %}
+           </div>
+         {% else %}
+           <s> {{ proposal.user.email }} </s>
+         {% endif %}
+       </li>
+     {% endfor %}
+     </ul>
+
   {% endif %}
 
 </article>
@@ -109,5 +128,10 @@
   {% endifequal %}
 
 {% include "events/modals/apply_for_event.html" %}
+{% include "events/modals/propose_event.html" %}
 
+{% endblock %}
+
+{% block extra_scripts %}
+  {% include "autocomplete_light/static.html" %}
 {% endblock %}

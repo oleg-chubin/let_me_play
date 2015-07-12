@@ -99,10 +99,12 @@ class EventView(DetailView):
     def get_context_data(self, **kwargs):
         result = super(EventView, self).get_context_data(**kwargs)
         event = result['object']
-        result['event_actions'] = persistence.get_event_actions_for_user(
-            self.request.user, event)
-        result['is_admin'] = event.court.admin_group.user_set.filter(
+        is_admin = event.court.admin_group.user_set.filter(
             email=self.request.user.email).exists()
+        result['event_actions'] = persistence.get_event_actions_for_user(
+            self.request.user, event, is_admin=is_admin)
+        result['is_admin'] = is_admin
+        result['proposal_form'] = forms.EventProposalForm()
         result['active_applications'] =event.application_set.filter(
             status=models.ApplicationStatuses.ACTIVE
         )
@@ -212,6 +214,35 @@ class CreateApplicationView(BaseView):
         )
 
 
+class CreateProposalView(BaseView):
+    def post(self, request, *args, **kwargs):
+        if request.user.is_anonymous():
+            return http.HttpResponseForbidden()
+
+        events = models.Event.objects.filter(id=kwargs['event'])
+        if not events:
+            return http.HttpResponseNotFound()
+
+        if not events[0].court.admin_group.user_set.filter(id=request.user.id).exists():
+            return http.HttpResponseForbidden()
+
+        form = forms.EventProposalForm(data=request.POST)
+
+        if form.is_valid():
+            comment = form.cleaned_data['comment']
+            for user in form.cleaned_data['users']:
+                models.Proposal.objects.get_or_create(
+                    event=events[0],
+                    user=user,
+                    status=models.ApplicationStatuses.ACTIVE,
+                    defaults={'comment':comment}
+                )
+
+        return http.HttpResponseRedirect(
+            reverse('let_me_app:view_event', kwargs={'pk': kwargs['event']})
+        )
+
+
 class DeclineProposalEventView(EventActionMixin, BaseView):
     def get_queryset(self, request, *args, **kwargs):
         return models.Proposal.objects.filter(
@@ -292,6 +323,23 @@ class DismissVisitorEventView(EventActionMixin, BaseView):
     def process_object(self, visit):
         visit.status = models.VisitStatuses.DECLINED
         visit.save()
+
+
+class CancelProposalEventView(EventActionMixin, BaseView):
+    def check_permissions(self, request, *args, **kwargs):
+        return Group.objects.filter(
+            court__event=kwargs['event'], user=request.user).exists()
+
+    def get_queryset(self, request, *args, **kwargs):
+        return models.Proposal.objects.filter(
+            event_id=kwargs['event'],
+            user=kwargs['user'],
+            status=models.ProposalStatuses.ACTIVE
+        )
+
+    def process_object(self, proposal):
+        proposal.status = models.ProposalStatuses.CANCELED
+        proposal.save()
 
 
 class CancelEventView(EventActionMixin, BaseView):
