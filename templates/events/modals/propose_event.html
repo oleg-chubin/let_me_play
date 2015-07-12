@@ -1,0 +1,25 @@
+{% extends "events/modals/base.html" %}
+
+
+{% block modal_id %}modalProposeEvent{% endblock %}
+{% block modal_labelledby %}modalProposeEvent{% endblock %}
+
+{% block modal_content %}
+  <form method="post" enctype="multipart/form-data" action="{% url 'let_me_app:create_proposal' event=object.id %}">
+    {% csrf_token %}
+    {{ block.super }}
+</form>
+  {% endblock %}
+
+{% block modal_title %} Propose event {% endblock %}
+{% block modal_body %}
+  <div class="form-group">
+    {{ proposal_form.users }}
+  </div>
+  <div class="form-group">
+    <textarea class="form-control" type="textarea" id="comment" name="comment" placeholder="Message" maxlength="140" rows="7"></textarea>
+  </div>
+{% endblock %}
+{% block modal_footer %}
+    <button type="submit" class="btn btn-primary">Propose event</button>
+{% endblock %}

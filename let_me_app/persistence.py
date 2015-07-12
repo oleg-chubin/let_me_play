@@ -6,7 +6,7 @@ Created on Jun 21, 2015
 from . import models
 
 
-def get_event_actions_for_user(user, event_object):
+def get_event_actions_for_user(user, event_object, is_admin=False):
     if user.is_anonymous():
         return []
     result = []
@@ -22,13 +22,19 @@ def get_event_actions_for_user(user, event_object):
         status=models.VisitStatuses.PENDING
     )
     visit_exists = visits.exists()
+
+    if is_admin:
+        result.append('propose_event')
+
     if proposals.count():
         result.extend(['decline_proposal', 'accept_proposal'])
     if applications.count():
         result.extend(["cancel_application"])
     if visit_exists:
         result.append('cancel_visit')
-    return result or ['apply_for_event']
+    if not set(result) - set(['propose_event']):
+        result.append('apply_for_event')
+    return result
 
 
 def get_my_chats(user):
