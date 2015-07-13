@@ -1,8 +1,13 @@
+import time
+
 from django.contrib.auth.models import Group
 from django.utils.translation import ugettext as _
 from django.db import models
+from django.db.models.signals import pre_save, post_save
+from django.dispatch import receiver
 from django.utils import timezone
 from django.conf import settings
+
 
 
 UserModel = settings.AUTH_USER_MODEL
@@ -131,7 +136,7 @@ class Site(Followable):
 
 class Court(Followable):
     site = models.ForeignKey(Site)
-    admin_group = models.ForeignKey(Group)
+    admin_group = models.ForeignKey(Group, blank=True, null=True)
     description = models.TextField(_("Description"))
 
     SHORT_DESCR_LEN = 20
@@ -141,6 +146,21 @@ class Court(Followable):
         if len(description) > self.SHORT_DESCR_LEN:
             description = "{}...".format(description)
         return "{} ({})".format(self.site, description)
+
+
+@receiver(pre_save, sender=Court)
+def admin_group_creator(sender, **kwargs):
+    if not kwargs['instance'].admin_group:
+        admin_group = Group.objects.create(name="court_admin_group_%s" % time.time())
+        kwargs['instance'].admin_group = admin_group
+
+
+@receiver(post_save, sender=Court)
+def admin_group_updater(sender, **kwargs):
+    if kwargs['created']:
+        kwargs['instance'].admin_group.name = "court_admin_group_%s" % kwargs['instance'].id
+        kwargs['instance'].admin_group.save()
+
 
 
 class Occasion(models.Model):
