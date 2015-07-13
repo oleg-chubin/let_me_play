@@ -1,6 +1,0 @@
-<form method="post" action="{% url 'let_me_app:accept_application' user=applicant.id event=object.id %}">
-{% csrf_token %}
-  <button type="submit" class="btn btn-primary">
-   <span class="glyphicon glyphicon-thumbs-up"></span>
-  </button>
-</form>

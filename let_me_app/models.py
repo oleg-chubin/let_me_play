@@ -9,7 +9,6 @@ from django.utils import timezone
 from django.conf import settings
 
 
-
 UserModel = settings.AUTH_USER_MODEL
 
 

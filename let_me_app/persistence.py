@@ -6,6 +6,10 @@ Created on Jun 21, 2015
 from . import models
 
 
+def get_court_actions_for_user(user, court_object, is_admin=False):
+    return ['add_to_admin_group']
+
+
 def get_event_actions_for_user(user, event_object, is_admin=False):
     if user.is_anonymous():
         return []

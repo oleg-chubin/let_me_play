@@ -24,3 +24,7 @@ class ChatMessageForm(Form):
 class EventProposalForm(Form):
     users = BootstrapModelMultipleChoiceField('UserAutocomplete')
     comment = CharField()
+
+
+class GroupAdminForm(Form):
+    users = BootstrapModelMultipleChoiceField('UserAutocomplete')
