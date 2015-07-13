@@ -1,0 +1,21 @@
+{% extends "events/modals/base.html" %}
+
+{% block modal_id %}modalAddToAdminGroup{% endblock %}
+{% block modal_labelledby %}modalAddToAdminGroup{% endblock %}
+
+{% block modal_content %}
+  <form method="post" enctype="multipart/form-data" action="{% url 'let_me_app:add_user_to_admin_group' court=object.id %}">
+    {% csrf_token %}
+    {{ block.super }}
+</form>
+  {% endblock %}
+
+{% block modal_title %} Add User to admin group {% endblock %}
+{% block modal_body %}
+  <div class="form-group">
+    {{ group_admin_form.users }}
+  </div>
+{% endblock %}
+{% block modal_footer %}
+    <button type="submit" class="btn btn-primary">Add User</button>
+{% endblock %}

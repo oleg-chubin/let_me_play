@@ -62,6 +62,10 @@ urlpatterns = patterns('',
         views.AddUserToAdminGroupView.as_view(),
         name="add_user_to_admin_group"),
 
+    url(r'^view/site/(?P<pk>[0-9]+)/$',
+        views.SiteDetailView.as_view(),
+        name='view_site'),
+
 
     url(r'^view/chat/list/$', views.ChatList.as_view(), name="chat_list"),
     url(r'^view/chat/(?P<pk>[0-9]+)/$',

@@ -390,6 +390,20 @@ class CourtDetailView(DetailView):
         return result
 
 
+class SiteDetailView(DetailView):
+    template_name = 'sites/details.html'
+    model = models.Site
+
+    def get_context_data(self, **kwargs):
+        result = super(SiteDetailView, self).get_context_data(**kwargs)
+        is_admin = self.request.user.is_staff
+
+        result['site_actions'] = []#persistence.get_court_actions_for_user(
+#            self.request.user, court, is_admin=is_admin)
+        result['is_admin'] = is_admin
+        return result
+
+
 class CourtActionMixin(EventActionMixin):
     def get_success_url(self, **kwargs):
         return reverse('let_me_app:view_court', kwargs={'pk': self.kwargs['court']})

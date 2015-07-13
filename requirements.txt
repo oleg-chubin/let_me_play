@@ -11,3 +11,5 @@ sorl-thumbnail==12.2
 django-extra-views==0.6.5
 factory-boy==2.5.2
 django-autocomplete-light==2.2.3
+django-osm-field
+django-leaflet

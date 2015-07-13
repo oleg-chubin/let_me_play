@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% load staticfiles let_me_escort leaflet_tags %}
+
+
+{% block extra_head %}
+    {% leaflet_css %}
+    <link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li><a href="#">Home</a></li>
+  <li><a href="#">Site</a></li>
+  <li class="active">Court</li>
+</ol>
+{% endblock %}
+
+{% block main %}
+<h1>
+  {% followdropdown object "escort/follow_menu.html" %}
+    {{ object.name }}
+  {% endfollowdropdown %}
+</h1>
+ {% leaflet_map "yourmap" callback="window.map_init_basic" %}
+ <article>
+   <h2> Address </h2>
+   <p>
+     {{ object.address|linebreaksbr }}
+   </p>
+   <h2> Description </h2>
+   <p>
+     {{ object.description|linebreaksbr }}
+   </p>
+   <h2> Courts </h2>
+   <ul>
+     {% for court in object.court_set.all %}
+       <li>
+         {% followdropdown court "escort/follow_menu.html" %}
+           <a href="{% url "let_me_app:view_court" pk=court.id %}">
+             {{ court.name }} ({{ event.start_at }})
+           </a>
+         {% endfollowdropdown %}
+       </li>
+     {% endfor %}
+    </ul>
+ </article>
+
+ <div class="ui-group-buttons pull-right marginBottom10">
+   {% for action in court_actions %}
+     {% include "courts/buttons/"|add:action|add:'.html' %}
+     {% if not forloop.last %}
+       <div class="or"></div>
+     {% endif %}
+   {% endfor %}
+ </div>
+
+{% include "courts/modals/add_to_admin_group.html" %}
+
+{% endblock %}
+
+{% block extra_scripts %}
+  {% include "autocomplete_light/static.html" %}
+  {% leaflet_js %}
+  <script type="text/javascript">
+      function map_init_basic (map, options) {
+          L.marker([{{ object.geo_point.1 }}, {{ object.geo_point.0 }}]).addTo(map);
+          map.panTo(new L.LatLng({{ object.geo_point.1 }}, {{ object.geo_point.0 }}));
+      }
+  </script>
+{% endblock %}

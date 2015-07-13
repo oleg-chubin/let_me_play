@@ -42,6 +42,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'annoying',
     'sorl.thumbnail',
+    'django.contrib.gis',
+    'leaflet',
     'social.apps.django_app.default',
 
     'let_me_app',
@@ -209,6 +211,13 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 DATABASES['default'] = dj_database_url.config()
 
 AUTH_USER_MODEL = 'let_me_auth.User'
+
+LEAFLET_CONFIG = {
+    'DEFAULT_CENTER': (6.0, 45.0),
+    'DEFAULT_ZOOM': 16,
+    'MIN_ZOOM': 3,
+    'MAX_ZOOM': 18,
+}
 
 try:
     from .local_settings import *
