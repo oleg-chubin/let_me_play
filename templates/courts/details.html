@@ -3,6 +3,7 @@
 {% load staticfiles let_me_escort %}
 
 {% block extra_head %}
+<link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -54,20 +55,29 @@
           {% followdropdown group_user "escort/follow_menu.html" %}
             {{ group_user.email }}
           {% endfollowdropdown %}
+           <div class="ui-group-buttons">
+             {% with user=group_user %}
+               {% include "courts/buttons/remove_from_admin.html" %}
+             {% endwith %}
+           </div>
         </li>
         {% endfor %}
     {% endif %}
  </article>
 
  <div class="ui-group-buttons pull-right marginBottom10">
-   {% for action in event_actions %}
-     {% include "events/buttons/"|add:action|add:'.html' %}
+   {% for action in court_actions %}
+     {% include "courts/buttons/"|add:action|add:'.html' %}
      {% if not forloop.last %}
        <div class="or"></div>
      {% endif %}
    {% endfor %}
  </div>
 
-{% include "events/modals/apply_for_event.html" %}
+{% include "courts/modals/add_to_admin_group.html" %}
 
+{% endblock %}
+
+{% block extra_scripts %}
+  {% include "autocomplete_light/static.html" %}
 {% endblock %}

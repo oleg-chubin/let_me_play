@@ -152,6 +152,9 @@ class UserManagedEventListView(ListView):
         return result.filter(court__admin_group__user=self.request.user).order_by('-start_at')
 
 class EventActionMixin(object):
+    def get_success_url(self, **kwargs):
+        return reverse('let_me_app:view_event', kwargs={'pk': kwargs['event']})
+
     def get_queryset(self, request, *args, **kwargs):
         pass
 
@@ -174,9 +177,7 @@ class EventActionMixin(object):
         for obj in objects:
             self.process_object(obj)
 
-        return http.HttpResponseRedirect(
-            reverse('let_me_app:view_event', kwargs={'pk': kwargs['event']})
-        )
+        return http.HttpResponseRedirect(self.get_success_url(**kwargs))
 
 
 class CancelApplicationView(EventActionMixin, BaseView):
@@ -379,7 +380,58 @@ class CourtDetailView(DetailView):
     def get_context_data(self, **kwargs):
         result = super(CourtDetailView, self).get_context_data(**kwargs)
         court = result['object']
-        result['is_admin'] = court.admin_group.user_set.filter(
-            email=self.request.user.email).exists()
-#        result['event_actions'] = persistence.get_event_actions_for_user(self.request.user, event)
+        is_admin = result['is_admin'] = court.admin_group.user_set.filter(
+            email=self.request.user.email).exists() or self.request.user.is_staff
+
+        result['court_actions'] = persistence.get_court_actions_for_user(
+            self.request.user, court, is_admin=is_admin)
+        result['is_admin'] = is_admin
+        result['group_admin_form'] = forms.GroupAdminForm()
         return result
+
+
+class CourtActionMixin(EventActionMixin):
+    def get_success_url(self, **kwargs):
+        return reverse('let_me_app:view_court', kwargs={'pk': self.kwargs['court']})
+
+    def get_queryset(self, request, *args, **kwargs):
+        return models.Court.objects.filter(pk=kwargs['court'])
+
+    def process_object(self, obj):
+        pass
+
+    def check_permissions(self, request, *args, **kwargs):
+        return Group.objects.filter(
+            court=self.kwargs['court'], user=request.user).exists() or self.request.user.is_staff
+
+
+class RemoveFromAdminGroup(CourtActionMixin, BaseView):
+    def get_queryset(self, request, *args, **kwargs):
+        return models.Court.objects.filter(pk=kwargs['court'])
+
+    def process_object(self, obj):
+        obj.admin_group.user_set.remove(self.kwargs['user'])
+
+
+class AddUserToAdminGroupView(BaseView):
+    def post(self, request, *args, **kwargs):
+        if request.user.is_anonymous():
+            return http.HttpResponseForbidden()
+
+        courts = models.Court.objects.filter(id=kwargs['court'])
+        if not courts:
+            return http.HttpResponseNotFound()
+
+        if not courts[0].admin_group.user_set.filter(id=request.user.id).exists():
+            return http.HttpResponseForbidden()
+
+        form = forms.GroupAdminForm(data=request.POST)
+
+        if form.is_valid():
+            if form.cleaned_data['users']:
+                courts[0].admin_group.user_set.add(*form.cleaned_data['users'])
+
+        return http.HttpResponseRedirect(
+            reverse('let_me_app:view_court', kwargs={'pk': kwargs['court']})
+        )
+

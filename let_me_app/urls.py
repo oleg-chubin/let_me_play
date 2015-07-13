@@ -55,6 +55,14 @@ urlpatterns = patterns('',
         views.CreateProposalView.as_view(),
         name="create_proposal"),
 
+    url(r'^remove/(?P<user>[0-9]+)/from/admingroup/for/court/(?P<court>[0-9]+)/$',
+        views.RemoveFromAdminGroup.as_view(),
+        name="remove_from_admin_group"),
+    url(r'^add/users/to/admingroup/for/court/(?P<court>[0-9]+)/$',
+        views.AddUserToAdminGroupView.as_view(),
+        name="add_user_to_admin_group"),
+
+
     url(r'^view/chat/list/$', views.ChatList.as_view(), name="chat_list"),
     url(r'^view/chat/(?P<pk>[0-9]+)/$',
         views.ChatDetails.as_view(), name="chat_details"),
