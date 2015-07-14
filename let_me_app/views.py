@@ -436,7 +436,8 @@ class AddUserToAdminGroupView(BaseView):
         if not courts:
             return http.HttpResponseNotFound()
 
-        if not courts[0].admin_group.user_set.filter(id=request.user.id).exists():
+        if not (courts[0].admin_group.user_set.filter(id=request.user.id).exists()
+                or self.request.user.is_staff):
             return http.HttpResponseForbidden()
 
         form = forms.GroupAdminForm(data=request.POST)
