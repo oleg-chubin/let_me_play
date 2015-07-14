@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 
-{% load staticfiles let_me_escort %}
+{% load staticfiles let_me_escort leaflet_tags %}
 
 {% block extra_head %}
-<link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
+  {% leaflet_css %}
+  <link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -15,40 +16,41 @@
 {% endblock %}
 
 {% block main %}
-<h1>
-  {% followdropdown object "escort/follow_menu.html" %}
-    {{ object.site.name }} court details
-  {% endfollowdropdown %}
-</h1>
- <img src="{{ MEDIA_URL }}{{object.site.map_image}}" alt="map" class="pull-left img-responsive postImg img-thumbnail margin10">
- <article>
-   <h2> Description </h2>
-   <p>
-     {{ object.description|linebreaksbr }}
-   </p>
-   <h2> Events </h2>
-   <ul>
-     {% for event in object.event_set.all %}
-     <li>
-
-     {% followdropdown event "escort/follow_menu.html" %}
-       <a href="{% url "let_me_app:view_event" pk=event.id %}"> {{ event.name }} ({{ event.start_at }}) </a>
-       {% ifequal event.status 1 %}
-         <span class="label label-success">Pending</span>
-       {% else %}
-         {% ifequal event.status 2 %}
-           <span class="label label-primary">Completed</span>
-         {% else %}
-           <span class="label label-default">Cancelled</span>
-         {% endifequal %}
-       {% endifequal %}
-     {% endfollowdropdown %}
-
-     </li>
-     {% endfor %}
+<div class="row-fluid">
+  <div class="col-md-6">
+    {% leaflet_map "yourmap" callback="window.map_init_basic" %}
+  </div>
+  <div class="col-md-6">
+    <h2>
+      {% followdropdown object "escort/follow_menu.html" %}
+        {{ object.site.name }}
+      {% endfollowdropdown %}
+    </h2>
+    <h3> Description </h3>
+    <p>
+      {{ object.description|linebreaksbr }}
+    </p>
+    <h3> Events </h3>
+    <ul>
+      {% for event in object.event_set.all %}
+        <li>
+          {% followdropdown event "escort/follow_menu.html" %}
+            <a href="{% url "let_me_app:view_event" pk=event.id %}"> {{ event.name }} ({{ event.start_at }}) </a>
+            {% ifequal event.status 1 %}
+              <span class="label label-success">Pending</span>
+            {% else %}
+              {% ifequal event.status 2 %}
+                <span class="label label-primary">Completed</span>
+              {% else %}
+                <span class="label label-default">Cancelled</span>
+              {% endifequal %}
+            {% endifequal %}
+          {% endfollowdropdown %}
+        </li>
+      {% endfor %}
     </ul>
     {% if is_admin %}
-      <h2> Admin group </h2>
+      <h3> Admin group </h3>
       <ul>
         {% for group_user in object.admin_group.user_set.all %}
         <li>
@@ -63,16 +65,18 @@
         </li>
         {% endfor %}
     {% endif %}
- </article>
 
- <div class="ui-group-buttons pull-right marginBottom10">
-   {% for action in court_actions %}
-     {% include "courts/buttons/"|add:action|add:'.html' %}
-     {% if not forloop.last %}
-       <div class="or"></div>
-     {% endif %}
-   {% endfor %}
- </div>
+    <div class="ui-group-buttons pull-right marginBottom10">
+      {% for action in court_actions %}
+        {% include "courts/buttons/"|add:action|add:'.html' %}
+        {% if not forloop.last %}
+          <div class="or"></div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
 
 {% include "courts/modals/add_to_admin_group.html" %}
 
@@ -80,4 +84,11 @@
 
 {% block extra_scripts %}
   {% include "autocomplete_light/static.html" %}
+  {% leaflet_js %}
+  <script type="text/javascript">
+      function map_init_basic (map, options) {
+          L.marker([{{ object.site.geo_point.1 }}, {{ object.site.geo_point.0 }}]).addTo(map);
+          map.panTo(new L.LatLng({{ object.site.geo_point.1 }}, {{ object.site.geo_point.0 }}));
+      }
+  </script>
 {% endblock %}
