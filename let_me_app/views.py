@@ -14,6 +14,7 @@ from extra_views import CreateWithInlinesView, InlineFormSet
 from extra_views.generic import GenericInlineFormSet
 
 from let_me_app import persistence, forms, models
+from django.db import transaction
 
 
 
@@ -164,6 +165,7 @@ class EventActionMixin(object):
     def check_permissions(self, request, *args, **kwargs):
         return True
 
+    @transaction.atomic
     def post(self, request, *args, **kwargs):
         if not self.check_permissions(request, *args, **kwargs):
             return http.HttpResponseForbidden()
@@ -194,6 +196,7 @@ class CancelApplicationView(EventActionMixin, BaseView):
 
 
 class CreateApplicationView(BaseView):
+    @transaction.atomic
     def post(self, request, *args, **kwargs):
         if request.user.is_anonymous():
             return http.HttpResponseForbidden()
@@ -216,6 +219,7 @@ class CreateApplicationView(BaseView):
 
 
 class CreateProposalView(BaseView):
+    @transaction.atomic
     def post(self, request, *args, **kwargs):
         if request.user.is_anonymous():
             return http.HttpResponseForbidden()
@@ -428,6 +432,7 @@ class RemoveFromAdminGroup(CourtActionMixin, BaseView):
 
 
 class AddUserToAdminGroupView(BaseView):
+    @transaction.atomic
     def post(self, request, *args, **kwargs):
         if request.user.is_anonymous():
             return http.HttpResponseForbidden()

@@ -9,6 +9,7 @@ from let_me_app import models
 from django.db.models import get_model
 from django.views.generic.base import View as BaseView
 from django.views.generic.list import ListView
+from django.db import transaction
 
 class DashboardView(ListView):
     model = models.Changelog
@@ -44,6 +45,7 @@ class FollowMixin(object):
     def process_object(self, obj):
         pass
 
+    @transaction.atomic
     def post(self, request, *args, **kwargs):
         query = models.Followable.objects.filter(pk=kwargs['pk'])
         query = query.select_for_update()
