@@ -1,131 +1,132 @@
 {% extends 'base.html' %}
 
-{% load staticfiles let_me_escort %}
+{% load staticfiles let_me_escort leaflet_tags %}
 
 {% block extra_head %}
-<link href="{% static "css/event.css" %}" rel="stylesheet">
-<link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
+  {% leaflet_css %}
+  <link href="{% static "css/event.css" %}" rel="stylesheet">
+  <link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block breadcrumbs %}
-<ol class="breadcrumb">
-  <li><a href="#">Home</a></li>
-  <li><a href="#">Site</a></li>
-  <li><a href="{% url 'let_me_app:view_court' pk=object.court_id %}">Court</a></li>
-  <li class="active">Event</li>
-</ol>
+  <ol class="breadcrumb">
+    <li><a href="#">Home</a></li>
+    <li><a href="{% url 'let_me_app:view_site' pk=object.court.site_id %}">Site</a></li>
+    <li><a href="{% url 'let_me_app:view_court' pk=object.court_id %}">Court</a></li>
+    <li class="active">Event</li>
+  </ol>
 {% endblock %}
 
 {% block main %}
-<h1>
-
-  {% followdropdown object "escort/follow_menu.html" %}
-    {{ object.name }}
-  {% endfollowdropdown %}
-
-  {% ifequal object.status 1 %}
-    {% if is_admin %}
-      <div class="ui-group-buttons marginBottom10">
-        {% include "events/buttons/complete_event.html" %}
-        <div class="or"></div>
-        {% include "events/buttons/cancel_event.html" %}
-      </div>
-    {% endif %}
-  {% else %}
-     {% ifequal object.status 2 %}
-       <span class="label label-primary">Completed</span>
-     {% else %}
-       <span class="label label-default">Cancelled</span>
-     {% endifequal %}
-  {% endifequal %}
-
-</h1>
- <img src="{{ MEDIA_URL }}{{object.court.site.map_image}}" alt="court map" class="pull-left img-responsive postImg img-thumbnail margin10">
- <article>
-   <h2> Description </h2>
-   <p>
-     {{ object.description|linebreaksbr }}
-   </p>
-   <h2> Inventory </h2>
-   <ul>
-   {% for inventory in object.inventory_list.inventory_set.all %}
-   <li> {{ inventory.equipment }} ({{ inventory.amount }}) </li>
-   {% endfor %}
-   </ul>
-   <h2> Visitors </h2>
-   <ul>
-   {% for visit in object.visit_set.all %}
-   <li>
-     {% if visit.status == 1 %}
-       {% followdropdown visit.user "escort/follow_menu.html" %}
-         {{ visit.user }}
-       {% endfollowdropdown %}
-       {% with visit.user as visitor %}
-         {% if is_admin %}
-           <div class="ui-group-buttons">
-             {% include "events/buttons/dismiss_visit.html" %}
-           </div>
-         {% endif %}
-       {% endwith %}
-     {% else %}
-       <del>
-         {% followdropdown visit.user "escort/follow_menu.html" %}
-           {{ visit.user }}
-         {% endfollowdropdown %}
-       </del>
-     {% endif %}
-   </li>
-   {% endfor %}
-   </ul>
-   {% if is_admin %}
-     <h2> Applications </h2>
-     <ul>
-     {% for application in active_applications %}
-       <li>
-         {{ application.user.email }} ({{ application.comment }})
-
-         <div class="ui-group-buttons marginBottom10">
-           {% with application.user as applicant %}
-              {% include "events/buttons/accept_application.html" %}
-           {% endwith %}
-           <div class="or"></div>
-           {% include "events/buttons/decline_application.html" %}
-         </div>
-       </li>
-     {% endfor %}
-     </ul>
-
-     <h2> Proposals </h2>
-     <ul>
-     {% for proposal in object.proposal_set.all %}
-       <li>
-         {% if proposal.status == PROPOSAL_STATUSES.ACTIVE %}
-           {{ proposal.user.email }}
-           <div class="ui-group-buttons">
-             {% with invitee=proposal.user %}
-               {% include "events/buttons/cancel_proposal.html" %}
-             {% endwith %}
-           </div>
-         {% else %}
-           <s> {{ proposal.user.email }} </s>
-         {% endif %}
-       </li>
-     {% endfor %}
-     </ul>
-
-  {% endif %}
-
-</article>
-  {% ifequal object.status 1 %}
-    <div class="ui-group-buttons pull-right marginBottom10">
-      {% for action in event_actions %}
-        {% include "events/buttons/"|add:action|add:'.html' %}
-        {% if not forloop.last %}
-          <div class="or"></div>
+<div class="row-fluid">
+  <div class="col-md-6">
+    {% leaflet_map "yourmap" callback="window.map_init_basic" %}
+  </div>
+  <div class="col-md-6">
+    <h2>
+      {% followdropdown object "escort/follow_menu.html" %}
+        {{ object.name }}
+      {% endfollowdropdown %}
+      {% ifequal object.status 1 %}
+        {% if is_admin %}
+          <div class="ui-group-buttons marginBottom10">
+            {% include "events/buttons/complete_event.html" %}
+            <div class="or"></div>
+            {% include "events/buttons/cancel_event.html" %}
+          </div>
         {% endif %}
+      {% else %}
+         {% ifequal object.status 2 %}
+           <span class="label label-primary">Completed</span>
+         {% else %}
+           <span class="label label-default">Cancelled</span>
+         {% endifequal %}
+      {% endifequal %}
+    </h2>
+    <h3> Description </h3>
+    <p>
+      {{ object.description|linebreaksbr }}
+    </p>
+    <h3> Inventory </h3>
+    <ul>
+      {% for inventory in object.inventory_list.inventory_set.all %}
+        <li> {{ inventory.equipment }} ({{ inventory.amount }}) </li>
       {% endfor %}
-    </div>
-  {% endifequal %}
+    </ul>
+    <h3> Visitors </h3>
+    <ul>
+      {% for visit in object.visit_set.all %}
+        <li>
+          {% if visit.status == 1 %}
+            {% followdropdown visit.user "escort/follow_menu.html" %}
+              {{ visit.user }}
+            {% endfollowdropdown %}
+            {% with visit.user as visitor %}
+              {% if is_admin %}
+                <div class="ui-group-buttons">
+                  {% include "events/buttons/dismiss_visit.html" %}
+                </div>
+              {% endif %}
+            {% endwith %}
+          {% else %}
+            <del>
+              {% followdropdown visit.user "escort/follow_menu.html" %}
+                {{ visit.user }}
+              {% endfollowdropdown %}
+            </del>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+    {% if is_admin %}
+      <h3> Applications </h3>
+      <ul>
+        {% for application in active_applications %}
+          <li>
+            {{ application.user.email }} ({{ application.comment|truncatewords_html:4 }})
+
+            <div class="ui-group-buttons marginBottom10">
+              {% with application.user as applicant %}
+                {% include "events/buttons/accept_application.html" %}
+              {% endwith %}
+              <div class="or"></div>
+              {% include "events/buttons/decline_application.html" %}
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+
+      <h3> Proposals </h3>
+      <ul>
+        {% for proposal in object.proposal_set.all %}
+          <li>
+            {% if proposal.status == PROPOSAL_STATUSES.ACTIVE %}
+              {{ proposal.user.email }}
+              <div class="ui-group-buttons">
+                {% with invitee=proposal.user %}
+                  {% include "events/buttons/cancel_proposal.html" %}
+                {% endwith %}
+              </div>
+            {% else %}
+              <s> {{ proposal.user.email }} </s>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% ifequal object.status 1 %}
+      <div class="ui-group-buttons pull-right marginBottom10">
+        {% for action in event_actions %}
+          {% include "events/buttons/"|add:action|add:'.html' %}
+          {% if not forloop.last %}
+            <div class="or"></div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endifequal %}
+  </div>
+</div>
 
 {% include "events/modals/apply_for_event.html" %}
 {% include "events/modals/propose_event.html" %}
@@ -134,4 +135,11 @@
 
 {% block extra_scripts %}
   {% include "autocomplete_light/static.html" %}
+  {% leaflet_js %}
+  <script type="text/javascript">
+      function map_init_basic (map, options) {
+          L.marker([{{ object.court.site.geo_point.1 }}, {{ object.court.site.geo_point.0 }}]).addTo(map);
+          map.panTo(new L.LatLng({{ object.court.site.geo_point.1 }}, {{ object.court.site.geo_point.0 }}));
+      }
+  </script>
 {% endblock %}

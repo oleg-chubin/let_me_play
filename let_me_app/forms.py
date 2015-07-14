@@ -4,7 +4,12 @@ Created on Jul 4, 2015
 @author: oleg
 '''
 from django.forms import Form, CharField
+from django import forms
+
 import autocomplete_light
+from leaflet.forms.widgets import LeafletWidget
+
+from let_me_app import models
 
 
 class BootstrapMultipleChoiceWidget(autocomplete_light.MultipleChoiceWidget):
@@ -28,3 +33,10 @@ class EventProposalForm(Form):
 
 class GroupAdminForm(Form):
     users = BootstrapModelMultipleChoiceField('UserAutocomplete')
+
+
+class SiteAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = models.Site
+        widgets = {'geo_point': LeafletWidget()}

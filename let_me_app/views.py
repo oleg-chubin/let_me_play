@@ -14,6 +14,7 @@ from extra_views import CreateWithInlinesView, InlineFormSet
 from extra_views.generic import GenericInlineFormSet
 
 from let_me_app import persistence, forms, models
+from django.db import transaction
 
 
 
@@ -164,6 +165,7 @@ class EventActionMixin(object):
     def check_permissions(self, request, *args, **kwargs):
         return True
 
+    @transaction.atomic
     def post(self, request, *args, **kwargs):
         if not self.check_permissions(request, *args, **kwargs):
             return http.HttpResponseForbidden()
@@ -194,6 +196,7 @@ class CancelApplicationView(EventActionMixin, BaseView):
 
 
 class CreateApplicationView(BaseView):
+    @transaction.atomic
     def post(self, request, *args, **kwargs):
         if request.user.is_anonymous():
             return http.HttpResponseForbidden()
@@ -216,6 +219,7 @@ class CreateApplicationView(BaseView):
 
 
 class CreateProposalView(BaseView):
+    @transaction.atomic
     def post(self, request, *args, **kwargs):
         if request.user.is_anonymous():
             return http.HttpResponseForbidden()
@@ -390,6 +394,20 @@ class CourtDetailView(DetailView):
         return result
 
 
+class SiteDetailView(DetailView):
+    template_name = 'sites/details.html'
+    model = models.Site
+
+    def get_context_data(self, **kwargs):
+        result = super(SiteDetailView, self).get_context_data(**kwargs)
+        is_admin = self.request.user.is_staff
+
+        result['site_actions'] = []#persistence.get_court_actions_for_user(
+#            self.request.user, court, is_admin=is_admin)
+        result['is_admin'] = is_admin
+        return result
+
+
 class CourtActionMixin(EventActionMixin):
     def get_success_url(self, **kwargs):
         return reverse('let_me_app:view_court', kwargs={'pk': self.kwargs['court']})
@@ -414,6 +432,7 @@ class RemoveFromAdminGroup(CourtActionMixin, BaseView):
 
 
 class AddUserToAdminGroupView(BaseView):
+    @transaction.atomic
     def post(self, request, *args, **kwargs):
         if request.user.is_anonymous():
             return http.HttpResponseForbidden()
@@ -422,7 +441,8 @@ class AddUserToAdminGroupView(BaseView):
         if not courts:
             return http.HttpResponseNotFound()
 
-        if not courts[0].admin_group.user_set.filter(id=request.user.id).exists():
+        if not (courts[0].admin_group.user_set.filter(id=request.user.id).exists()
+                or self.request.user.is_staff):
             return http.HttpResponseForbidden()
 
         form = forms.GroupAdminForm(data=request.POST)

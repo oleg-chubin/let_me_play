@@ -1,0 +1,6 @@
+<form method="post" action="{% url 'let_me_app:remove_from_admin_group' court=object.id user=user.id %}">
+{% csrf_token %}
+<button type="submit" class="btn btn-link">
+<span class="glyphicon glyphicon glyphicon-remove"></span>
+</button>
+</form>

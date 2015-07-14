@@ -7,7 +7,8 @@ from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils import timezone
 from django.conf import settings
-
+from osm_field.fields import LatitudeField, LongitudeField, OSMField
+from django.contrib.gis.db import models as gismodels
 
 UserModel = settings.AUTH_USER_MODEL
 
@@ -124,10 +125,14 @@ class Changelog(models.Model):
 
 
 class Site(Followable):
+    geo_point = gismodels.PointField(null=True, blank=True)
+
     name = models.CharField(max_length=128)
     description = models.TextField(_("Description"))
     address = models.TextField(_("Address"))
     map_image = models.ImageField(_('map image'), null=True, blank=True)
+
+    objects = gismodels.GeoManager()
 
     def __str__(self):
         return self.name
