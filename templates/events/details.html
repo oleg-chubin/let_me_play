@@ -21,6 +21,9 @@
 <div class="row-fluid">
   <div class="col-md-6">
     {% leaflet_map "yourmap" callback="window.map_init_basic" %}
+    {% with images=object.galleryimage_set.all %}
+      {% include "images/gallery.html" %}
+    {% endwith %}
   </div>
   <div class="col-md-6">
     <h2>

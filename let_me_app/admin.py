@@ -3,11 +3,12 @@ from django.contrib import admin
 from django.contrib import admin
 from let_me_app.models import (InternalMessage, Peeper, PrivateComment,
     Changelog, Site, Court, Occasion, BookingPolicy, Invoice, InventoryList,
-    Event, Equipment, Inventory, Proposal, Application, Receipt, Visit, ChatParticipant)
+    Event, Equipment, Inventory, Proposal, Application, Receipt, Visit,
+    ChatParticipant, GalleryImage)
 from let_me_app import admin_forms
 
 
-model_list = (InternalMessage, Peeper, PrivateComment,
+model_list = (InternalMessage, Peeper, PrivateComment, GalleryImage,
     Changelog, Court, Occasion, BookingPolicy, Invoice, ChatParticipant,
     Event, Equipment, Inventory, Proposal, Application, Receipt, Visit, Site
 )
