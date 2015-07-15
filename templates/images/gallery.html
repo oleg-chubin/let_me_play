@@ -1,0 +1,21 @@
+{% for image in images %}
+<div class="col-sm-3" >
+  <a href="#" data-toggle="modal" data-target=".pop-up-{{forloop.counter}}">
+    <img src="{{ MEDIA_URL }}{{ image.image }}"  style="wigth: 100px; height: 100px;" class="img-responsive img-rounded center-block" alt="">
+  </a>
+</div>
+
+  <div class="modal fade pop-up-{{forloop.counter}}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title" id="myLargeModalLabel-1">{{image.note}}</h4>
+        </div>
+        <div class="modal-body">
+          <img src="{{ MEDIA_URL }}{{ image.image }}" class="img-responsive img-rounded center-block" alt="">
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal mixer image -->
+{% endfor %}

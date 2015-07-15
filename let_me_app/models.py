@@ -81,6 +81,15 @@ class Followable(models.Model):
         return "followable object {}".format(self.id)
 
 
+class GalleryImage(models.Model):
+    followable = models.ForeignKey(Followable)
+    image = models.ImageField(_('image'))
+    thumbnail = models.ImageField(_('thumbnail'), null=True, blank=True)
+    note = models.CharField(max_length=128, default="just a picture")
+
+    THUMBNAIL_HEIGHT = 100
+
+
 class ChatParticipant(models.Model):
     user = models.ForeignKey(UserModel)
     chat = models.ForeignKey('InternalMessage')
@@ -130,7 +139,6 @@ class Site(Followable):
     name = models.CharField(max_length=128)
     description = models.TextField(_("Description"))
     address = models.TextField(_("Address"))
-    map_image = models.ImageField(_('map image'), null=True, blank=True)
 
     objects = gismodels.GeoManager()
 
