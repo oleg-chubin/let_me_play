@@ -21,9 +21,22 @@
                 <ul class="dropdown-menu" role="menu">
                   <li><a href="{% url "let_me_app:user_events" %}">My events</a></li>
                   <li><a href="{% url "let_me_app:user_managed_events" %}">Events managed</a></li>
+                  {% if user and not user.is_anonymous %}
+                  <li>
+                    <a href="{% url "let_me_app:create_new_event" %}">
+                      <span class="glyphicon glyphicon-record" aria-hidden="true"></span> Create
+                    </a>
+                  </li>
+                  {% endif %}
                 </ul>
             </li>
           </ul>
+
+          {% if user and not user.is_anonymous %}
+            <a class="btn btn-primary navbar-btn" href="{% url "let_me_app:create_new_event" %}">
+            <span class="glyphicon glyphicon-record" aria-hidden="true"></span> Create
+            </a>
+          {% endif %}
 
           <ul class="nav navbar-nav pull-right">
             {% if user and not user.is_anonymous %}

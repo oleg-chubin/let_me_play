@@ -66,6 +66,9 @@ urlpatterns = patterns('',
         views.SiteDetailView.as_view(),
         name='view_site'),
 
+    url(r'^create/new/event/$',
+        views.CreateEventView.as_view(),
+        name='create_new_event'),
 
     url(r'^view/chat/list/$', views.ChatList.as_view(), name="chat_list"),
     url(r'^view/chat/(?P<pk>[0-9]+)/$',

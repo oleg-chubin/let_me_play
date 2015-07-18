@@ -49,6 +49,8 @@ INSTALLED_APPS = (
     'let_me_app',
     'let_me_auth',
     'let_me_escort',
+
+    'floppyforms',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

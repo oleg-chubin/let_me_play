@@ -1,11 +1,12 @@
 from xml.dom import minidom
 from itertools import groupby
 
+from collections import OrderedDict
 from django import http
 from django.contrib.auth.models import Group
 from django.core.urlresolvers import reverse
 from django.utils import timezone
-from django.views.generic.base import View as BaseView
+from django.views.generic.base import View as BaseView, TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import BaseUpdateView
 from django.views.generic.list import ListView
@@ -454,4 +455,64 @@ class AddUserToAdminGroupView(BaseView):
         return http.HttpResponseRedirect(
             reverse('let_me_app:view_court', kwargs={'pk': kwargs['court']})
         )
+
+
+class CreateEventView(TemplateView):
+    template_name = 'events/create_new.html'
+
+    def get_forms(self):
+        data_forms = OrderedDict(
+            (
+                ('site', forms.SiteForm(
+                    data=self.request.POST,
+                    files=self.request.FILES,
+                    prefix='site')),
+                ('court', forms.CourtForm(
+                    data=self.request.POST,
+                    files=self.request.FILES,
+                    prefix='court')),
+                ('event', forms.EventForm(
+                    data=self.request.POST,
+                    files=self.request.FILES,
+                    prefix='event',)),
+            )
+        )
+        return data_forms
+
+    def get_context_data(self, **kwargs):
+        import ipdb; ipdb.set_trace()
+        context = {}
+        context['forms'] = self.get_forms()
+        return context
+
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        view_forms = self.get_forms()
+        validation_result = True
+        for form in view_forms.values():
+            validation_result = validation_result and form.is_valid()
+            if validation_result:
+                form.save(commit=False)
+
+        if not validation_result:
+            return self.render_to_response({'forms': view_forms})
+
+        view_forms['site'].instance.save()
+        view_forms['court'].instance.site = view_forms['site'].instance
+        view_forms['court'].instance.save()
+        view_forms['court'].instance.admin_group.user_set.add(request.user)
+        view_forms['event'].instance.court = view_forms['court'].instance
+        view_forms['event'].instance.save()
+
+        for form in view_forms.values():
+            form.save_m2m()
+
+        return http.HttpResponseRedirect(
+            reverse(
+                'let_me_app:view_event',
+                kwargs={'pk': view_forms['event'].instance.id}
+            )
+        )
+
+
 
