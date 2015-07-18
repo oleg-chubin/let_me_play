@@ -480,7 +480,6 @@ class CreateEventView(TemplateView):
         return data_forms
 
     def get_context_data(self, **kwargs):
-        import ipdb; ipdb.set_trace()
         context = {}
         context['forms'] = self.get_forms()
         return context
