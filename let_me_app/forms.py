@@ -8,6 +8,7 @@ from django import forms
 
 import autocomplete_light
 from leaflet.forms.widgets import LeafletWidget
+from floppyforms import widgets as floppyforms_widgets
 
 from let_me_app import models
 
@@ -36,7 +37,44 @@ class GroupAdminForm(Form):
 
 
 class SiteAdminForm(forms.ModelForm):
-
     class Meta:
         model = models.Site
         widgets = {'geo_point': LeafletWidget()}
+
+
+class SiteForm(forms.ModelForm):
+    class Meta:
+        model = models.Site
+        widgets = {
+            'geo_point': LeafletWidget(),
+            'description': floppyforms_widgets.Textarea(),
+            'name': floppyforms_widgets.TextInput(),
+            'address': floppyforms_widgets.Textarea()
+        }
+
+
+class CourtForm(forms.ModelForm):
+    class Meta:
+        model = models.Court
+        exclude = ('site', 'admin_group')
+        widgets = {
+            'description': floppyforms_widgets.Textarea(),
+        }
+
+
+
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = models.Event
+        exclude = ('court', 'invoice', 'inventory_list', 'staff', 'status')
+        widgets = {
+            'start_at': floppyforms_widgets.DateTimeInput(),
+            'description': floppyforms_widgets.Textarea(),
+            'name': floppyforms_widgets.TextInput(),
+        }
+
+    class Media:
+        css = {
+            'all': ('css/bootstrap-datetimepicker.css',)
+        }
+        js = ('js/moment.js', 'js/bootstrap-datetimepicker.js', 'js/forms.js')

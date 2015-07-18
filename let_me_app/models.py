@@ -102,6 +102,7 @@ class ChatParticipant(models.Model):
 class InternalMessage(models.Model):
     created_at = models.DateTimeField(_('date created'), default=timezone.now)
     last_update = models.DateTimeField(auto_now=True)
+    subject = models.ForeignKey(Followable, null=True, blank=True)
     text = models.TextField(_("text"))
 
 

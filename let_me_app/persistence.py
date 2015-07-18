@@ -41,6 +41,13 @@ def get_event_actions_for_user(user, event_object, is_admin=False):
     return result
 
 
+def save_event_and_related_things(event, user):
+        event.save()
+        chat = models.InternalMessage.objects.create(subject=event)
+        models.ChatParticipant.objects.create(chat=chat, user=user)
+        return event
+
+
 def get_my_chats(user):
     if user.is_anonymous():
         return models.InternalMessage.objects.none()

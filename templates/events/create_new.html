@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% load leaflet_tags static floppyforms %}
+
+{% block extra_head %}
+    {% leaflet_js plugins="forms" %}
+    {% leaflet_css plugins="forms" %}
+    <link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block breadcrumbs %}
+  <ol class="breadcrumb">
+    <li><a href="#">Home</a></li>
+    <li class="active">Create new event</li>
+  </ol>
+{% endblock %}
+
+{% block main %}
+
+<form method="post">
+  {% csrf_token %}
+  {% for form_name, form in forms.items %}
+    <legend>{{ form_name|title }} details </legend>
+    {% include "form.html" %}
+  {% endfor %}
+    <div class="ui-group-buttons pull-right marginBottom10">
+      <button type="submit" class="btn btn-success">Save</button>
+      <div class="or"></div>
+      <a href="." class="btn btn-danger">Cancel</a>
+    </div>
+</form>
+{% endblock %}
+
+{% block extra_scripts %}
+    {% for form in forms.values %}
+        {{ form.media }}
+    {% endfor %}
+{% endblock %}

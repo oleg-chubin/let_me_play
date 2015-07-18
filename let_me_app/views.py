@@ -1,11 +1,13 @@
 from xml.dom import minidom
 from itertools import groupby
 
+from collections import OrderedDict
 from django import http
 from django.contrib.auth.models import Group
 from django.core.urlresolvers import reverse
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from django.views.generic.base import View as BaseView
+from django.views.generic.base import View as BaseView, TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import BaseUpdateView
 from django.views.generic.list import ListView
@@ -454,4 +456,86 @@ class AddUserToAdminGroupView(BaseView):
         return http.HttpResponseRedirect(
             reverse('let_me_app:view_court', kwargs={'pk': kwargs['court']})
         )
+
+
+class CreateEventView(TemplateView):
+    template_name = 'events/create_new.html'
+
+    def get_forms(self, **kwargs):
+        data_forms = OrderedDict()
+        for entity, form_class in [('site', forms.SiteForm), ('court', forms.CourtForm)]:
+            if not entity in kwargs:
+                data_forms[entity] = form_class(
+                    data=self.request.POST,
+                    files=self.request.FILES,
+                    prefix=entity
+                )
+        data_forms['event'] = forms.EventForm(
+            data=self.request.POST, files=self.request.FILES, prefix='event')
+        return data_forms
+
+    def get_instances(self, view_forms, **kwargs):
+        instances = {'event': view_forms['event'].instance}
+        for entity, model in (('site', models.Site), ('court', models.Court)):
+            pk = kwargs.get(entity)
+            if not pk:
+                instances[entity] = view_forms[entity].instance
+            else:
+                instances[entity] = get_object_or_404(model, pk=pk)
+        return instances
+
+    def get_context_data(self, **kwargs):
+        view_forms = kwargs.get('forms') or self.get_forms(**kwargs)
+        return {'forms': view_forms}
+
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        view_forms = self.get_forms(**kwargs)
+        validation_result = True
+        for form in view_forms.values():
+            validation_result = validation_result and form.is_valid()
+            if validation_result:
+                form.save(commit=False)
+
+        if not validation_result:
+            return self.render_to_response(
+                self.get_context_data(forms=view_forms, **kwargs))
+
+        instances = self.get_instances(view_forms, **kwargs)
+        instances['site'].save()
+        instances['court'].site = instances['site']
+        instances['court'].save()
+        instances['court'].admin_group.user_set.add(request.user)
+        instances['event'].court = instances['court']
+
+        persistence.save_event_and_related_things(instances['event'], request.user)
+
+        for form in view_forms.values():
+            form.save_m2m()
+
+        return http.HttpResponseRedirect(
+            reverse(
+                'let_me_app:view_event', kwargs={'pk': instances['event'].id}
+            )
+        )
+
+
+class CreateSiteEventView(CreateEventView):
+    template_name = 'events/create_for_site.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CreateSiteEventView, self).get_context_data(**kwargs)
+        context['site_object'] = get_object_or_404(models.Site, pk=kwargs['site'])
+        return context
+
+
+class CreateCourtEventView(CreateEventView):
+    template_name = 'events/create_for_court.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CreateCourtEventView, self).get_context_data(**kwargs)
+        context['court'] = get_object_or_404(models.Court, pk=kwargs['court'])
+        return context
+
+
 

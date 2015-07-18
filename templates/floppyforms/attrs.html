@@ -1,0 +1,1 @@
+ class="form-control" placeholder="{{field.label}}" {% for name, value in attrs.items %} {{ name }}{% if value|stringformat:"s" != "True" or value != 1 %}="{{ value }}"{% endif %}{% endfor %}
