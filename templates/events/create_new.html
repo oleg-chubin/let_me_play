@@ -21,36 +21,7 @@
   {% csrf_token %}
   {% for form_name, form in forms.items %}
     <legend>{{ form_name|title }} details </legend>
-    {% form form using %}
-      {% formconfig row using "floppyforms/rows/bootstrap.html" %}
-      {% formconfig field using "floppyforms/datetime.html" for "DateTimeField" %}
-      {% comment %}
-        {% block errors %}
-          {% for error in form.non_field_errors %}
-              <div class="alert alert-error">
-                  <a class="close" href="#" data-dismiss="alert">×</a>
-                  {{ error }}
-              </div><!--- .alert.alert-error -->
-          {% endfor %}
-          {% for error in form|hidden_field_errors %}
-              <div class="alert alert-error">
-                  <a class="close" href="#" data-dismiss="alert">×</a>
-                  {{ error }}
-              </div><!--- .alert.alert-error -->
-          {% endfor %}
-        {% endblock errors %}
-      {% endcomment %}
-      {% block rows %}
-        {% for field in form.visible_fields %}
-            {% block row %}{% formrow field %}{% endblock %}
-        {% endfor %}
-        {% if not form.visible_fields %}
-          {% for field in form.hidden_fields %}
-            {% formfield field %}
-          {% endfor %}
-        {% endif %}
-      {% endblock %}
-    {% endform %}
+    {% include "form.html" %}
   {% endfor %}
     <div class="ui-group-buttons pull-right marginBottom10">
       <button type="submit" class="btn btn-success">Save</button>
