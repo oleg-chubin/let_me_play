@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% load staticfiles let_me_escort leaflet_tags %}
+
+{% block extra_head %}
+  {% leaflet_css %}
+  {% leaflet_js plugins="forms" %}
+  {% leaflet_css plugins="forms" %}
+  <link href="{% static "css/search_results.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block breadcrumbs %}
+  <ol class="breadcrumb">
+    <li><a href="#">Home</a></li>
+    <li class="active">Events</li>
+  </ol>
+{% endblock %}
+
+{% block main %}
+  <div class="row">
+    <div class="col-md-8">
+      {% leaflet_map "event_map" callback="window.map_init_basic" %}
+    </div>
+    <div class="col-md-4">
+      <form method="get">
+      {% with form=search_form %}
+        {% include "form.html" %}
+      {% endwith %}
+      <button type="submit" class="btn btn-success pull-right"><span class="glyphicon glyphicon-search"></span> Find</button>
+      </form>
+    </div>
+  </div>
+  <ul>
+  <hgroup class="mb20">
+    <h1>Search Results</h1>
+    <h2 class="lead">
+      <strong class="text-danger">{{ object_list.count }}</strong> results were found
+    </h2>
+  </hgroup>
+
+  <section class="col-xs-12 col-sm-6 col-md-12">
+
+    {% for object in object_list %}
+        <article class="search-result row">
+          <div class="col-xs-12 col-sm-12 col-md-3">
+            <a href="#" title="Lorem ipsum" class="thumbnail">
+              <img src="http://lorempixel.com/250/140/people" alt="Lorem ipsum" />
+            </a>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-md-2">
+            <ul class="meta-search">
+              <li><i class="glyphicon glyphicon-calendar"></i> <span>{{ object.start_at|date }}</span></li>
+              <li><i class="glyphicon glyphicon-time"></i> <span>{{ object.start_at|time }}</span></li>
+              <li class="event_item" data-record_id="{{object.id}}" data-geo_point="[{{ object.court.site.geo_point.x }}, {{ object.court.site.geo_point.y }}]"><i class="glyphicon glyphicon-tags"></i> <span>People</span></li>
+            </ul>
+          </div>
+            <div class="col-xs-12 col-sm-12 col-md-7 excerpet">
+                <h3><a href="#" title="">{{ object.name }} </a></h3>
+                <p>{{ object.description|linebreaksbr }}</p>
+            </div>
+            <span class="clearfix borda"></span>
+        </article>
+    {% endfor %}
+  </section>
+
+  </ul>
+{% endblock %}
+
+{% block extra_scripts %}
+{{ search_form.media }}
+<script src="{% static "js/event_search.js" %}"></script>
+{% endblock %}

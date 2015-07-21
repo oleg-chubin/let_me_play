@@ -5,6 +5,7 @@ Created on Jul 4, 2015
 '''
 from django.forms import Form, CharField
 from django import forms
+from django.contrib.gis import forms as geo_forms
 
 import autocomplete_light
 from leaflet.forms.widgets import LeafletWidget
@@ -61,6 +62,21 @@ class CourtForm(forms.ModelForm):
             'description': floppyforms_widgets.Textarea(),
         }
 
+
+class EventSearchForm(forms.Form):
+    start_date = forms.DateTimeField(
+        required=False, widget=floppyforms_widgets.DateTimeInput())
+    end_date = forms.DateTimeField(
+        required=False, widget=floppyforms_widgets.DateTimeInput())
+    geo_point = geo_forms.PointField(
+        required=False, widget=floppyforms_widgets.HiddenInput())
+    radius = forms.IntegerField(
+        required=False, widget=floppyforms_widgets.NumberInput())
+    class Media:
+        css = {
+            'all': ('css/bootstrap-datetimepicker.css',)
+        }
+        js = ('js/moment.js', 'js/bootstrap-datetimepicker.js', 'js/forms.js')
 
 
 class EventForm(forms.ModelForm):

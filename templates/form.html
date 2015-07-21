@@ -23,10 +23,8 @@
     {% for field in form.visible_fields %}
         {% block row %}{% formrow field %}{% endblock %}
     {% endfor %}
-    {% if not form.visible_fields %}
       {% for field in form.hidden_fields %}
         {% formfield field %}
       {% endfor %}
-    {% endif %}
   {% endblock %}
 {% endform %}
