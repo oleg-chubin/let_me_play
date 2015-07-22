@@ -55,7 +55,7 @@
             </ul>
           </div>
             <div class="col-xs-12 col-sm-12 col-md-7 excerpet">
-                <h3><a href="#" title="">{{ object.name }} </a></h3>
+                <h3><a href="{% url "let_me_app:view_event" pk=object.id %}" title="">{{ object.name }} </a></h3>
                 <p>{{ object.description|linebreaksbr }}</p>
             </div>
             <span class="clearfix borda"></span>
