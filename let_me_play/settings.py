@@ -85,6 +85,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    'let_me_auth.middleware.LoginRequiredMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     #'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -140,6 +141,9 @@ STATICFILES_FINDERS = (
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
 )
+
+LOGIN_EXEMPT_NAMESPACES = ('social', 'let_me_auth')
+DEFAULT_VIEW_NAME = 'let_me_escort:view_dashboard'
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/done/'
