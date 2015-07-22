@@ -1,6 +1,8 @@
 from django.shortcuts import redirect, render
+from django.conf import settings
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 # from django.template.context import RequestContext
 from annoying.decorators import render_to
 
@@ -18,7 +20,7 @@ def login(request):
 
 @login_required()
 def home(request):
-    return render(request, 'home.html')
+    return redirect(reverse(settings.DEFAULT_VIEW_NAME))
 
 
 def logout(request):
