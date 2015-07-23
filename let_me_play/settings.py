@@ -196,6 +196,11 @@ SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('SOCIAL_AUTH_FACEBOOK_SECRET')
 
 #VK
 #http://psa.matiasaguirre.net/docs/backends/vk.html#oauth2
+SOCIAL_AUTH_VK_SCOPE = ['email']  # configure how the data is labelled on SocialAuth.extra_data
+SOCIAL_AUTH_VK_EXTRA_DATA = ['email',]
+SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email']
+SOCIAL_AUTH_VK_OAUTH2_EXTRA_DATA = ['email',]
+
 SOCIAL_AUTH_VK_OAUTH2_KEY = os.environ.get('SOCIAL_AUTH_VK_OAUTH2_KEY')
 SOCIAL_AUTH_VK_OAUTH2_SECRET = os.environ.get('SOCIAL_AUTH_VK_OAUTH2_SECRET')
 
