@@ -147,8 +147,17 @@ class Site(Followable):
         return self.name
 
 
+class ActivityType(models.Model):
+    image = models.ImageField(_('image'))
+    title = models.CharField(max_length=128)
+
+    def __str__(self):
+        return self.title
+
+
 class Court(Followable):
     site = models.ForeignKey(Site)
+    activity_type = models.ForeignKey(ActivityType)
     admin_group = models.ForeignKey(Group, blank=True, null=True)
     description = models.TextField(_("Description"))
 

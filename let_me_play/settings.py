@@ -85,6 +85,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    'let_me_auth.middleware.LoginRequiredMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     #'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -141,6 +142,9 @@ TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
 )
 
+LOGIN_EXEMPT_NAMESPACES = ('social', 'let_me_auth')
+DEFAULT_VIEW_NAME = 'let_me_escort:view_dashboard'
+
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/done/'
 SOCIAL_AUTH_STRATEGY = 'social.strategies.django_strategy.DjangoStrategy'
@@ -162,7 +166,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.mail.mail_validation',
     'social.pipeline.user.create_user',
     'social.pipeline.social_auth.associate_user',
-    'social.pipeline.debug.debug',
+#    'social.pipeline.debug.debug',
     'social.pipeline.social_auth.load_extra_data',
     'social.pipeline.user.user_details',
     #'social.pipeline.debug.debug'
@@ -192,6 +196,11 @@ SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('SOCIAL_AUTH_FACEBOOK_SECRET')
 
 #VK
 #http://psa.matiasaguirre.net/docs/backends/vk.html#oauth2
+SOCIAL_AUTH_VK_SCOPE = ['email']  # configure how the data is labelled on SocialAuth.extra_data
+SOCIAL_AUTH_VK_EXTRA_DATA = ['email',]
+SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email']
+SOCIAL_AUTH_VK_OAUTH2_EXTRA_DATA = ['email',]
+
 SOCIAL_AUTH_VK_OAUTH2_KEY = os.environ.get('SOCIAL_AUTH_VK_OAUTH2_KEY')
 SOCIAL_AUTH_VK_OAUTH2_SECRET = os.environ.get('SOCIAL_AUTH_VK_OAUTH2_SECRET')
 
