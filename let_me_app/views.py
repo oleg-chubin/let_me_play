@@ -4,6 +4,7 @@ from itertools import groupby
 from collections import OrderedDict
 from django import http
 from django.contrib.auth.models import Group
+from django.contrib.gis.measure import D
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -407,6 +408,39 @@ class SiteDetailView(DetailView):
         result['site_actions'] = []#persistence.get_court_actions_for_user(
 #            self.request.user, court, is_admin=is_admin)
         result['is_admin'] = is_admin
+        return result
+
+
+class EventSearchView(ListView):
+    template_name = 'events/search.html'
+    model = models.Event
+
+    def get_queryset(self):
+        queryset = super(EventSearchView, self).get_queryset().order_by('start_at')
+        form = forms.EventSearchForm(
+            data=self.request.GET
+        )
+        if form.is_valid():
+            if form.cleaned_data['geo_point'] and form.cleaned_data['radius']:
+                site_queryset = models.Site.objects.filter(
+                    geo_point__distance_lt=(form.cleaned_data['geo_point'],
+                                            D(m=form.cleaned_data['radius']))
+                )
+                queryset = queryset.filter(court__site__in=site_queryset)
+            if form.cleaned_data['activity_type']:
+                queryset = queryset.filter(
+                    court__activity_type__in=form.cleaned_data['activity_type'])
+            if form.cleaned_data['start_date']:
+                queryset = queryset.filter(
+                    start_at__gt=form.cleaned_data['start_date'])
+            if form.cleaned_data['end_date']:
+                queryset = queryset.filter(
+                    start_at__lt=form.cleaned_data['end_date'])
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        result = super(EventSearchView, self).get_context_data(**kwargs)
+        result['search_form'] = forms.EventSearchForm(data=self.request.GET)
         return result
 
 

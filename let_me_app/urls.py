@@ -76,6 +76,9 @@ urlpatterns = patterns('',
         views.CreateCourtEventView.as_view(),
         name='create_court_event'),
 
+    url(r'^offer/events/$',
+        views.EventSearchView.as_view(), name='search_events'),
+
     url(r'^view/chat/list/$', views.ChatList.as_view(), name="chat_list"),
     url(r'^view/chat/(?P<pk>[0-9]+)/$',
         views.ChatDetails.as_view(), name="chat_details"),
