@@ -21,6 +21,7 @@
                 <ul class="dropdown-menu" role="menu">
                   <li><a href="{% url "let_me_app:user_events" %}">My events</a></li>
                   <li><a href="{% url "let_me_app:user_managed_events" %}">Events managed</a></li>
+                  <li><a href="{% url "let_me_app:search_events" %}">Search Events</a></li>
                   {% if user and not user.is_anonymous %}
                   <li>
                     <a href="{% url "let_me_app:create_new_event" %}">

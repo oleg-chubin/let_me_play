@@ -73,6 +73,11 @@ class EventSearchForm(forms.Form):
         required=False, widget=floppyforms_widgets.HiddenInput())
     radius = forms.IntegerField(
         required=False, widget=floppyforms_widgets.NumberInput())
+    activity_type = forms.ModelMultipleChoiceField(
+        models.ActivityType.objects.all(),
+        required=False, widget=floppyforms_widgets.SelectMultiple()
+    )
+
     class Media:
         css = {
             'all': ('css/bootstrap-datetimepicker.css',)

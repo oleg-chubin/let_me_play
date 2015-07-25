@@ -416,8 +416,10 @@ class EventSearchView(ListView):
     model = models.Event
 
     def get_queryset(self):
-        queryset = super(EventSearchView, self).get_queryset()
-        form = forms.EventSearchForm(initial={'radius':100}, data=self.request.GET)
+        queryset = super(EventSearchView, self).get_queryset().order_by('start_at')
+        form = forms.EventSearchForm(
+            data=self.request.GET
+        )
         if form.is_valid():
             if form.cleaned_data['geo_point'] and form.cleaned_data['radius']:
                 site_queryset = models.Site.objects.filter(
@@ -425,6 +427,9 @@ class EventSearchView(ListView):
                                             D(m=form.cleaned_data['radius']))
                 )
                 queryset = queryset.filter(court__site__in=site_queryset)
+            if form.cleaned_data['activity_type']:
+                queryset = queryset.filter(
+                    court__activity_type__in=form.cleaned_data['activity_type'])
             if form.cleaned_data['start_date']:
                 queryset = queryset.filter(
                     start_at__gt=form.cleaned_data['start_date'])
