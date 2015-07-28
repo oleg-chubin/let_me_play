@@ -1,0 +1,22 @@
+{% extends "events/modals/base.html" %}
+
+
+{% block modal_id %}modalCreateVisit{% endblock %}
+{% block modal_labelledby %}modalCreateVisit{% endblock %}
+
+{% block modal_content %}
+  <form method="post" enctype="multipart/form-data" action="{% url 'let_me_app:create_visit' event=object.id %}">
+    {% csrf_token %}
+    {{ block.super }}
+</form>
+  {% endblock %}
+
+{% block modal_title %} Create event {% endblock %}
+{% block modal_body %}
+  <div class="form-group">
+    {{ visit_form.users }}
+  </div>
+{% endblock %}
+{% block modal_footer %}
+    <button type="submit" class="btn btn-primary">Create visit</button>
+{% endblock %}

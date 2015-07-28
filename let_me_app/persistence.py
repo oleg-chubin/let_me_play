@@ -27,8 +27,9 @@ def get_event_actions_for_user(user, event_object, is_admin=False):
     )
     visit_exists = visits.exists()
 
+    admin_actions = ['propose_event', 'create_visit']
     if is_admin:
-        result.append('propose_event')
+        result.extend(admin_actions)
 
     if proposals.count():
         result.extend(['decline_proposal', 'accept_proposal'])
@@ -36,15 +37,17 @@ def get_event_actions_for_user(user, event_object, is_admin=False):
         result.extend(["cancel_application"])
     if visit_exists:
         result.append('cancel_visit')
-    if not set(result) - set(['propose_event']):
+    if not set(result) - set(admin_actions):
         result.append('apply_for_event')
     return result
 
 
-def save_event_and_related_things(event, user):
+def save_event_and_related_things(event, user, visitors=tuple()):
         event.save()
         chat = models.InternalMessage.objects.create(subject=event)
         models.ChatParticipant.objects.create(chat=chat, user=user)
+        for visitor in visitors:
+            create_event_visit(event, visitor, None)
         return event
 
 
@@ -56,7 +59,9 @@ def get_my_chats(user):
 
 
 def create_event_visit(event, user, inventory_list):
-    visit = models.Visit.objects.create(
-        event=event, user=user, inventory_list=inventory_list
+    visit, created = models.Visit.objects.get_or_create(
+        event=event, user=user,
+        status=models.VisitStatuses.PENDING,
+        defaults={'inventory_list': inventory_list}
     )
     return visit

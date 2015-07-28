@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% load staticfiles let_me_escort leaflet_tags %}
+
+{% block extra_head %}
+  {% leaflet_css %}
+  <link href="{% static "css/event.css" %}" rel="stylesheet">
+  <link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block breadcrumbs %}
+  <ol class="breadcrumb">
+    <li><a href="#">Home</a></li>
+    <li><a href="{% url 'let_me_app:view_site' pk=event.court.site_id %}">Site</a></li>
+    <li><a href="{% url 'let_me_app:view_court' pk=event.court.id %}">Court</a></li>
+    <li class="active">Event</li>
+  </ol>
+{% endblock %}
+
+{% block main %}
+<div class="row-fluid">
+  <div class="col-md-6">
+    {% leaflet_map "yourmap" callback="window.map_init_basic" %}
+  </div>
+  <div class="col-md-6">
+    <form method="post">
+      <legend> Site </legend>
+      <p>
+        {{ event.court.site.name }}
+      </p>
+      <p>
+        {{ event.court.site.description|linebreaksbr }}
+      </p>
+      <p>
+        {{ event.court.site.address|linebreaksbr }}
+      </p>
+      <legend> Court </legend>
+      <p>
+        {{ event.court.site.description|linebreaksbr }}
+      </p>
+        {% csrf_token %}
+        {% for entity, form in forms.items %}
+          <legend> {{ entity|title }} </legend>
+            {% include "form.html" %}
+        {% endfor %}
+      <div class="ui-group-buttons pull-right marginBottom10">
+        <button type="submit" class="btn btn-success">Save</button>
+        <div class="or"></div>
+        <a href="{% url 'let_me_app:view_event' pk=event.id %}" class="btn btn-danger">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+  {% include "autocomplete_light/static.html" %}
+  {% leaflet_js %}
+  <script type="text/javascript">
+      function map_init_basic (map, options) {
+          L.marker([{{ event.court.site.geo_point.1 }}, {{ event.court.site.geo_point.0 }}]).addTo(map);
+          map.panTo(new L.LatLng({{ event.court.site.geo_point.1 }}, {{ event.court.site.geo_point.0 }}));
+      }
+  </script>
+  {% for form in forms.values %}
+      {{ form.media }}
+  {% endfor %}
+{% endblock %}

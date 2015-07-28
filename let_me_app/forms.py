@@ -3,7 +3,6 @@ Created on Jul 4, 2015
 
 @author: oleg
 '''
-from django.forms import Form, CharField
 from django import forms
 from django.contrib.gis import forms as geo_forms
 
@@ -12,6 +11,7 @@ from leaflet.forms.widgets import LeafletWidget
 from floppyforms import widgets as floppyforms_widgets
 
 from let_me_app import models
+from let_me_auth import models as auth_models
 
 
 class BootstrapMultipleChoiceWidget(autocomplete_light.MultipleChoiceWidget):
@@ -24,16 +24,16 @@ class BootstrapMultipleChoiceWidget(autocomplete_light.MultipleChoiceWidget):
 class BootstrapModelMultipleChoiceField(autocomplete_light.ModelMultipleChoiceField):
     widget=BootstrapMultipleChoiceWidget
 
-class ChatMessageForm(Form):
-    message = CharField()
+class ChatMessageForm(forms.Form):
+    message = forms.CharField()
 
 
-class EventProposalForm(Form):
+class EventProposalForm(forms.Form):
     users = BootstrapModelMultipleChoiceField('UserAutocomplete')
-    comment = CharField()
+    comment = forms.CharField(required=False)
 
 
-class GroupAdminForm(Form):
+class GroupAdminForm(forms.Form):
     users = BootstrapModelMultipleChoiceField('UserAutocomplete')
 
 
@@ -100,3 +100,7 @@ class EventForm(forms.ModelForm):
             'all': ('css/bootstrap-datetimepicker.css',)
         }
         js = ('js/moment.js', 'js/bootstrap-datetimepicker.js', 'js/forms.js')
+
+
+class EventVisitForm(forms.Form):
+    users = BootstrapModelMultipleChoiceField('UserAutocomplete')
