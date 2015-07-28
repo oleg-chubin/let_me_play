@@ -3,6 +3,7 @@ from itertools import groupby
 
 from collections import OrderedDict
 from django import http
+from django import forms as django_forms
 from django.contrib.auth.models import Group
 from django.contrib.gis.measure import D
 from django.core.urlresolvers import reverse
@@ -109,6 +110,7 @@ class EventView(DetailView):
             self.request.user, event, is_admin=is_admin)
         result['is_admin'] = is_admin
         result['proposal_form'] = forms.EventProposalForm()
+        result['visit_form'] = forms.EventVisitForm()
         result['active_applications'] =event.application_set.filter(
             status=models.ApplicationStatuses.ACTIVE
         )
@@ -245,6 +247,30 @@ class CreateProposalView(BaseView):
                     status=models.ApplicationStatuses.ACTIVE,
                     defaults={'comment':comment}
                 )
+
+        return http.HttpResponseRedirect(
+            reverse('let_me_app:view_event', kwargs={'pk': kwargs['event']})
+        )
+
+
+class CreateVisitView(BaseView):
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        if request.user.is_anonymous():
+            return http.HttpResponseForbidden()
+
+        events = models.Event.objects.filter(id=kwargs['event'])
+        if not events:
+            return http.HttpResponseNotFound()
+
+        if not events[0].court.admin_group.user_set.filter(id=request.user.id).exists():
+            return http.HttpResponseForbidden()
+
+        form = forms.EventVisitForm(data=request.POST)
+
+        if form.is_valid():
+            for user in form.cleaned_data['users']:
+                persistence.create_event_visit(events[0], user, None)
 
         return http.HttpResponseRedirect(
             reverse('let_me_app:view_event', kwargs={'pk': kwargs['event']})
@@ -495,7 +521,12 @@ class AddUserToAdminGroupView(BaseView):
 class CreateEventView(TemplateView):
     template_name = 'events/create_new.html'
 
-    def get_forms(self, **kwargs):
+    def get_visitors_form(self, data, files, **kwargs):
+        return forms.EventVisitForm(
+            data=data, prefix='event', initial={'users': [self.request.user]}
+        )
+
+    def get_forms(self, data, files, **kwargs):
         data_forms = OrderedDict()
         for entity, form_class in [('site', forms.SiteForm), ('court', forms.CourtForm)]:
             if not entity in kwargs:
@@ -506,6 +537,7 @@ class CreateEventView(TemplateView):
                 )
         data_forms['event'] = forms.EventForm(
             data=self.request.POST, files=self.request.FILES, prefix='event')
+        data_forms['visitors'] = self.get_visitors_form(data, files, **kwargs)
         return data_forms
 
     def get_instances(self, view_forms, **kwargs):
@@ -519,16 +551,16 @@ class CreateEventView(TemplateView):
         return instances
 
     def get_context_data(self, **kwargs):
-        view_forms = kwargs.get('forms') or self.get_forms(**kwargs)
+        view_forms = kwargs.get('forms') or self.get_forms(None, None, **kwargs)
         return {'forms': view_forms}
 
     @transaction.atomic
     def post(self, request, *args, **kwargs):
-        view_forms = self.get_forms(**kwargs)
+        view_forms = self.get_forms(request.POST, request.FILES, **kwargs)
         validation_result = True
         for form in view_forms.values():
             validation_result = validation_result and form.is_valid()
-            if validation_result:
+            if validation_result and isinstance(form, django_forms.ModelForm):
                 form.save(commit=False)
 
         if not validation_result:
@@ -542,10 +574,13 @@ class CreateEventView(TemplateView):
         instances['court'].admin_group.user_set.add(request.user)
         instances['event'].court = instances['court']
 
-        persistence.save_event_and_related_things(instances['event'], request.user)
+        persistence.save_event_and_related_things(
+            instances['event'], request.user, visitors=view_forms['visitors'].cleaned_data['users']
+        )
 
         for form in view_forms.values():
-            form.save_m2m()
+            if isinstance(form, django_forms.ModelForm):
+                form.save_m2m()
 
         return http.HttpResponseRedirect(
             reverse(
@@ -570,6 +605,53 @@ class CreateCourtEventView(CreateEventView):
         context = super(CreateCourtEventView, self).get_context_data(**kwargs)
         context['court'] = get_object_or_404(models.Court, pk=kwargs['court'])
         return context
+
+
+class CloneEventView(TemplateView):
+    template_name = 'events/clone_event.html'
+
+    def get_context_data(self, **kwargs):
+        view_forms = kwargs.get('forms') or self.get_forms(None, None, **kwargs)
+        result = {'forms': view_forms}
+        result['event'] = (kwargs.get('source_event') or
+            get_object_or_404(models.Event, pk=kwargs['event']))
+        return result
+
+    def get_forms(self, data, files, **kwargs):
+        data_forms = OrderedDict()
+        data_forms['event'] = forms.EventForm(
+            data=self.request.POST, files=self.request.FILES, prefix='event')
+        data_forms['visitors'] = forms.EventVisitForm(
+            data=data, prefix='event', initial={'users': [self.request.user]}
+        )
+        return data_forms
+
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        source_event = get_object_or_404(models.Event, pk=kwargs['event'])
+        view_forms = self.get_forms(request.POST, request.FILES, **kwargs)
+        validation_result = True
+        for form in view_forms.values():
+            validation_result = validation_result and form.is_valid()
+
+        if not validation_result:
+            return self.render_to_response(
+                self.get_context_data(
+                    forms=view_forms, source_event=source_event, **kwargs)
+            )
+
+        event = view_forms['event'].save(commit=False)
+
+        event.court_id = source_event.court_id
+        persistence.save_event_and_related_things(
+            event, request.user, visitors=view_forms['visitors'].cleaned_data['users']
+        )
+
+        view_forms['event'].save_m2m()
+
+        return http.HttpResponseRedirect(
+            reverse('let_me_app:view_event', kwargs={'pk': event.id})
+        )
 
 
 
