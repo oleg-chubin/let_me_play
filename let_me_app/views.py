@@ -111,6 +111,7 @@ class EventView(DetailView):
         result['is_admin'] = is_admin
         result['proposal_form'] = forms.EventProposalForm()
         result['visit_form'] = forms.EventVisitForm()
+        result['inventory_form'] = forms.InventoryForm()
         result['active_applications'] =event.application_set.filter(
             status=models.ApplicationStatuses.ACTIVE
         )
@@ -223,58 +224,80 @@ class CreateApplicationView(BaseView):
         )
 
 
-class CreateProposalView(BaseView):
+class DetailRelatedPostView(BaseView):
+    def get_form(self):
+        pass
+
+    def action_is_allowed(self, event):
+        pass
+
+    def save_on_success(self, event, form):
+        pass
+
     @transaction.atomic
     def post(self, request, *args, **kwargs):
         if request.user.is_anonymous():
             return http.HttpResponseForbidden()
 
-        events = models.Event.objects.filter(id=kwargs['event'])
-        if not events:
-            return http.HttpResponseNotFound()
+        event = get_object_or_404(models.Event, id=kwargs['event'])
 
-        if not events[0].court.admin_group.user_set.filter(id=request.user.id).exists():
+        if not self.action_is_allowed(event):
             return http.HttpResponseForbidden()
 
-        form = forms.EventProposalForm(data=request.POST)
+        form = self.get_form()
 
         if form.is_valid():
-            comment = form.cleaned_data['comment']
-            for user in form.cleaned_data['users']:
-                models.Proposal.objects.get_or_create(
-                    event=events[0],
-                    user=user,
-                    status=models.ApplicationStatuses.ACTIVE,
-                    defaults={'comment':comment}
-                )
+            self.save_on_success(event, form)
 
         return http.HttpResponseRedirect(
-            reverse('let_me_app:view_event', kwargs={'pk': kwargs['event']})
+            reverse('let_me_app:view_event', kwargs={'pk': event.id})
         )
+
+
+class CreateProposalView(DetailRelatedPostView):
+    def get_form(self):
+        return forms.EventProposalForm(data=self.request.POST)
+
+    def action_is_allowed(self, event):
+        return event.court.admin_group.user_set.filter(
+            id=self.request.user.id).exists()
+
+    def save_on_success(self, event, form):
+        comment = form.cleaned_data['comment']
+        for user in form.cleaned_data['users']:
+            models.Proposal.objects.get_or_create(
+                event=event, user=user,
+                status=models.ApplicationStatuses.ACTIVE,
+                defaults={'comment':comment}
+            )
+
+
+class AddInventoryView(DetailRelatedPostView):
+    def get_form(self):
+        return forms.InventoryForm(data=self.request.POST)
+
+    def action_is_allowed(self, event):
+        return event.court.admin_group.user_set.filter(
+            id=self.request.user.id).exists()
+
+    def save_on_success(self, event, form):
+        inventory_list, _ = models.InventoryList.objects.get_or_create(event=event)
+        inventory = form.save(commit=False)
+        inventory.inventory_list = inventory_list
+        inventory.save()
 
 
 class CreateVisitView(BaseView):
-    @transaction.atomic
-    def post(self, request, *args, **kwargs):
-        if request.user.is_anonymous():
-            return http.HttpResponseForbidden()
+    def get_form(self):
+        return forms.EventVisitForm(data=request.POST)
 
-        events = models.Event.objects.filter(id=kwargs['event'])
-        if not events:
-            return http.HttpResponseNotFound()
+    def action_is_allowed(self, event):
+        return event.court.admin_group.user_set.filter(
+            id=self.request.user.id).exists()
 
-        if not events[0].court.admin_group.user_set.filter(id=request.user.id).exists():
-            return http.HttpResponseForbidden()
-
-        form = forms.EventVisitForm(data=request.POST)
-
-        if form.is_valid():
-            for user in form.cleaned_data['users']:
-                persistence.create_event_visit(events[0], user, None)
-
-        return http.HttpResponseRedirect(
-            reverse('let_me_app:view_event', kwargs={'pk': kwargs['event']})
-        )
+    def save_on_success(self, event, form):
+        for user in form.cleaned_data['users']:
+            persistence.create_event_visit(events[0], user, None)
 
 
 class DeclineProposalEventView(EventActionMixin, BaseView):
@@ -357,6 +380,17 @@ class DismissVisitorEventView(EventActionMixin, BaseView):
     def process_object(self, visit):
         visit.status = models.VisitStatuses.DECLINED
         visit.save()
+
+
+class CancelInventoryEventView(EventActionMixin, BaseView):
+    def get_queryset(self, request, *args, **kwargs):
+        return models.Inventory.objects.filter(
+            inventory_list__event=kwargs['event'],
+            id=kwargs['inventory'],
+        )
+
+    def process_object(self, inventory):
+        inventory.delete()
 
 
 class CancelProposalEventView(EventActionMixin, BaseView):

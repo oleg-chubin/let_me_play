@@ -27,7 +27,7 @@ def get_event_actions_for_user(user, event_object, is_admin=False):
     )
     visit_exists = visits.exists()
 
-    admin_actions = ['propose_event', 'create_visit']
+    admin_actions = ['propose_event', 'create_visit', 'add_inventory']
     if is_admin:
         result.extend(admin_actions)
 

@@ -21,6 +21,13 @@ class BootstrapMultipleChoiceWidget(autocomplete_light.MultipleChoiceWidget):
         return attrs
 
 
+class BootstrapChoiceWidget(autocomplete_light.ChoiceWidget):
+    def build_attrs(self, name=None):
+        attrs = super(BootstrapChoiceWidget, self).build_attrs(name=name)
+        attrs['class'] = attrs['class'] + ' form-control'
+        return attrs
+
+
 class BootstrapModelMultipleChoiceField(autocomplete_light.ModelMultipleChoiceField):
     widget=BootstrapMultipleChoiceWidget
 
@@ -31,6 +38,16 @@ class ChatMessageForm(forms.Form):
 class EventProposalForm(forms.Form):
     users = BootstrapModelMultipleChoiceField('UserAutocomplete')
     comment = forms.CharField(required=False)
+
+
+class InventoryForm(forms.ModelForm):
+    class Meta:
+        model = models.Inventory
+        fields = ['equipment', 'amount']
+        widgets = {
+            'equipment': BootstrapChoiceWidget('EquipmentAutocomplete'),
+            'amount': floppyforms_widgets.NumberInput(),
+        }
 
 
 class GroupAdminForm(forms.Form):
