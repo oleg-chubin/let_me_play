@@ -1,0 +1,6 @@
+<form method="post" action="{% url 'let_me_app:cancel_inventory' event=object.id inventory=inventory.id %}">
+{% csrf_token %}
+<button type="submit" class="btn btn-link">
+<span class="glyphicon glyphicon glyphicon-remove"></span>
+</button>
+</form>

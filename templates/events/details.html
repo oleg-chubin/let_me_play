@@ -125,7 +125,13 @@
       <div id="detail-4">
         <ul>
           {% for inventory in object.inventory_list.inventory_set.all %}
-            <li> {{ inventory.equipment }} ({{ inventory.amount }}) </li>
+            <li> {{ inventory.equipment }} ({{ inventory.amount }})
+            {% if is_admin %}
+              <div class="ui-group-buttons">
+                {% include "events/buttons/cancel_inventory.html" %}
+              </div>
+            </li>
+            {% endif %}
           {% endfor %}
         </ul>
       </div>
@@ -226,6 +232,7 @@
 </div>
 
 
+{% include "events/modals/add_inventory.html" %}
 {% include "events/modals/apply_for_event.html" %}
 {% include "events/modals/propose_event.html" %}
 {% include "events/modals/create_visit.html" %}

@@ -48,6 +48,13 @@ urlpatterns = patterns('',
         views.DismissVisitorEventView.as_view(),
         name="dismiss_visit"),
 
+    url(r'^cancel/inventory/(?P<inventory>[0-9]+)/for/event/(?P<event>[0-9]+)/$',
+        views.CancelInventoryEventView.as_view(),
+        name="cancel_inventory"),
+    url(r'^add/inventory/for/event/(?P<event>[0-9]+)/$',
+        views.AddInventoryView.as_view(),
+        name="add_inventory"),
+
     url(r'^cancel/proposal/(?P<user>[0-9]+)/for/event/(?P<event>[0-9]+)/$',
         views.CancelProposalEventView.as_view(),
         name="cancel_proposal"),
