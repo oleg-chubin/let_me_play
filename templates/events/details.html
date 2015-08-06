@@ -6,6 +6,7 @@
   {% leaflet_css %}
   <link href="{% static "css/event.css" %}" rel="stylesheet">
   <link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
+  <link href="{% static "css/info_panel.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -18,6 +19,25 @@
 {% endblock %}
 
 {% block main %}
+<div class="row">
+  {% if my_active_visit %}
+    <div class="col-md-6">
+      {% include "events/panels/my_visit.html" with visit=my_active_visit %}
+    </div>
+  {% endif %}
+  {% if my_active_proposal %}
+    <div class="col-md-6">
+      {% include "events/panels/my_proposal.html" with proposal=my_active_proposal %}
+    </div>
+  {% endif %}
+  {% if my_active_application %}
+    <div class="col-md-6">
+      {% include "events/panels/my_application.html" with application=my_active_application %}
+    </div>
+  {% endif %}
+</div>
+
+
 <div class="panel panel-default">
   <div class="panel-heading">
     <h3 class="panel-title">
