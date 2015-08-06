@@ -1,0 +1,30 @@
+{% extends "base_info_panel.html" %}
+
+{% block panel_title %}My visit{% endblock %}
+
+{% block panel_content %}
+  <div>
+    <h4>Receipt</h4>
+    {% if visit.receipt %}
+      {{ visit.date }}
+      {{ visit.price }}
+      {{ visit.status }}
+    {% else %}
+      Nothing
+    {% endif %}
+    <h4>Inventory</h4>
+    {% if visit.inventory_list %}
+      <ul>
+        {% for inventory in visit.inventory_list.inventory_set.all %}
+          <li>{{ inventory.equipment }} ({{inventory.amount}})</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      Nothing
+    {% endif %}
+  </div>
+
+    <div class="ui-group-buttons pull-right marginBottom10">
+      {% include "events/buttons/cancel_visit.html" %}
+    </div>
+{% endblock %}

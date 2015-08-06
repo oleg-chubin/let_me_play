@@ -1,0 +1,16 @@
+{% extends "base_info_panel.html" %}
+
+{% block panel_title %}My Proposal{% endblock %}
+
+{% block panel_content %}
+    <div>
+      <h4>Comment</h4>
+      {{ proposal.comment }}
+    </div>
+
+    <div class="ui-group-buttons pull-right marginBottom10">
+      {% include "events/buttons/accept_proposal.html" %}
+      <div class="or"></div>
+      {% include "events/buttons/decline_proposal.html" %}
+    </div>
+{% endblock %}

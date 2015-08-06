@@ -1,0 +1,24 @@
+{% extends "base_info_panel.html" %}
+
+{% block panel_title %}My application{% endblock %}
+
+{% block panel_content %}
+  <div>
+    <h4>Comment</h4>
+    {{ application.comment }}
+    <h4>Inventory</h4>
+    {% if application.inventory_list %}
+      <ul>
+        {% for inventory in application.inventory_list.inventory_set.all %}
+          <li>{{ inventory.equipment }} ({{inventory.amount}})</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      Nothing
+    {% endif %}
+  </div>
+
+    <div class="ui-group-buttons pull-right marginBottom10">
+      {% include "events/buttons/cancel_application.html" %}
+    </div>
+{% endblock %}

@@ -51,21 +51,10 @@
     </ul>
 
     <div class="ui-group-buttons pull-right marginBottom10">
-      {% for action in court_actions %}
-        {% include "courts/buttons/"|add:action|add:'.html' %}
-         <div class="or"></div>
-      {% endfor %}
         <a href="{% url 'let_me_app:create_site_event' site=object.id %}" class="btn btn-primary">
           <span class="glyphicon glyphicon-record" aria-hidden="true"></span>
           Create event
         </a>
-    </div>
-
-    <div class="ui-group-buttons pull-right marginBottom10">
-      {% for action in court_actions %}
-        {% include "courts/buttons/"|add:action|add:'.html' %}
-        <div class="or"></div>
-      {% endfor %}
     </div>
 
   </div>
