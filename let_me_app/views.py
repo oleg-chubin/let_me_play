@@ -130,7 +130,7 @@ class EventView(DetailView):
         if my_active_applications:
             result['my_active_application'] = my_active_applications[0]
 
-        my_active_visits = event.application_set.filter(
+        my_active_visits = event.visit_set.filter(
             user=self.request.user,
             status__in=[
                 models.VisitStatuses.PENDING, models.VisitStatuses.COMPLETED]
