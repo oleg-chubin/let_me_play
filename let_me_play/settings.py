@@ -39,7 +39,12 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles',)
+
+if DEBUG:
+    INSTALLED_APPS += ('debug_toolbar',)
+
+INSTALLED_APPS += (
     'annoying',
     'sorl.thumbnail',
     'django.contrib.gis',
@@ -51,6 +56,7 @@ INSTALLED_APPS = (
     'let_me_escort',
 
     'floppyforms',
+
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -84,7 +90,13 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',)
+
+if DEBUG:
+    MIDDLEWARE_CLASSES += (
+    'debug_toolbar.middleware.DebugToolbarMiddleware',)
+
+MIDDLEWARE_CLASSES += (
     'let_me_auth.middleware.LoginRequiredMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     #'django.middleware.clickjacking.XFrameOptionsMiddleware',
