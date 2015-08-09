@@ -17,33 +17,65 @@
 {% endblock %}
 
 {% block main %}
-  {% for object in object_list %}
-    <div class="well">
-        <div class="media">
-          <div class="media-body">
-            <ul class="text-right list-inline">
-              {% for participant in object.chatparticipant_set.all %}
-                  <li>{{ participant.user }}</li>
-              {% endfor %}
-            </ul>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      Chat list
+    </h3>
+  </div>
+
+  <ul class="list-group">
+
+    {% for object in object_list %}
+      <li class="list-group-item">
+        <div class="row toggle" id="dropdown-detail-{{forloop.counter}}" data-toggle="detail-{{forloop.counter}}">
+          <div class="col-xs-10">
+            <h4>
+              {% if object.subject_id %}
+                Event "{{object.subject.event.name}}" discussion
+              {% else %}
+                Group chat
+              {% endif %}
+            </h4>
+          </div>
+          <div class="col-xs-2"><span class="glyphicon glyphicon-menu-down pull-right toggle-icon"></span>
+            <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
+        </div>
+        <div id="detail-{{forloop.counter}}">
+            <p>
+              <strong> <i class="glyphicon glyphicon-user"></i></strong>
+                {% for participant in object.chatparticipant_set.all %}
+                  {{ participant.user }}
+                {% endfor %}
+            </p>
             {% with recent_message=object|recent_chat_message %}
-              <h4>
-                <a href="{% url "let_me_app:chat_details" pk=object.id %}">
-                  {{ recent_message.author }}
-                </a>
-              </h4>
-              <p> {{ recent_message.text }} </p>
-            {% endwith %}
-            <ul class="list-inline list-unstyled">
-              <li>
-                <span>
-                  <i class="glyphicon glyphicon-calendar"></i>
+              {% if recent_message %}
+                <p>
+                  <strong> <i class="glyphicon glyphicon-calendar"></i> </strong>
                   {{ object.last_update }}
-                </span>
-              </li>
-            </ul>
-         </div>
-      </div>
-    </div>
-  {% endfor %}
+                </p>
+                <p>
+                  <strong><i class="glyphicon glyphicon-envelope"></i></strong>
+                  {{ recent_message.text }} ({{ recent_message.author }})
+                </p>
+              {% endif %}
+            {% endwith %}
+            <p>
+              <strong><i class="glyphicon glyphicon-link"></i></strong>
+              <a href="{% url "let_me_app:chat_details" pk=object.id %}">
+               More...
+              </a>
+            </p>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
 {% endblock %}
+
+
+{% block extra_scripts %}
+  <script src="{% static "js/expandable_listgroup.js" %}"></script>
+{% endblock %}
+

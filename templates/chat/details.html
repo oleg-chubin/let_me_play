@@ -24,9 +24,6 @@
     {% for participant in object.chatparticipant_set.all %}
       <span class="btn btn-labeled btn-success">
         {{ participant.user }}
-        <button class="btn-label">
-          <i class="glyphicon glyphicon-remove"></i>
-        </button>
       </span>
     {% endfor %}
     </div>
