@@ -40,13 +40,21 @@ class ChatList(ListView):
     model = models.InternalMessage
 
     def get_queryset(self, **kwargs):
-        result = super(ChatList, self).get_queryset(**kwargs)
-        return result.filter(chatparticipant__user=self.request.user)
+        query = super(ChatList, self).get_queryset(**kwargs)
+        query = query.filter(chatparticipant__user=self.request.user)
+        query = query.select_related('subject__event')
+        query = query.prefetch_related('chatparticipant_set__user')
+        return query
 
 
 class ChatDetails(DetailView):
     template_name = 'chat/details.html'
     model = models.InternalMessage
+
+    def get_queryset(self, **kwargs):
+        query = super(ChatDetails, self).get_queryset(**kwargs)
+        query = query.prefetch_related('chatparticipant_set__user')
+        return query
 
     def get_context_data(self, *args, **kwargs):
         result = super(ChatDetails, self).get_context_data(*args, **kwargs)
