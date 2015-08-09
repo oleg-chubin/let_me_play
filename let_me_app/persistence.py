@@ -64,4 +64,8 @@ def create_event_visit(event, user, inventory_list):
         status=models.VisitStatuses.PENDING,
         defaults={'inventory_list': inventory_list}
     )
+    if created:
+        chat = list(models.InternalMessage.objects.filter(subject=event))
+        if chat:
+            models.ChatParticipant.objects.create(user=user, chat=chat[0])
     return visit
