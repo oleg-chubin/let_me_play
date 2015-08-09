@@ -222,7 +222,7 @@ class StaffProfile(Followable):
 
 
 class Event(Followable):
-    start_at = models.DateTimeField(_('date started'))
+    start_at = models.DateTimeField(_('date started'), db_index=True)
     name = models.CharField(max_length=128, default='')
     description = models.TextField(max_length=1024, default='')
     court = models.ForeignKey(Court)

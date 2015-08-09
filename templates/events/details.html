@@ -164,12 +164,10 @@
       </div>
       <div id="detail-5">
         <ul>
-          {% for visit in object.visit_set.all %}
+          {% for visit in active_visits %}
             <li>
               {% if visit.status == 1 %}
-                {% followdropdown visit.user "escort/follow_menu.html" %}
-                  {{ visit.user }}
-                {% endfollowdropdown %}
+                {{ visit.user }}
                 {% with visit.user as visitor %}
                   {% if is_admin %}
                     <div class="ui-group-buttons">
@@ -179,9 +177,7 @@
                 {% endwith %}
               {% else %}
                 <del>
-                  {% followdropdown visit.user "escort/follow_menu.html" %}
-                    {{ visit.user }}
-                  {% endfollowdropdown %}
+                  {{ visit.user }}
                 </del>
               {% endif %}
             </li>
@@ -222,14 +218,10 @@
         </div>
         <div id="detail-7">
           <ul>
-            {% for proposal in object.proposal_set.all %}
+            {% for proposal in active_proposals %}
               <li>
-                {% if proposal.status == PROPOSAL_STATUSES.ACTIVE %}
                   {{ proposal.user.email }}<div class="ui-group-buttons">{% with invitee=proposal.user %}{% include "events/buttons/cancel_proposal.html" %} {% endwith %}
                   </div>
-                {% else %}
-                  <s> {{ proposal.user.email }} </s>
-                {% endif %}
               </li>
             {% endfor %}
           </ul>

@@ -101,6 +101,13 @@ class EventView(DetailView):
     template_name = 'events/details.html'
     model = models.Event
 
+    def get_queryset(self):
+        queryset = super(EventView, self).get_queryset()
+        queryset = queryset.select_related(
+            'inventory_list', 'court', 'court__site', 'court__activity_type')
+        queryset = queryset.prefetch_related('inventory_list__inventory_set')
+        return queryset
+
     def get_context_data(self, **kwargs):
         result = super(EventView, self).get_context_data(**kwargs)
         event = result['object']
@@ -114,27 +121,26 @@ class EventView(DetailView):
         result['inventory_form'] = forms.InventoryForm()
         result['active_applications'] =event.application_set.filter(
             status=models.ApplicationStatuses.ACTIVE
-        )
+        ).select_related('user')
+        result['active_visits'] =event.visit_set.filter(
+            status__in=[models.VisitStatuses.PENDING, models.VisitStatuses.COMPLETED]
+        ).select_related('user')
+        result['active_proposals'] =event.proposal_set.all().select_related('user')
 
-        my_active_proposals = event.proposal_set.filter(
-            user=self.request.user,
-            status=models.ProposalStatuses.ACTIVE
-        )
-        if my_active_proposals:
-            result['my_active_proposal'] = my_active_proposals[0]
+        for prop in result['active_proposals']:
+            if (prop.user == self.request.user
+                    and prop.status==models.ProposalStatuses.ACTIVE):
+                result['my_active_proposal'] = prop
 
-        my_active_applications = event.application_set.filter(
-            user=self.request.user,
-            status=models.ApplicationStatuses.ACTIVE
-        )
+        my_active_applications = [
+            i for i in result['active_applications'] if i.user == self.request.user
+        ]
         if my_active_applications:
             result['my_active_application'] = my_active_applications[0]
 
-        my_active_visits = event.visit_set.filter(
-            user=self.request.user,
-            status__in=[
-                models.VisitStatuses.PENDING, models.VisitStatuses.COMPLETED]
-        )
+        my_active_visits = [
+            i for i in result['active_visits'] if i.user == self.request.user
+        ]
         if my_active_visits:
             result['my_active_visit'] = my_active_visits[0]
         return result
@@ -309,9 +315,9 @@ class AddInventoryView(DetailRelatedPostView):
         inventory.save()
 
 
-class CreateVisitView(BaseView):
+class CreateVisitView(DetailRelatedPostView):
     def get_form(self):
-        return forms.EventVisitForm(data=request.POST)
+        return forms.EventVisitForm(data=self.request.POST)
 
     def action_is_allowed(self, event):
         return event.court.admin_group.user_set.filter(
@@ -319,7 +325,7 @@ class CreateVisitView(BaseView):
 
     def save_on_success(self, event, form):
         for user in form.cleaned_data['users']:
-            persistence.create_event_visit(events[0], user, None)
+            persistence.create_event_visit(event, user, None)
 
 
 class DeclineProposalEventView(EventActionMixin, BaseView):
@@ -499,6 +505,10 @@ class EventSearchView(ListView):
 
     def get_queryset(self):
         queryset = super(EventSearchView, self).get_queryset().order_by('start_at')
+
+        queryset = queryset.select_related(
+            'inventory_list', 'court', 'court__site', 'court__activity_type')
+
         form = forms.EventSearchForm(
             data=self.request.GET
         )
