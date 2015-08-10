@@ -45,7 +45,6 @@ def get_event_actions_for_user(user, event_object, is_admin=False):
 def save_event_and_related_things(event, user, visitors=tuple()):
         event.save()
         chat = models.InternalMessage.objects.create(subject=event)
-        models.ChatParticipant.objects.create(chat=chat, user=user)
         for visitor in visitors:
             create_event_visit(event, visitor, None)
         return event
