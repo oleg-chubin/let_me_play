@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 
-{% load let_me_chat %}
-
-{% load staticfiles %}
+{% load let_me_chat staticfiles i18n %}
 
 {% block extra_head %}
 <link href="{% static "css/timeline.css" %}" rel="stylesheet">
@@ -10,8 +8,8 @@
 
 {% block breadcrumbs %}
 <ol class="breadcrumb">
-  <li><a href="#">Home</a></li>
-  <li class="active">My proposals</li>
+  <li><a href="#">{% trans "Home" %}</a></li>
+  <li class="active">{% trans "My proposals" %}</li>
 </ol>
 {% endblock %}
 
@@ -52,7 +50,7 @@
                                   {% else %}
                                   <s>
                                     {{ object.event.name }}
-                                  </s><span class="label label-default">Inactive</span>
+                                  </s><span class="label label-default">{% trans "Inactive" %}</span>
                                   {% endif %}
                                 </a>
                               </span>

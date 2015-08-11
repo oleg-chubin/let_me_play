@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-10 14:20+0000\n"
+"POT-Creation-Date: 2015-08-11 13:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -76,10 +76,13 @@ msgid "text"
 msgstr "техт"
 
 #: let_me_app/models.py:141 let_me_app/models.py:162
+#: templates/events/details.html:97 templates/events/details.html.py:120
+#: templates/events/details.html:137
 msgid "Description"
 msgstr "описание"
 
-#: let_me_app/models.py:142
+#: let_me_app/models.py:142 templates/events/details.html:101
+#: templates/sites/details.html:33
 msgid "Address"
 msgstr "Адрес"
 
@@ -145,7 +148,10 @@ msgstr "пользователь"
 msgid "users"
 msgstr "пользователи"
 
-#: templates/chat/details.html:13
+#: templates/chat/details.html:13 templates/events/details.html:14
+#: templates/events/search.html:14 templates/events/user_events.html:11
+#: templates/events/user_managed_events.html:12
+#: templates/events/user_proposals.html:11 templates/sites/details.html:14
 msgid "Home"
 msgstr "Главная"
 
@@ -156,6 +162,132 @@ msgstr "Чаты"
 #: templates/chat/details.html:15
 msgid "Chat"
 msgstr "Чат"
+
+#: templates/events/details.html:15 templates/sites/details.html:15
+msgid "Site"
+msgstr "Карта сайта"
+
+#: templates/events/details.html:16 templates/events/details.html.py:110
+msgid "Court"
+msgstr "Площадка"
+
+#: templates/events/details.html:17 templates/events/details.html.py:127
+msgid "Event"
+msgstr "События"
+
+#: templates/events/details.html:70
+msgid "Map"
+msgstr "Карта"
+
+#: templates/events/details.html:93 templates/events/details.html.py:133
+msgid "Name"
+msgstr "Имя"
+
+#: templates/events/details.html:116
+msgid "Type"
+msgstr "Тип"
+
+#: templates/events/details.html:144
+msgid "Inventory"
+msgstr "Инвентарь"
+
+#: templates/events/details.html:164
+msgid "Visitors"
+msgstr "Посетитель"
+
+#: templates/events/details.html:194 templates/navbar.html:93
+msgid "Applications"
+msgstr "Заявки"
+
+#: templates/events/details.html:218 templates/navbar.html:73
+msgid "Proposals"
+msgstr "Предложения"
+
+#: templates/events/search.html:15 templates/navbar.html:20
+msgid "Events"
+msgstr "События"
+
+#: templates/events/search.html:29
+msgid "Find"
+msgstr "Найти"
+
+#: templates/events/search.html:35
+msgid "Search Results"
+msgstr "Результаты поиска"
+
+#: templates/events/search.html:37
+msgid "results were found"
+msgstr "результатов найдено"
+
+#: templates/events/search.html:54
+msgid "People"
+msgstr "Людей"
+
+#: templates/events/user_events.html:12 templates/navbar.html:24
+msgid "My events"
+msgstr "Мои события"
+
+#: templates/events/user_events.html:53
+#: templates/events/user_proposals.html:53
+msgid "Inactive"
+msgstr "Неактивный"
+
+#: templates/events/user_managed_events.html:13
+msgid "Managed events"
+msgstr "Управляемые события"
+
+#: templates/events/user_proposals.html:12
+msgid "My proposals"
+msgstr "My Предложения"
+
+#: templates/navbar.html:25
+msgid "Events managed"
+msgstr "Подопечные события"
+
+#: templates/navbar.html:26
+msgid "Search Events"
+msgstr "Искать события"
+
+#: templates/navbar.html:30 templates/navbar.html.py:40
+#: templates/sites/details.html:57
+msgid "Create event"
+msgstr "Создать событие"
+
+#: templates/navbar.html:57
+msgid "Settings"
+msgstr "Настройки"
+
+#: templates/navbar.html:59
+msgid "User stats"
+msgstr "Статистика пользователя"
+
+#: templates/navbar.html:63
+msgid "Messages"
+msgstr "События"
+
+#: templates/navbar.html:83
+msgid "Visits"
+msgstr "Посещения"
+
+#: templates/navbar.html:102
+msgid "Logout"
+msgstr "Выйти"
+
+#: templates/navbar.html:108
+msgid "You are not logged in. "
+msgstr "Вы не зашли в систему"
+
+#: templates/navbar.html:126
+msgid "Go"
+msgstr "Далее"
+
+#: templates/sites/details.html:37
+msgid "Description "
+msgstr "описание"
+
+#: templates/sites/details.html:41
+msgid "Courts"
+msgstr "Площадки"
 
 #: venv/lib/python3.4/site-packages/django/contrib/sitemaps/apps.py:8
 msgid "Site Maps"

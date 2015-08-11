@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-10 14:20+0000\n"
+"POT-Creation-Date: 2015-08-11 13:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -74,10 +74,13 @@ msgid "text"
 msgstr ""
 
 #: let_me_app/models.py:141 let_me_app/models.py:162
+#: templates/events/details.html:97 templates/events/details.html.py:120
+#: templates/events/details.html:137
 msgid "Description"
 msgstr ""
 
-#: let_me_app/models.py:142
+#: let_me_app/models.py:142 templates/events/details.html:101
+#: templates/sites/details.html:33
 msgid "Address"
 msgstr ""
 
@@ -143,7 +146,10 @@ msgstr ""
 msgid "users"
 msgstr ""
 
-#: templates/chat/details.html:13
+#: templates/chat/details.html:13 templates/events/details.html:14
+#: templates/events/search.html:14 templates/events/user_events.html:11
+#: templates/events/user_managed_events.html:12
+#: templates/events/user_proposals.html:11 templates/sites/details.html:14
 msgid "Home"
 msgstr ""
 
@@ -153,6 +159,132 @@ msgstr ""
 
 #: templates/chat/details.html:15
 msgid "Chat"
+msgstr ""
+
+#: templates/events/details.html:15 templates/sites/details.html:15
+msgid "Site"
+msgstr ""
+
+#: templates/events/details.html:16 templates/events/details.html.py:110
+msgid "Court"
+msgstr ""
+
+#: templates/events/details.html:17 templates/events/details.html.py:127
+msgid "Event"
+msgstr ""
+
+#: templates/events/details.html:70
+msgid "Map"
+msgstr ""
+
+#: templates/events/details.html:93 templates/events/details.html.py:133
+msgid "Name"
+msgstr ""
+
+#: templates/events/details.html:116
+msgid "Type"
+msgstr ""
+
+#: templates/events/details.html:144
+msgid "Inventory"
+msgstr ""
+
+#: templates/events/details.html:164
+msgid "Visitors"
+msgstr ""
+
+#: templates/events/details.html:194 templates/navbar.html:93
+msgid "Applications"
+msgstr ""
+
+#: templates/events/details.html:218 templates/navbar.html:73
+msgid "Proposals"
+msgstr ""
+
+#: templates/events/search.html:15 templates/navbar.html:20
+msgid "Events"
+msgstr ""
+
+#: templates/events/search.html:29
+msgid "Find"
+msgstr ""
+
+#: templates/events/search.html:35
+msgid "Search Results"
+msgstr ""
+
+#: templates/events/search.html:37
+msgid "results were found"
+msgstr ""
+
+#: templates/events/search.html:54
+msgid "People"
+msgstr ""
+
+#: templates/events/user_events.html:12 templates/navbar.html:24
+msgid "My events"
+msgstr ""
+
+#: templates/events/user_events.html:53
+#: templates/events/user_proposals.html:53
+msgid "Inactive"
+msgstr ""
+
+#: templates/events/user_managed_events.html:13
+msgid "Managed events"
+msgstr ""
+
+#: templates/events/user_proposals.html:12
+msgid "My proposals"
+msgstr ""
+
+#: templates/navbar.html:25
+msgid "Events managed"
+msgstr ""
+
+#: templates/navbar.html:26
+msgid "Search Events"
+msgstr ""
+
+#: templates/navbar.html:30 templates/navbar.html.py:40
+#: templates/sites/details.html:57
+msgid "Create event"
+msgstr ""
+
+#: templates/navbar.html:57
+msgid "Settings"
+msgstr ""
+
+#: templates/navbar.html:59
+msgid "User stats"
+msgstr ""
+
+#: templates/navbar.html:63
+msgid "Messages"
+msgstr ""
+
+#: templates/navbar.html:83
+msgid "Visits"
+msgstr ""
+
+#: templates/navbar.html:102
+msgid "Logout"
+msgstr ""
+
+#: templates/navbar.html:108
+msgid "You are not logged in. "
+msgstr ""
+
+#: templates/navbar.html:126
+msgid "Go"
+msgstr ""
+
+#: templates/sites/details.html:37
+msgid "Description "
+msgstr ""
+
+#: templates/sites/details.html:41
+msgid "Courts"
 msgstr ""
 
 #: venv/lib/python3.4/site-packages/django/contrib/sitemaps/apps.py:8

@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 
-{% load staticfiles let_me_escort leaflet_tags %}
+{% load i18n %}
 
+{% load staticfiles let_me_escort leaflet_tags %}
 
 {% block extra_head %}
     {% leaflet_css %}
@@ -10,8 +11,8 @@
 
 {% block breadcrumbs %}
 <ol class="breadcrumb">
-  <li><a href="#">Home</a></li>
-  <li class="active">Site</li>
+  <li><a href="#">{% trans "Home" %}</a></li>
+  <li class="active">{% trans "Site" %}</li>
 </ol>
 {% endblock %}
 
@@ -29,15 +30,15 @@
         {{ object.name }}
       {% endfollowdropdown %}
     </h2>
-    <h3> Address </h3>
+    <h3>{% trans "Address" %}</h3>
     <p>
       {{ object.address|linebreaksbr }}
     </p>
-    <h3> Description </h3>
+    <h3>{% trans "Description " %}</h3>
     <p>
       {{ object.description|linebreaksbr }}
     </p>
-    <h3> Courts </h3>
+    <h3>{% trans "Courts" %}</h3>
     <ul>
       {% for court in object.court_set.all %}
         <li>
@@ -53,7 +54,7 @@
     <div class="ui-group-buttons pull-right marginBottom10">
         <a href="{% url 'let_me_app:create_site_event' site=object.id %}" class="btn btn-primary">
           <span class="glyphicon glyphicon-record" aria-hidden="true"></span>
-          Create event
+          {% trans "Create event" %}
         </a>
     </div>
 
