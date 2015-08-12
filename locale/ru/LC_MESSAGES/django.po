@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-11 13:56+0000\n"
+"POT-Creation-Date: 2015-08-12 09:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -148,7 +148,11 @@ msgstr "пользователь"
 msgid "users"
 msgstr "пользователи"
 
-#: templates/chat/details.html:13 templates/events/details.html:14
+#: templates/chat/details.html:13 templates/dashboard/list.html:13
+#: templates/events/clone_event.html:13
+#: templates/events/create_for_court.html:13
+#: templates/events/create_for_site.html:13
+#: templates/events/create_new.html:13 templates/events/details.html:14
 #: templates/events/search.html:14 templates/events/user_events.html:11
 #: templates/events/user_managed_events.html:12
 #: templates/events/user_proposals.html:11 templates/sites/details.html:14
@@ -163,17 +167,153 @@ msgstr "Чаты"
 msgid "Chat"
 msgstr "Чат"
 
-#: templates/events/details.html:15 templates/sites/details.html:15
-msgid "Site"
-msgstr "Карта сайта"
+#: templates/dashboard/list.html:14
+msgid "Dashboard"
+msgstr ""
 
-#: templates/events/details.html:16 templates/events/details.html.py:110
+#: templates/dashboard/messages/let_me_app.visit.html:7
+msgid "Visits"
+msgstr "Посещения"
+
+msgid "Visit"
+msgstr "Посещение"
+
+msgid "was created"
+msgstr "был создан"
+
+#: templates/dashboard/messages/let_me_app.visit.html:7
+msgid "was updated"
+msgstr "был обновлен"
+
+#: templates/dashboard/messages/let_me_app.visit.html:11
+msgid "User"
+msgstr "Пользователь"
+
+#: templates/dashboard/messages/let_me_app.visit.html:11
+msgid "has arranged visit for event"
+msgstr "договорился о событии"
+
+#: templates/dashboard/messages/let_me_app.visit.html:16
+msgid "User stats"
+msgstr "Статистика пользователя"
+
+msgid "User's"
+msgstr "Пользовательский"
+
+#: templates/dashboard/messages/let_me_app.visit.html:16
+msgid "visit for event"
+msgstr "посещения события"
+
+#: templates/dashboard/messages/let_me_app.visit.html:20
+msgid "has been"
+msgstr "был"
+
+#: templates/escort/follow_menu.html:19
+msgid "Not follow"
+msgstr "Не следить"
+
+#: templates/escort/follow_menu.html:19
+msgid "Follow"
+msgstr "Следить"
+
+#: templates/events/buttons/accept_proposal.html:6
+msgid "My proposals"
+msgstr "My Предложения"
+
+msgid "Accept proposal"
+msgstr "Принять предложение"
+
+#: templates/events/buttons/add_inventory.html:4
+#: templates/events/modals/add_inventory.html:14
+#: templates/events/modals/add_inventory.html:24
+msgid "Inventory"
+msgstr "Инвентарь"
+
+msgid "Add inventory"
+msgstr "Добавить инвентарь"
+
+#: templates/events/buttons/apply_for_event.html:4
+#: templates/events/modals/apply_for_event.html:10
+#: templates/events/modals/apply_for_event.html:16
+msgid "Apply for event"
+msgstr "Попроситься на событие"
+
+#: templates/events/buttons/cancel_application.html:4
+msgid "Applications"
+msgstr "Заявки"
+
+msgid "Cancel application"
+msgstr "Отменить заявку"
+
+msgid "Cancel"
+msgstr "Отмененить"
+
+#: templates/events/buttons/cancel_visit.html:5
+msgid "Cancel visit"
+msgstr "Отменить визит"
+
+#: templates/events/buttons/clone_event.html:3
+msgid "Clone"
+msgstr "Клонировать"
+
+msgid "Complete"
+msgstr "Завершить"
+
+#: templates/events/buttons/create_visit.html:4
+#: templates/events/modals/create_visit.html:22
+msgid "Create event"
+msgstr "Создать событие"
+
+msgid "Create visit"
+msgstr "Создать посещение"
+
+msgid "Decline proposal"
+msgstr "Отклонить предложение"
+
+msgid "Propose event"
+msgstr "Предложить событие"
+
+#: templates/events/clone_event.html:14 templates/events/clone_event.html:27
+#: templates/events/create_for_court.html:14
+#: templates/events/create_for_court.html:27
+#: templates/events/create_for_site.html:14
+#: templates/events/create_for_site.html:26 templates/events/details.html:15
+#: templates/sites/details.html:15
+msgid "Site"
+msgstr "Точка"
+
+#: templates/events/clone_event.html:15 templates/events/clone_event.html:37
+#: templates/events/create_for_court.html:15
+#: templates/events/create_for_court.html:37 templates/events/details.html:16
+#: templates/events/details.html.py:110
 msgid "Court"
 msgstr "Площадка"
 
-#: templates/events/details.html:17 templates/events/details.html.py:127
+#: templates/events/clone_event.html:16
+#: templates/events/create_for_court.html:16
+#: templates/events/create_for_court.html:41
+#: templates/events/create_for_site.html:15 templates/events/details.html:17
+#: templates/events/details.html.py:127
 msgid "Event"
 msgstr "События"
+
+#: templates/events/clone_event.html:47
+#: templates/events/create_for_court.html:47
+#: templates/events/create_for_site.html:44
+#: templates/events/create_new.html:27
+msgid "Save"
+msgstr "Сохранить"
+
+#: templates/events/create_for_site.html:39
+#: templates/events/create_new.html:23
+msgid "details"
+msgstr "детали"
+
+#: templates/events/create_new.html:14
+#, fuzzy
+#| msgid "Create event"
+msgid "Create new event"
+msgstr "Создать событие"
 
 #: templates/events/details.html:70
 msgid "Map"
@@ -187,21 +327,50 @@ msgstr "Имя"
 msgid "Type"
 msgstr "Тип"
 
-#: templates/events/details.html:144
-msgid "Inventory"
-msgstr "Инвентарь"
-
 #: templates/events/details.html:164
 msgid "Visitors"
 msgstr "Посетитель"
 
-#: templates/events/details.html:194 templates/navbar.html:93
-msgid "Applications"
-msgstr "Заявки"
-
 #: templates/events/details.html:218 templates/navbar.html:73
 msgid "Proposals"
 msgstr "Предложения"
+
+#: templates/events/modals/apply_for_event.html:12
+#: templates/events/modals/propose_event.html:21
+#, fuzzy
+msgid "Messages"
+msgstr "События"
+
+msgid "Message"
+msgstr "Событие"
+
+#: templates/events/panels/my_application.html:5
+#, fuzzy
+#| msgid "Applications"
+msgid "My application"
+msgstr "Заявки"
+
+#: templates/events/panels/my_application.html:9
+#: templates/events/panels/my_proposal.html:8
+msgid "Comment"
+msgstr "Комментарий"
+
+#: templates/events/panels/my_application.html:19
+#: templates/events/panels/my_visit.html:15
+#: templates/events/panels/my_visit.html:25
+msgid "Nothing"
+msgstr "Ничего"
+
+msgid "My Proposal"
+msgstr "My Предложение"
+
+#: templates/events/panels/my_visit.html:5
+msgid "My visit"
+msgstr "Мой визит"
+
+#: templates/events/panels/my_visit.html:9
+msgid "Receipt"
+msgstr "Счет"
 
 #: templates/events/search.html:15 templates/navbar.html:20
 msgid "Events"
@@ -236,10 +405,6 @@ msgstr "Неактивный"
 msgid "Managed events"
 msgstr "Управляемые события"
 
-#: templates/events/user_proposals.html:12
-msgid "My proposals"
-msgstr "My Предложения"
-
 #: templates/navbar.html:25
 msgid "Events managed"
 msgstr "Подопечные события"
@@ -248,26 +413,9 @@ msgstr "Подопечные события"
 msgid "Search Events"
 msgstr "Искать события"
 
-#: templates/navbar.html:30 templates/navbar.html.py:40
-#: templates/sites/details.html:57
-msgid "Create event"
-msgstr "Создать событие"
-
 #: templates/navbar.html:57
 msgid "Settings"
 msgstr "Настройки"
-
-#: templates/navbar.html:59
-msgid "User stats"
-msgstr "Статистика пользователя"
-
-#: templates/navbar.html:63
-msgid "Messages"
-msgstr "События"
-
-#: templates/navbar.html:83
-msgid "Visits"
-msgstr "Посещения"
 
 #: templates/navbar.html:102
 msgid "Logout"

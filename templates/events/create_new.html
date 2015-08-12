@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load leaflet_tags static floppyforms %}
+{% load leaflet_tags static floppyforms i18n %}
 
 {% block extra_head %}
     {% leaflet_js plugins="forms" %}
@@ -10,8 +10,8 @@
 
 {% block breadcrumbs %}
   <ol class="breadcrumb">
-    <li><a href="#">Home</a></li>
-    <li class="active">Create new event</li>
+    <li><a href="#">{% trans "Home" %}</a></li>
+    <li class="active">{% trans "Create new event" %}</li>
   </ol>
 {% endblock %}
 
@@ -20,13 +20,13 @@
 <form method="post">
   {% csrf_token %}
   {% for form_name, form in forms.items %}
-    <legend>{{ form_name|title }} details </legend>
+    <legend>{{ form_name|title }} {% trans "details" %} </legend>
     {% include "form.html" %}
   {% endfor %}
     <div class="ui-group-buttons pull-right marginBottom10">
-      <button type="submit" class="btn btn-success">Save</button>
+      <button type="submit" class="btn btn-success">{% trans "Save" %}</button>
       <div class="or"></div>
-      <a href="." class="btn btn-danger">Cancel</a>
+      <a href="." class="btn btn-danger">{% trans "Cancel" %}</a>
     </div>
 </form>
 {% endblock %}

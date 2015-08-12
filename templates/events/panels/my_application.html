@@ -1,12 +1,14 @@
 {% extends "base_info_panel.html" %}
 
-{% block panel_title %}My application{% endblock %}
+{% load i18n %}
+
+{% block panel_title %}{% trans "My application" %}{% endblock %}
 
 {% block panel_content %}
   <div>
-    <h4>Comment</h4>
+    <h4>{% trans "Comment" %}</h4>
     {{ application.comment }}
-    <h4>Inventory</h4>
+    <h4>{% trans "Inventory" %}</h4>
     {% if application.inventory_list %}
       <ul>
         {% for inventory in application.inventory_list.inventory_set.all %}
@@ -14,7 +16,7 @@
         {% endfor %}
       </ul>
     {% else %}
-      Nothing
+      {% trans "Nothing" %}
     {% endif %}
   </div>
 

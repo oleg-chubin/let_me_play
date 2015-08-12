@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Django settings for let_me_play project.
 
@@ -120,6 +121,8 @@ DATABASES = {
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
+
+LANGUAGES = [('en', 'English'), ('ru', 'Русский')]
 
 LANGUAGE_CODE = 'en-us'
 

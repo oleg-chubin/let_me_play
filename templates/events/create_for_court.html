@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load staticfiles let_me_escort leaflet_tags %}
+{% load staticfiles let_me_escort leaflet_tags i18n %}
 
 {% block extra_head %}
   {% leaflet_css %}
@@ -10,10 +10,10 @@
 
 {% block breadcrumbs %}
   <ol class="breadcrumb">
-    <li><a href="#">Home</a></li>
-    <li><a href="{% url 'let_me_app:view_site' pk=court.site_id %}">Site</a></li>
-    <li><a href="{% url 'let_me_app:view_court' pk=court.id %}">Court</a></li>
-    <li class="active">Event</li>
+    <li><a href="#">{% trans "Home" %}</a></li>
+    <li><a href="{% url 'let_me_app:view_site' pk=court.site_id %}">{% trans "Site" %}</a></li>
+    <li><a href="{% url 'let_me_app:view_court' pk=court.id %}">{% trans "Court" %}</a></li>
+    <li class="active">{% trans "Event" %}</li>
   </ol>
 {% endblock %}
 
@@ -24,7 +24,7 @@
   </div>
   <div class="col-md-6">
     <form method="post">
-      <legend> Site </legend>
+      <legend>{% trans "Site" %}</legend>
       <p>
         {{ court.site.name }}
       </p>
@@ -34,19 +34,19 @@
       <p>
         {{ court.site.address|linebreaksbr }}
       </p>
-      <legend> Court </legend>
+      <legend>{% trans "Court" %}</legend>
       <p>
         {{ court.site.description|linebreaksbr }}
       </p>
-      <legend> Event </legend>
+      <legend>{% trans "Event" %}</legend>
         {% csrf_token %}
         {% with forms.event as form %}
             {% include "form.html" %}
         {% endwith %}
       <div class="ui-group-buttons pull-right marginBottom10">
-        <button type="submit" class="btn btn-success">Save</button>
+        <button type="submit" class="btn btn-success">{% trans "Save" %}</button>
         <div class="or"></div>
-        <a href="{% url 'let_me_app:view_court' pk=court.id %}" class="btn btn-danger">Cancel</a>
+        <a href="{% url 'let_me_app:view_court' pk=court.id %}" class="btn btn-danger">{% trans "Cancel" %}</a>
       </div>
     </form>
   </div>

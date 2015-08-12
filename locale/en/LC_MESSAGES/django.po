@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-11 13:56+0000\n"
+"POT-Creation-Date: 2015-08-12 09:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -146,7 +146,11 @@ msgstr ""
 msgid "users"
 msgstr ""
 
-#: templates/chat/details.html:13 templates/events/details.html:14
+#: templates/chat/details.html:13 templates/dashboard/list.html:13
+#: templates/events/clone_event.html:13
+#: templates/events/create_for_court.html:13
+#: templates/events/create_for_site.html:13
+#: templates/events/create_new.html:13 templates/events/details.html:14
 #: templates/events/search.html:14 templates/events/user_events.html:11
 #: templates/events/user_managed_events.html:12
 #: templates/events/user_proposals.html:11 templates/sites/details.html:14
@@ -161,16 +165,143 @@ msgstr ""
 msgid "Chat"
 msgstr ""
 
-#: templates/events/details.html:15 templates/sites/details.html:15
+#: templates/dashboard/list.html:14
+msgid "Dashboard"
+msgstr ""
+
+#: templates/dashboard/messages/let_me_app.visit.html:7
+msgid "Visit"
+msgstr ""
+
+#: templates/dashboard/messages/let_me_app.visit.html:7
+msgid "was created"
+msgstr ""
+
+#: templates/dashboard/messages/let_me_app.visit.html:7
+msgid "was updated"
+msgstr ""
+
+#: templates/dashboard/messages/let_me_app.visit.html:11
+msgid "User"
+msgstr ""
+
+#: templates/dashboard/messages/let_me_app.visit.html:11
+msgid "has arranged visit for event"
+msgstr ""
+
+#: templates/dashboard/messages/let_me_app.visit.html:16
+msgid "User's"
+msgstr ""
+
+#: templates/dashboard/messages/let_me_app.visit.html:16
+msgid "visit for event"
+msgstr ""
+
+#: templates/dashboard/messages/let_me_app.visit.html:20
+msgid "has been"
+msgstr ""
+
+#: templates/escort/follow_menu.html:19
+msgid "Not follow"
+msgstr ""
+
+#: templates/escort/follow_menu.html:19
+msgid "Follow"
+msgstr ""
+
+#: templates/events/buttons/accept_proposal.html:6
+msgid "Accept proposal"
+msgstr ""
+
+#: templates/events/buttons/add_inventory.html:4
+#: templates/events/modals/add_inventory.html:14
+#: templates/events/modals/add_inventory.html:24
+msgid "Add inventory"
+msgstr ""
+
+#: templates/events/buttons/apply_for_event.html:4
+#: templates/events/modals/apply_for_event.html:10
+#: templates/events/modals/apply_for_event.html:16
+msgid "Apply for event"
+msgstr ""
+
+#: templates/events/buttons/cancel_application.html:4
+msgid "Cancel application"
+msgstr ""
+
+#: templates/events/buttons/cancel_event.html:6
+#: templates/events/clone_event.html:49
+#: templates/events/create_for_court.html:49
+#: templates/events/create_for_site.html:46
+#: templates/events/create_new.html:29
+msgid "Cancel"
+msgstr ""
+
+#: templates/events/buttons/cancel_visit.html:5
+msgid "Cancel visit"
+msgstr ""
+
+#: templates/events/buttons/clone_event.html:3
+msgid "Clone"
+msgstr ""
+
+#: templates/events/buttons/complete_event.html:6
+msgid "Complete"
+msgstr ""
+
+#: templates/events/buttons/create_visit.html:4
+#: templates/events/modals/create_visit.html:22
+msgid "Create visit"
+msgstr ""
+
+#: templates/events/buttons/decline_proposal.html:6
+msgid "Decline proposal"
+msgstr ""
+
+#: templates/events/buttons/propose_event.html:4
+#: templates/events/modals/propose_event.html:15
+#: templates/events/modals/propose_event.html:25
+msgid "Propose event"
+msgstr ""
+
+#: templates/events/clone_event.html:14 templates/events/clone_event.html:27
+#: templates/events/create_for_court.html:14
+#: templates/events/create_for_court.html:27
+#: templates/events/create_for_site.html:14
+#: templates/events/create_for_site.html:26 templates/events/details.html:15
+#: templates/sites/details.html:15
 msgid "Site"
 msgstr ""
 
-#: templates/events/details.html:16 templates/events/details.html.py:110
+#: templates/events/clone_event.html:15 templates/events/clone_event.html:37
+#: templates/events/create_for_court.html:15
+#: templates/events/create_for_court.html:37 templates/events/details.html:16
+#: templates/events/details.html.py:110
 msgid "Court"
 msgstr ""
 
-#: templates/events/details.html:17 templates/events/details.html.py:127
+#: templates/events/clone_event.html:16
+#: templates/events/create_for_court.html:16
+#: templates/events/create_for_court.html:41
+#: templates/events/create_for_site.html:15 templates/events/details.html:17
+#: templates/events/details.html.py:127
 msgid "Event"
+msgstr ""
+
+#: templates/events/clone_event.html:47
+#: templates/events/create_for_court.html:47
+#: templates/events/create_for_site.html:44
+#: templates/events/create_new.html:27
+msgid "Save"
+msgstr ""
+
+#: templates/events/create_for_site.html:39
+#: templates/events/create_new.html:23
+msgid "details"
+msgstr ""
+
+#: templates/events/create_new.html:14
+msgid "Create new event"
 msgstr ""
 
 #: templates/events/details.html:70
@@ -186,6 +317,8 @@ msgid "Type"
 msgstr ""
 
 #: templates/events/details.html:144
+#: templates/events/panels/my_application.html:11
+#: templates/events/panels/my_visit.html:17
 msgid "Inventory"
 msgstr ""
 
@@ -199,6 +332,43 @@ msgstr ""
 
 #: templates/events/details.html:218 templates/navbar.html:73
 msgid "Proposals"
+msgstr ""
+
+#: templates/events/modals/apply_for_event.html:12
+#: templates/events/modals/propose_event.html:21
+msgid "Message"
+msgstr ""
+
+#: templates/events/modals/create_visit.html:15 templates/navbar.html:30
+#: templates/navbar.html.py:40 templates/sites/details.html:57
+msgid "Create event"
+msgstr ""
+
+#: templates/events/panels/my_application.html:5
+msgid "My application"
+msgstr ""
+
+#: templates/events/panels/my_application.html:9
+#: templates/events/panels/my_proposal.html:8
+msgid "Comment"
+msgstr ""
+
+#: templates/events/panels/my_application.html:19
+#: templates/events/panels/my_visit.html:15
+#: templates/events/panels/my_visit.html:25
+msgid "Nothing"
+msgstr ""
+
+#: templates/events/panels/my_proposal.html:4
+msgid "My Proposal"
+msgstr ""
+
+#: templates/events/panels/my_visit.html:5
+msgid "My visit"
+msgstr ""
+
+#: templates/events/panels/my_visit.html:9
+msgid "Receipt"
 msgstr ""
 
 #: templates/events/search.html:15 templates/navbar.html:20
@@ -244,11 +414,6 @@ msgstr ""
 
 #: templates/navbar.html:26
 msgid "Search Events"
-msgstr ""
-
-#: templates/navbar.html:30 templates/navbar.html.py:40
-#: templates/sites/details.html:57
-msgid "Create event"
 msgstr ""
 
 #: templates/navbar.html:57

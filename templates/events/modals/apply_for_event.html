@@ -7,11 +7,11 @@
   </form>
   {% endblock %}
 
-{% block modal_title %} Apply for event {% endblock %}
+{% block modal_title %}{% trans "Apply for event" %}{% endblock %}
 {% block modal_body %}
-<textarea class="form-control" type="textarea" id="comment" name="comment" placeholder="Message" maxlength="140" rows="7">
+<textarea class="form-control" type="textarea" id="comment" name="comment" placeholder="{% trans 'Message' %}" maxlength="140" rows="7">
 </textarea>
 {% endblock %}
 {% block modal_footer %}
-    <button type="submit" class="btn btn-primary">Apply for event</button>
+    <button type="submit" class="btn btn-primary">{% trans "Apply for event" %}</button>
 {% endblock %}
