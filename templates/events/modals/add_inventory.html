@@ -1,11 +1,12 @@
 {% extends "events/modals/base.html" %}
 
+{% load i18n %}
 
 {% block modal_id %}modalAddInventory{% endblock %}
 {% block modal_labelledby %}modalAddInventory{% endblock %}
 
 {% block modal_content %}
-  <form method="post" enctype="multipart/form-data" action="{% url 'let_me_app:add_inventory' event=object.id %}">
+<form method="post" enctype="multipart/form-data" action="{% url 'let_me_app:add_inventory' event=object.id %}">
     {% csrf_token %}
     {{ block.super }}
 </form>

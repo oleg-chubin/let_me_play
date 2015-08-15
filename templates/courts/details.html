@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load staticfiles let_me_escort leaflet_tags %}
+{% load staticfiles let_me_escort leaflet_tags i18n %}
 
 {% block extra_head %}
   {% leaflet_css %}
@@ -9,9 +9,9 @@
 
 {% block breadcrumbs %}
 <ol class="breadcrumb">
-  <li><a href="#">Home</a></li>
-  <li><a href="{% url "let_me_app:view_site" pk=object.site_id %}">Site</a></li>
-  <li class="active">Court</li>
+  <li><a href="#">{% trans "Home" %}</a></li>
+  <li><a href="{% url "let_me_app:view_site" pk=object.site_id %}">{% trans "Site" %}</a></li>
+  <li class="active">{% trans "Court" %}</li>
 </ol>
 {% endblock %}
 
@@ -29,31 +29,25 @@
         {{ object.site.name }}
       {% endfollowdropdown %}
     </h2>
-    <h3> Description </h3>
+    <h3> {% trans "Description" %} </h3>
     <p>
       {{ object.description|linebreaksbr }}
     </p>
-    <h3> Events </h3>
+    <h3> {% trans "Events" %} </h3>
     <ul>
       {% for event in object.event_set.all %}
         <li>
           {% followdropdown event "escort/follow_menu.html" %}
             <a href="{% url "let_me_app:view_event" pk=event.id %}"> {{ event.name }} ({{ event.start_at }}) </a>
-            {% ifequal event.status 1 %}
-              <span class="label label-success">Pending</span>
-            {% else %}
-              {% ifequal event.status 2 %}
-                <span class="label label-primary">Completed</span>
-              {% else %}
-                <span class="label label-default">Cancelled</span>
-              {% endifequal %}
-            {% endifequal %}
+            <span class="label label-info">
+              {{ event.status|as_status:EVENT_STATUSES.CHOICES }}
+            </span>
           {% endfollowdropdown %}
         </li>
       {% endfor %}
     </ul>
     {% if is_admin %}
-      <h3> Admin group </h3>
+      <h3>{% trans "Admin group" %}</h3>
       <ul>
         {% for group_user in object.admin_group.user_set.all %}
         <li>
@@ -76,7 +70,7 @@
       {% endfor %}
       <a href="{% url 'let_me_app:create_court_event' court=object.id site=object.site_id %}" class="btn btn-primary">
         <span class="glyphicon glyphicon-record" aria-hidden="true"></span>
-        Create event
+        {% trans "Create event" %}
       </a>
     </div>
 

@@ -1,11 +1,13 @@
 {% extends "events/modals/base.html" %}
 
-  {% block modal_content %}
-    <form method="post" enctype="multipart/form-data" action="{% url 'let_me_app:create_application' event=object.id %}">
-      {% csrf_token %}
-      {{ block.super }}
-  </form>
-  {% endblock %}
+{% load i18n %}
+
+{% block modal_content %}
+  <form method="post" enctype="multipart/form-data" action="{% url 'let_me_app:create_application' event=object.id %}">
+    {% csrf_token %}
+    {{ block.super }}
+</form>
+{% endblock %}
 
 {% block modal_title %}{% trans "Apply for event" %}{% endblock %}
 {% block modal_body %}

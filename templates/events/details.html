@@ -4,9 +4,9 @@
 
 {% block extra_head %}
   {% leaflet_css %}
-  <link href="{% static "css/event.css" %}" rel="stylesheet">
-  <link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
-  <link href="{% static "css/info_panel.css" %}" rel="stylesheet">
+  <link href="{% static 'css/event.css' %}" rel="stylesheet">
+  <link href="{% static 'css/group_buttons.css' %}" rel="stylesheet">
+  <link href="{% static 'css/info_panel.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -65,7 +65,7 @@
   </div>
   <ul class="list-group">
     <li class="list-group-item">
-      <div class="row" id="dropdown-detail-1">
+      <div class="row" id="dropdown-detail-0">
         <div class="col-xs-10">
           <h4> {% trans "Map" %} </h4>
         </div>
@@ -81,7 +81,7 @@
     </li>
     <li class="list-group-item">
       <div class="row toggle" id="dropdown-detail-1" data-toggle="detail-1">
-        <div class="col-xs-10"> <h4> Site </h4> </div>
+        <div class="col-xs-10"> <h4> {% trans "Site" %} </h4> </div>
         <div class="col-xs-2">
           <span class="glyphicon glyphicon-menu-down pull-right toggle-icon"></span>
           <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span>
@@ -257,10 +257,12 @@
   {% include "autocomplete_light/static.html" %}
   {% leaflet_js %}
   <script type="text/javascript">
-      function map_init_basic (map, options) {
-          L.marker([{{ object.court.site.geo_point.1 }}, {{ object.court.site.geo_point.0 }}]).addTo(map);
-          map.panTo(new L.LatLng({{ object.court.site.geo_point.1 }}, {{ object.court.site.geo_point.0 }}));
-      }
+      {% with longitude=object.court.site.geo_point.0|stringformat:"f" latitude=object.court.site.geo_point.1|stringformat:"f" %}
+          function map_init_basic (map, options) {
+              L.marker([{{ latitude }}, {{ longitude }}]).addTo(map);
+              map.panTo(new L.LatLng({{ latitude }}, {{ longitude }}));
+          }
+      {% endwith %} 
   </script>
   <script src="{% static "js/expandable_listgroup.js" %}"></script>
 {% endblock %}
