@@ -1,20 +1,20 @@
 {% extends 'base.html' %}
 
-{% load staticfiles let_me_escort leaflet_tags %}
+{% load staticfiles let_me_escort leaflet_tags i18n %}
 
 {% block extra_head %}
   {% leaflet_css %}
-  <link href="{% static "css/event.css" %}" rel="stylesheet">
-  <link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
-  <link href="{% static "css/info_panel.css" %}" rel="stylesheet">
+  <link href="{% static 'css/event.css' %}" rel="stylesheet">
+  <link href="{% static 'css/group_buttons.css' %}" rel="stylesheet">
+  <link href="{% static 'css/info_panel.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block breadcrumbs %}
   <ol class="breadcrumb">
-    <li><a href="#">Home</a></li>
-    <li><a href="{% url 'let_me_app:view_site' pk=object.court.site_id %}">Site</a></li>
-    <li><a href="{% url 'let_me_app:view_court' pk=object.court_id %}">Court</a></li>
-    <li class="active">Event</li>
+    <li><a href="#">{% trans "Home" %}</a></li>
+    <li><a href="{% url 'let_me_app:view_site' pk=object.court.site_id %}">{% trans "Site" %}</a></li>
+    <li><a href="{% url 'let_me_app:view_court' pk=object.court_id %}">{% trans "Court" %}</a></li>
+    <li class="active">{% trans "Event" %}</li>
   </ol>
 {% endblock %}
 
@@ -65,8 +65,10 @@
   </div>
   <ul class="list-group">
     <li class="list-group-item">
-      <div class="row" id="dropdown-detail-1">
-        <div class="col-xs-10"> <h4> Map </h4> </div>
+      <div class="row" id="dropdown-detail-0">
+        <div class="col-xs-10">
+          <h4> {% trans "Map" %} </h4>
+        </div>
       </div>
       <div id="map-1">
         {% leaflet_map "yourmap" callback="window.map_init_basic" %}
@@ -79,7 +81,7 @@
     </li>
     <li class="list-group-item">
       <div class="row toggle" id="dropdown-detail-1" data-toggle="detail-1">
-        <div class="col-xs-10"> <h4> Site </h4> </div>
+        <div class="col-xs-10"> <h4> {% trans "Site" %} </h4> </div>
         <div class="col-xs-2">
           <span class="glyphicon glyphicon-menu-down pull-right toggle-icon"></span>
           <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span>
@@ -87,15 +89,15 @@
       </div>
       <div id="detail-1">
         <p>
-          <strong>Name</strong>
+          <strong>{% trans "Name" %}</strong>
           {{ object.court.site.name }}
         </p>
         <p>
-          <strong>Description</strong>
+          <strong>{% trans "Description" %}</strong>
           {{ object.court.site.description|linebreaksbr }}
         </p>
         <p>
-          <strong>Address</strong>
+          <strong>{% trans "Address" %}</strong>
           <address>
             {{ object.court.site.address|linebreaksbr }}
           </address>
@@ -104,41 +106,41 @@
     </li>
     <li class="list-group-item">
       <div class="row toggle" id="dropdown-detail-2" data-toggle="detail-2">
-        <div class="col-xs-10"> <h4>Court</h4> </div>
+        <div class="col-xs-10"> <h4>{% trans "Court" %}</h4> </div>
         <div class="col-xs-2"><span class="glyphicon glyphicon-menu-down pull-right toggle-icon"></span>
             <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
       </div>
       <div id="detail-2">
         <p>
-          <strong>Type</strong>
+          <strong>{% trans "Type" %}</strong>
           {{ object.court.activity_type.title }}
         </p>
         <p>
-          <strong>Description</strong>
+          <strong>{% trans "Description" %}</strong>
           {{ object.court.description|linebreaksbr }}
         </p>
       </div>
     </li>
     <li class="list-group-item">
       <div class="row toggle" id="dropdown-detail-3" data-toggle="detail-3">
-        <div class="col-xs-10"> <h4>Event</h4> </div>
+        <div class="col-xs-10"> <h4>{% trans "Event" %}</h4> </div>
         <div class="col-xs-2"><span class="glyphicon glyphicon-menu-down pull-right toggle-icon"></span>
             <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
       </div>
       <div id="detail-3">
         <p>
-          <strong>Name</strong>
+          <strong>{% trans "Name" %}</strong>
           {{ object.name|linebreaksbr }}
         </p>
         <p>
-          <strong>Description</strong>
+          <strong>{% trans "Description" %}</strong>
           {{ object.description|linebreaksbr }}
         </p>
       </div>
     </li>
     <li class="list-group-item">
       <div class="row toggle" id="dropdown-detail-4" data-toggle="detail-4">
-        <div class="col-xs-10"> <h4>Inventory</h4> </div>
+        <div class="col-xs-10"> <h4>{% trans "Inventory" %}</h4> </div>
         <div class="col-xs-2"><span class="glyphicon glyphicon-menu-down pull-right toggle-icon"></span>
             <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
       </div>
@@ -158,7 +160,7 @@
     </li>
     <li class="list-group-item">
       <div class="row toggle" id="dropdown-detail-5" data-toggle="detail-5">
-        <div class="col-xs-10"> <h4>Visitors</h4> </div>
+        <div class="col-xs-10"> <h4>{% trans "Visitors" %}</h4> </div>
         <div class="col-xs-2"><span class="glyphicon glyphicon-menu-down pull-right toggle-icon"></span>
             <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
       </div>
@@ -188,7 +190,7 @@
     {% if is_admin %}
       <li class="list-group-item">
         <div class="row toggle" id="dropdown-detail-6" data-toggle="detail-6">
-          <div class="col-xs-10"> <h4>Applications</h4> </div>
+          <div class="col-xs-10"> <h4>{% trans "Applications" %}</h4> </div>
           <div class="col-xs-2"><span class="glyphicon glyphicon-menu-down pull-right toggle-icon"></span>
             <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
         </div>
@@ -212,7 +214,7 @@
       </li>
       <li class="list-group-item">
         <div class="row toggle" id="dropdown-detail-7" data-toggle="detail-7">
-          <div class="col-xs-10"> <h4>Proposals</h4> </div>
+          <div class="col-xs-10"> <h4>{% trans "Proposals" %}</h4> </div>
           <div class="col-xs-2"><span class="glyphicon glyphicon-menu-down pull-right toggle-icon"></span>
             <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
         </div>
@@ -255,10 +257,12 @@
   {% include "autocomplete_light/static.html" %}
   {% leaflet_js %}
   <script type="text/javascript">
-      function map_init_basic (map, options) {
-          L.marker([{{ object.court.site.geo_point.1 }}, {{ object.court.site.geo_point.0 }}]).addTo(map);
-          map.panTo(new L.LatLng({{ object.court.site.geo_point.1 }}, {{ object.court.site.geo_point.0 }}));
-      }
+      {% with longitude=object.court.site.geo_point.0|stringformat:"f" latitude=object.court.site.geo_point.1|stringformat:"f" %}
+          function map_init_basic (map, options) {
+              L.marker([{{ latitude }}, {{ longitude }}]).addTo(map);
+              map.panTo(new L.LatLng({{ latitude }}, {{ longitude }}));
+          }
+      {% endwith %} 
   </script>
   <script src="{% static "js/expandable_listgroup.js" %}"></script>
 {% endblock %}

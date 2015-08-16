@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load staticfiles %}
+{% load staticfiles i18n %}
 
 {% block extra_head %}
 <link href="{% static "css/event.css" %}" rel="stylesheet">
@@ -9,8 +9,8 @@
 
 {% block breadcrumbs %}
 <ol class="breadcrumb">
-  <li><a href="#">Home</a></li>
-  <li class="active">Managed events</li>
+  <li><a href="#">{% trans "Home" %}</a></li>
+  <li class="active">{% trans "Managed events" %}</li>
 </ol>
 {% endblock %}
 

@@ -22,8 +22,8 @@ class BootstrapMultipleChoiceWidget(autocomplete_light.MultipleChoiceWidget):
 
 
 class BootstrapChoiceWidget(autocomplete_light.ChoiceWidget):
-    def build_attrs(self, name=None):
-        attrs = super(BootstrapChoiceWidget, self).build_attrs(name=name)
+    def build_attrs(self, *args, **kwargs):
+        attrs = super(BootstrapChoiceWidget, self).build_attrs(*args, **kwargs)
         attrs['class'] = attrs['class'] + ' form-control'
         return attrs
 

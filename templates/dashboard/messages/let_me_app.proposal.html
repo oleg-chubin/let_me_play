@@ -1,23 +1,26 @@
 {% extends 'dashboard/messages/base.html' %}
 
-{% load let_me_escort %}
+{% load let_me_escort i18n %}
 
 {% block "image_url" %} http://placehold.it/50/55C1E7/fff&text=A {% endblock %}
 {% block "header" %}
-    Proposal {% if object.text == 'created' %} was created {% else %} was updated {% endif %}
+    {% trans "Proposal" %} {% if object.text == 'created' %} {% trans "was created" %} {% else %} {% trans "was updated" %} {% endif %}
 {% endblock %}
 {% block "description" %}
   {% if object.text == 'created' %}
-    Event
-    <a href="{% url "let_me_app:view_event" pk=object.object.event.id %}">
+    {% trans "Chat" %}
+    <a href="{% url "let_me_app:chat_details" pk=object.object.internalmessage.id %}">
       {{ object.object.event.name }}
-    </a> has been proposed for user {{ object.object.user }}
+    </a> {% trans "has been created for user" %} 
+    <a href="{% url "let_me_app:chat_details" pk=object.object.event.id %}">
+      {{ object.object.event.name }}
+    </a>
   {% else %}
-    Proposal for event
+    {% trans "New message in " %}
     <a href="{% url "let_me_app:view_event" pk=object.object.event.id %}">
       {{ object.object.event.name }}
-    </a> for user {{ object.object.user }}
-    has been
+    </a> {% trans "for user" %} {{ object.object.user }}
+    {% trans "has been" %}
     {{ object.object.status|as_status:APPLICATION_STATUSES.CHOICES }}
   {% endif %}
 {% endblock %}

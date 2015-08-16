@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load staticfiles let_me_escort leaflet_tags %}
+{% load staticfiles let_me_escort leaflet_tags i18n %}
 
 {% block extra_head %}
   {% leaflet_css %}
@@ -10,9 +10,9 @@
 
 {% block breadcrumbs %}
   <ol class="breadcrumb">
-    <li><a href="#">Home</a></li>
-    <li><a href="{% url 'let_me_app:view_site' pk=site_object.id %}">Site</a></li>
-    <li class="active">Event</li>
+    <li><a href="#">{% trans "Home" %}</a></li>
+    <li><a href="{% url 'let_me_app:view_site' pk=site_object.id %}">{% trans "Site" %}</a></li>
+    <li class="active">{% trans "Event" %}</li>
   </ol>
 {% endblock %}
 
@@ -23,7 +23,7 @@
   </div>
   <div class="col-md-6">
     <form method="post">
-      <legend> Site </legend>
+      <legend>{% trans "Site" %} </legend>
       <p>
         {{ site_object.name }}
       </p>
@@ -36,14 +36,14 @@
         {% csrf_token %}
         {% for form_name, form in forms.items %}
           {% if form_name != 'site' %}
-            <legend>{{ form_name|title }} details </legend>
+            <legend>{{ form_name|title }} {% trans "details" %} </legend>
             {% include "form.html" %}
           {% endif %}
         {% endfor %}
       <div class="ui-group-buttons pull-right marginBottom10">
-        <button type="submit" class="btn btn-success">Save</button>
+        <button type="submit" class="btn btn-success">{% trans "Save" %}</button>
         <div class="or"></div>
-        <a href="{% url 'let_me_app:view_site' pk=site_object.id %}" class="btn btn-danger">Cancel</a>
+        <a href="{% url 'let_me_app:view_site' pk=site_object.id %}" class="btn btn-danger">{% trans "Cancel" %}</a>
       </div>
     </form>
   </div>

@@ -11,8 +11,8 @@
 
 {% block breadcrumbs %}
   <ol class="breadcrumb">
-    <li><a href="#">Home</a></li>
-    <li class="active">Events</li>
+    <li><a href="#">{% trans "Home" %}</a></li>
+    <li class="active">{% trans "Events" %}</li>
   </ol>
 {% endblock %}
 
@@ -26,15 +26,15 @@
       {% with form=search_form %}
         {% include "form.html" %}
       {% endwith %}
-      <button type="submit" class="btn btn-success pull-right"><span class="glyphicon glyphicon-search"></span> Find</button>
+      <button type="submit" class="btn btn-success pull-right"><span class="glyphicon glyphicon-search"></span> {% trans "Find" %}</button>
       </form>
     </div>
   </div>
   <ul>
   <hgroup class="mb20">
-    <h1>Search Results</h1>
+    <h1>{% trans "Search Results" %}</h1>
     <h2 class="lead">
-      <strong class="text-danger">{{ object_list.count }}</strong> results were found
+      <strong class="text-danger">{{ object_list.count }}</strong> {% trans "results were found" %}
     </h2>
   </hgroup>
 
@@ -51,7 +51,7 @@
             <ul class="meta-search">
               <li><i class="glyphicon glyphicon-calendar"></i> <span>{{ object.start_at|date }}</span></li>
               <li><i class="glyphicon glyphicon-time"></i> <span>{{ object.start_at|time }}</span></li>
-              <li class="event_item" data-record_id="{{object.id}}" data-geo_point="[{{ object.court.site.geo_point.x }}, {{ object.court.site.geo_point.y }}]"><i class="glyphicon glyphicon-tags"></i> <span>People</span></li>
+              <li class="event_item" data-record_id="{{object.id}}" data-geo_point="[{{ object.court.site.geo_point.x }}, {{ object.court.site.geo_point.y }}]"><i class="glyphicon glyphicon-tags"></i> <span>{% trans "People" %}</span></li>
             </ul>
           </div>
             <div class="col-xs-12 col-sm-12 col-md-7 excerpet">

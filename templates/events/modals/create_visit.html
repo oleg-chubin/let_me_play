@@ -1,5 +1,6 @@
 {% extends "events/modals/base.html" %}
 
+{% load i18n %}
 
 {% block modal_id %}modalCreateVisit{% endblock %}
 {% block modal_labelledby %}modalCreateVisit{% endblock %}
@@ -11,12 +12,12 @@
 </form>
   {% endblock %}
 
-{% block modal_title %} Create event {% endblock %}
+{% block modal_title %}{% trans "Create event" %}{% endblock %}
 {% block modal_body %}
   <div class="form-group">
     {{ visit_form.users }}
   </div>
 {% endblock %}
 {% block modal_footer %}
-    <button type="submit" class="btn btn-primary">Create visit</button>
+    <button type="submit" class="btn btn-primary">{% trans "Create visit" %}</button>
 {% endblock %}

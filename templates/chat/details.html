@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 
-{% load let_me_chat %}
-
-{% load staticfiles %}
+{% load let_me_chat i18n staticfiles %}
 
 {% block extra_head %}
 <link href="{% static "css/event.css" %}" rel="stylesheet">
@@ -12,9 +10,9 @@
 
 {% block breadcrumbs %}
 <ol class="breadcrumb">
-  <li><a href="#">Home</a></li>
-  <li><a href="{% url "let_me_app:chat_list" %}">Chats</a></li>
-  <li class="active">Chat</li>
+  <li><a href="#">{% trans "Home" %}</a></li>
+  <li><a href="{% url "let_me_app:chat_list" %}">{% trans "Chats" %}</a></li>
+  <li class="active">{% trans "Chat" %}</li>
 </ol>
 {% endblock %}
 

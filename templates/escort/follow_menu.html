@@ -1,3 +1,5 @@
+{% load i18n %}
+
 {{ inner_text }}
 <div class="btn-group show-on-hover">
   <span data-toggle="dropdown">
@@ -14,7 +16,7 @@
         {% csrf_token %}
       </form>
       <a href="#" onClick="$(this).parent().find('form').submit()">
-        {% if is_followed %} Not follow {% else %} Follow {% endif %}
+        {% if is_followed %}{% trans "Not follow" %}{% else %}{% trans "Follow" %}{% endif %}
       </a>
     </li>
   </ul>

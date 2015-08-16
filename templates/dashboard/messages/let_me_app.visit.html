@@ -1,22 +1,22 @@
 {% extends 'dashboard/messages/base.html' %}
 
-{% load let_me_escort %}
+{% load let_me_escort i18n %}
 
 {% block "image_url" %} http://placehold.it/50/e5a547/fff&text=V {% endblock %}
 {% block "header" %}
-  Visit {% if object.text == 'created' %} was created {% else %} was updated {% endif %}
+ {% trans "Visit" %} {% if object.text == 'created' %} {% trans "was created" %} {% else %} {% trans "was updated" %} {% endif %}
 {% endblock %}
 {% block "description" %}
   {% if object.text == 'created' %}
-    User {{ object.object.user }} has arranged visit for event
+    {% trans "User" %} {{ object.object.user }} {% trans "has arranged visit for event" %}
     <a href="{% url "let_me_app:view_event" pk=object.object.event_id %}">
       {{ object.object.event.name }}
     </a>
   {% else %}
-    User's {{ object.object.user }} visit for event
+    {% trans "User's" %} {{ object.object.user }} {% trans "visit for event" %}
     <a href="{% url "let_me_app:view_event" pk=object.object.event_id %}">
       {{ object.object.event.name }}
     </a>
-    has been {{ object.object.status|as_status:VISIT_STATUSES.CHOICES }}
+    {% trans "has been" %} {{ object.object.status|as_status:VISIT_STATUSES.CHOICES }}
   {% endif %}
 {% endblock %}

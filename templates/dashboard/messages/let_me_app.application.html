@@ -1,23 +1,23 @@
 {% extends 'dashboard/messages/base.html' %}
 
-{% load let_me_escort %}
+{% load let_me_escort i18n %}
 
 {% block "image_url" %} http://placehold.it/50/55C1E7/fff&text=A {% endblock %}
 {% block "header" %}
-    Application {% if object.text == 'created' %} was created {% else %} was updated {% endif %}
+    {% trans "Application" %} {% if object.text == 'created' %} {% trans "was created"%} {% else %} {% trans "was updated" %} {% endif %}
 {% endblock %}
 {% block "description" %}
   {% if object.text == 'created' %}
-    User {{ object.object.user }} has applied for
+    {% trans "User" %} {{ object.object.user }} {% trans "has applied for" %}
     <a href="{% url "let_me_app:view_event" pk=object.object.event.id %}">
       {{ object.object.event.name }}
     </a>
   {% else %}
-    User's {{ object.object.user }} application for event
+    {% trans "User's" %} {{ object.object.user }} {% trans "application for event" %}
     <a href="{% url "let_me_app:view_event" pk=object.object.event.id %}">
       {{ object.object.event.name }}
     </a>
-    has been
+    {% trans "has been" %}
     {{ object.object.status|as_status:APPLICATION_STATUSES.CHOICES }}
   {% endif %}
 {% endblock %}

@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 
-{% load let_me_chat %}
-
-{% load staticfiles %}
+{% load let_me_chat i18n staticfiles %}
 
 {% block extra_head %}
 <link href="{% static "css/event.css" %}" rel="stylesheet">
@@ -11,8 +9,8 @@
 
 {% block breadcrumbs %}
 <ol class="breadcrumb">
-  <li><a href="#">Home</a></li>
-  <li class="active">Chats</li>
+  <li><a href="#">{% trans "Home" %}</a></li>
+  <li class="active">{% trans "Chats" %}</li>
 </ol>
 {% endblock %}
 
@@ -21,7 +19,7 @@
 <div class="panel panel-default">
   <div class="panel-heading">
     <h3 class="panel-title">
-      Chat list
+      {% trans "Chat list" %}
     </h3>
   </div>
 
@@ -33,9 +31,11 @@
           <div class="col-xs-10">
             <h4>
               {% if object.subject_id %}
-                Event "{{object.subject.event.name}}" discussion
+                {% blocktrans with event_name=object.subject.event.name %}
+                Event "{{ event_name}}" discussion
+                {% endblocktrans %}
               {% else %}
-                Group chat
+                {% trans "Group chat" %}
               {% endif %}
             </h4>
           </div>
@@ -64,7 +64,7 @@
             <p>
               <strong><i class="glyphicon glyphicon-link"></i></strong>
               <a href="{% url "let_me_app:chat_details" pk=object.id %}">
-               More...
+               {% trans "More..." %}
               </a>
             </p>
         </div>

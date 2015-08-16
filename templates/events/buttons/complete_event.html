@@ -1,4 +1,7 @@
+{% load i18n %}
 <form method="post" action="{% url 'let_me_app:complete_event' event=object.id %}">
 {% csrf_token %}
 </form>
-<a href="#" onClick="$(this).parent().find('form').submit()">Complete</a>
+<a href="#" onClick="$(this).parent().find('form').submit()">
+  {% trans "Complete" %}
+</a>

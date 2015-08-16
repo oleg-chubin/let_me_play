@@ -1,17 +1,18 @@
 {% extends "events/modals/base.html" %}
 
+{% load i18n %}
 
 {% block modal_id %}modalAddInventory{% endblock %}
 {% block modal_labelledby %}modalAddInventory{% endblock %}
 
 {% block modal_content %}
-  <form method="post" enctype="multipart/form-data" action="{% url 'let_me_app:add_inventory' event=object.id %}">
+<form method="post" enctype="multipart/form-data" action="{% url 'let_me_app:add_inventory' event=object.id %}">
     {% csrf_token %}
     {{ block.super }}
 </form>
   {% endblock %}
 
-{% block modal_title %} Add inventory {% endblock %}
+{% block modal_title %}{% trans "Add inventory" %}{% endblock %}
 {% block modal_body %}
   <div class="form-group">
     {{ inventory_form.equipment }}
@@ -21,5 +22,5 @@
   </div>
 {% endblock %}
 {% block modal_footer %}
-    <button type="submit" class="btn btn-primary">Add inventory</button>
+    <button type="submit" class="btn btn-primary">{% trans "Add inventory" %}</button>
 {% endblock %}

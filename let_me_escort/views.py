@@ -11,6 +11,7 @@ from django.views.generic.base import View as BaseView
 from django.views.generic.list import ListView
 from django.db import transaction
 
+
 class DashboardView(ListView):
     model = models.Changelog
     template_name = 'dashboard/list.html'
@@ -29,11 +30,17 @@ class DashboardView(ListView):
 
         objects = {}
         for model_name, pks in object_by_models.items():
+            if model_name in ('let_me_app.InternalMessage', ):
+                continue
             model = get_model(model_name)
             objects[model_name] = {i.pk: i for i in model.objects.filter(pk__in=pks).select_related()}
+        
+        result['decoded_list'] = []
         for data in decoded_list:
-            data['object'] = objects[data['model']].get(data['id'])
-        result['decoded_list'] = decoded_list
+            obj = objects.get(data['model'], {}).get(data['id'])
+            if obj:
+                data['object'] = obj
+                result['decoded_list'].append(data)
         return result
 
     def get_queryset(self, **kwargs):
