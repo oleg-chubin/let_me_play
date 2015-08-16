@@ -54,12 +54,12 @@
                     <span class="caret"></span>
                   </a>
                   <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">{% trans "Settings" %}</a></li>
+                    <li><a href="{% url 'user_settings' %}">{% trans "Settings" %}</a></li>
                     <li class="divider"></li>
-                    <li><a href="#">{% trans "User stats" %}</span></a></li>
+                    <li><a href="#">{% trans "User stats" %}</a></li>
                     <li class="divider"></li>
                     <li>
-                      <a href="{% url "let_me_app:chat_list" %}">
+                      <a href="{% url 'let_me_app:chat_list' %}">
                       {% trans "Messages" %}
                       {% if messages_count %}
                         <span class="badge badge-info">
