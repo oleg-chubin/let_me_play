@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-15 22:53+0000\n"
+"POT-Creation-Date: 2015-08-17 21:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: let_me_app/autocomplete_light_registry.py:14
+msgid "Please type to find users"
+msgstr ""
+
+#: let_me_app/autocomplete_light_registry.py:19
+msgid "Please type to find equipment"
+msgstr ""
 
 #: let_me_app/models.py:26
 msgid "New"
@@ -57,51 +65,80 @@ msgstr ""
 msgid "Missed"
 msgstr ""
 
-#: let_me_app/models.py:86 let_me_app/models.py:151
+#: let_me_app/models.py:84 let_me_app/models.py:149
 msgid "image"
 msgstr ""
 
-#: let_me_app/models.py:87
+#: let_me_app/models.py:85
 msgid "thumbnail"
 msgstr ""
 
-#: let_me_app/models.py:103 let_me_app/models.py:124 let_me_app/models.py:130
+#: let_me_app/models.py:86
+msgid "note"
+msgstr ""
+
+#: let_me_app/models.py:101 let_me_app/models.py:122 let_me_app/models.py:128
 msgid "date created"
 msgstr ""
 
-#: let_me_app/models.py:106 let_me_app/models.py:125 let_me_app/models.py:131
+#: let_me_app/models.py:104 let_me_app/models.py:123 let_me_app/models.py:129
 msgid "text"
 msgstr ""
 
-#: let_me_app/models.py:141 let_me_app/models.py:162
+#: let_me_app/models.py:136
+msgid "Geo point"
+msgstr ""
+
+#: let_me_app/models.py:138 let_me_app/models.py:211 let_me_app/models.py:224
+#: let_me_app/models.py:239
+msgid "name"
+msgstr ""
+
+#: let_me_app/models.py:139 let_me_app/models.py:160 let_me_app/models.py:225
 #: templates/courts/details.html:32 templates/events/details.html:97
 #: templates/events/details.html.py:120 templates/events/details.html:137
 msgid "Description"
 msgstr ""
 
-#: let_me_app/models.py:142 templates/events/details.html:101
+#: let_me_app/models.py:140 templates/events/details.html:101
 #: templates/sites/details.html:33
 msgid "Address"
 msgstr ""
 
-#: let_me_app/models.py:189 let_me_app/models.py:225
+#: let_me_app/models.py:150
+msgid "title"
+msgstr ""
+
+#: let_me_app/models.py:187 let_me_app/models.py:223
 msgid "date started"
 msgstr ""
 
-#: let_me_app/models.py:190
+#: let_me_app/models.py:188
 msgid "duration (minutes)"
 msgstr ""
 
-#: let_me_app/models.py:191
+#: let_me_app/models.py:189
 msgid "period (hours)"
 msgstr ""
 
-#: let_me_app/models.py:198
+#: let_me_app/models.py:196
 msgid "registration start within period"
 msgstr ""
 
-#: let_me_app/models.py:199
+#: let_me_app/models.py:197
 msgid "estimated price"
+msgstr ""
+
+#: let_me_app/models.py:219
+msgid "description"
+msgstr ""
+
+#: let_me_app/models.py:247
+msgid "amount"
+msgstr ""
+
+#: let_me_app/models.py:255 let_me_app/models.py:268
+msgid "comment"
 msgstr ""
 
 #: let_me_auth/models.py:13
@@ -146,6 +183,10 @@ msgstr ""
 msgid "users"
 msgstr ""
 
+#: let_me_play/forms.py:21
+msgid "language"
+msgstr ""
+
 #: templates/chat/details.html:13 templates/chat/list.html:12
 #: templates/courts/details.html:12 templates/dashboard/list.html:13
 #: templates/events/clone_event.html:13
@@ -155,6 +196,7 @@ msgstr ""
 #: templates/events/search.html:14 templates/events/user_events.html:11
 #: templates/events/user_managed_events.html:12
 #: templates/events/user_proposals.html:11 templates/sites/details.html:14
+#: templates/user/settings.html:11
 msgid "Home"
 msgstr ""
 
@@ -415,7 +457,7 @@ msgstr ""
 #: templates/events/clone_event.html:47
 #: templates/events/create_for_court.html:47
 #: templates/events/create_for_site.html:44
-#: templates/events/create_new.html:27
+#: templates/events/create_new.html:27 templates/user/settings.html:26
 msgid "Save"
 msgstr ""
 
@@ -555,16 +597,20 @@ msgstr ""
 msgid "You are not logged in. "
 msgstr ""
 
-#: templates/navbar.html:126
-msgid "Go"
-msgstr ""
-
 #: templates/sites/details.html:37
 msgid "Description "
 msgstr ""
 
 #: templates/sites/details.html:41
 msgid "Courts"
+msgstr ""
+
+#: templates/user/settings.html:12
+msgid "User settings"
+msgstr ""
+
+#: templates/user/settings.html:21
+msgid "Localization"
 msgstr ""
 
 #: venv/lib/python3.4/site-packages/django/contrib/sitemaps/apps.py:8

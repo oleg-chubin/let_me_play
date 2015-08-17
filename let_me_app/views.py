@@ -604,13 +604,13 @@ class CreateEventView(TemplateView):
         data_forms = OrderedDict()
         for entity, form_class in [('site', forms.SiteForm), ('court', forms.CourtForm)]:
             if not entity in kwargs:
-                data_forms[entity] = form_class(
-                    data=self.request.POST,
-                    files=self.request.FILES,
-                    prefix=entity
-                )
+                kw = {'prefix': entity}
+                if data:
+                    kw['data'] = data
+                    kw['files'] = files
+                data_forms[entity] = form_class(**kw)
         data_forms['event'] = forms.EventForm(
-            data=self.request.POST, files=self.request.FILES, prefix='event')
+            data=data, files=files, prefix='event')
         data_forms['visitors'] = self.get_visitors_form(data, files, **kwargs)
         return data_forms
 

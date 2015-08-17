@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-15 22:53+0000\n"
+"POT-Creation-Date: 2015-08-17 21:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,6 +18,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: let_me_app/autocomplete_light_registry.py:14
+msgid "Please type to find users"
+msgstr "начните набирать для поиска пользователя"
+
+#: let_me_app/autocomplete_light_registry.py:19
+msgid "Please type to find equipment"
+msgstr "начните набирать для поиска оборудования"
 
 #: let_me_app/models.py:26
 msgid "New"
@@ -59,52 +67,91 @@ msgstr "Завершено"
 msgid "Missed"
 msgstr "Пропущенно"
 
-#: let_me_app/models.py:86 let_me_app/models.py:151
+#: let_me_app/models.py:84 let_me_app/models.py:149
 msgid "image"
 msgstr "Изображение"
 
-#: let_me_app/models.py:87
+#: let_me_app/models.py:85
 msgid "thumbnail"
 msgstr "пример изображения"
 
-#: let_me_app/models.py:103 let_me_app/models.py:124 let_me_app/models.py:130
+#: let_me_app/models.py:86
+msgid "note"
+msgstr "замечание"
+
+#: let_me_app/models.py:101 let_me_app/models.py:122 let_me_app/models.py:128
 msgid "date created"
 msgstr "дата создания"
 
-#: let_me_app/models.py:106 let_me_app/models.py:125 let_me_app/models.py:131
+#: let_me_app/models.py:104 let_me_app/models.py:123 let_me_app/models.py:129
 msgid "text"
 msgstr "техт"
 
-#: let_me_app/models.py:141 let_me_app/models.py:162
+#: let_me_app/models.py:136
+msgid "Geo point"
+msgstr ""
+
+#: let_me_app/models.py:138 let_me_app/models.py:211 let_me_app/models.py:224
+#: let_me_app/models.py:239
+#, fuzzy
+msgid "last name"
+msgstr "Фамилия"
+
+
+msgid "name"
+msgstr "Имя"
+
+
+#: let_me_app/models.py:139 let_me_app/models.py:160 let_me_app/models.py:225
 #: templates/courts/details.html:32 templates/events/details.html:97
 #: templates/events/details.html.py:120 templates/events/details.html:137
 msgid "Description"
 msgstr "описание"
 
-#: let_me_app/models.py:142 templates/events/details.html:101
+#: let_me_app/models.py:140 templates/events/details.html:101
 #: templates/sites/details.html:33
 msgid "Address"
 msgstr "Адрес"
 
-#: let_me_app/models.py:189 let_me_app/models.py:225
+#: let_me_app/models.py:150
+msgid "title"
+msgstr "название"
+
+#: let_me_app/models.py:187 let_me_app/models.py:223
 msgid "date started"
 msgstr "Дата начала"
 
-#: let_me_app/models.py:190
+#: let_me_app/models.py:188
 msgid "duration (minutes)"
 msgstr "продолжительность (мин)"
 
-#: let_me_app/models.py:191
+#: let_me_app/models.py:189
 msgid "period (hours)"
 msgstr "период (часы)"
 
-#: let_me_app/models.py:198
+#: let_me_app/models.py:196
 msgid "registration start within period"
 msgstr "старт регистрации"
 
-#: let_me_app/models.py:199
+#: let_me_app/models.py:197
 msgid "estimated price"
 msgstr "приблизительная стоимость"
+
+#: let_me_app/models.py:219
+#, fuzzy
+#| msgid "Description"
+msgid "description"
+msgstr "описание"
+
+#: let_me_app/models.py:247
+msgid "amount"
+msgstr "количество"
+
+#: let_me_app/models.py:255 let_me_app/models.py:268
+#, fuzzy
+#| msgid "Comment"
+msgid "comment"
+msgstr "Комментарий"
 
 #: let_me_auth/models.py:13
 msgid "email address"
@@ -113,10 +160,6 @@ msgstr "емэил"
 #: let_me_auth/models.py:14
 msgid "first name"
 msgstr "Имя"
-
-#: let_me_auth/models.py:15
-msgid "last name"
-msgstr "Фамилия"
 
 #: let_me_auth/models.py:16
 msgid "staff status"
@@ -148,6 +191,10 @@ msgstr "пользователь"
 msgid "users"
 msgstr "пользователи"
 
+#: let_me_play/forms.py:21
+msgid "language"
+msgstr ""
+
 #: templates/chat/details.html:13 templates/chat/list.html:12
 #: templates/courts/details.html:12 templates/dashboard/list.html:13
 #: templates/events/clone_event.html:13
@@ -157,6 +204,7 @@ msgstr "пользователи"
 #: templates/events/search.html:14 templates/events/user_events.html:11
 #: templates/events/user_managed_events.html:12
 #: templates/events/user_proposals.html:11 templates/sites/details.html:14
+#: templates/user/settings.html:11
 msgid "Home"
 msgstr "Главная"
 
@@ -440,7 +488,7 @@ msgstr "Предложить событие"
 #: templates/events/clone_event.html:47
 #: templates/events/create_for_court.html:47
 #: templates/events/create_for_site.html:44
-#: templates/events/create_new.html:27
+#: templates/events/create_new.html:27 templates/user/settings.html:26
 msgid "Save"
 msgstr "Сохранить"
 
@@ -585,10 +633,6 @@ msgstr "Выйти"
 msgid "You are not logged in. "
 msgstr "Вы не зашли в систему"
 
-#: templates/navbar.html:126
-msgid "Go"
-msgstr "Далее"
-
 #: templates/sites/details.html:37
 msgid "Description "
 msgstr "описание"
@@ -596,6 +640,18 @@ msgstr "описание"
 #: templates/sites/details.html:41
 msgid "Courts"
 msgstr "Площадки"
+
+#: templates/user/settings.html:12
+#, fuzzy
+#| msgid "User stats"
+msgid "User settings"
+msgstr "Статистика пользователя"
+
+#: templates/user/settings.html:21
+#, fuzzy
+#| msgid "Applications"
+msgid "Localization"
+msgstr "Заявки"
 
 #: venv/lib/python3.4/site-packages/django/contrib/sitemaps/apps.py:8
 msgid "Site Maps"
@@ -1805,3 +1861,6 @@ msgstr ""
 #: venv/lib/python3.4/site-packages/sorl/thumbnail/admin/compat.py:61
 msgid "Clear image"
 msgstr ""
+
+#~ msgid "Go"
+#~ msgstr "Далее"

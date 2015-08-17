@@ -1,7 +1,7 @@
 import time
 
 from django.contrib.auth.models import Group
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
@@ -75,8 +75,6 @@ ApplicationStatuses = ProposalStatuses
 
 
 class Followable(models.Model):
-    pass
-
     def __str__(self):
         return "followable object {}".format(self.id)
 
@@ -85,7 +83,7 @@ class GalleryImage(models.Model):
     followable = models.ForeignKey(Followable)
     image = models.ImageField(_('image'))
     thumbnail = models.ImageField(_('thumbnail'), null=True, blank=True)
-    note = models.CharField(max_length=128, default="just a picture")
+    note = models.CharField(_('note'), max_length=128, default="just a picture")
 
     THUMBNAIL_HEIGHT = 100
 
@@ -135,11 +133,11 @@ class Changelog(models.Model):
 
 
 class Site(Followable):
-    geo_point = gismodels.PointField(null=True, blank=True)
+    geo_point = gismodels.PointField(verbose_name=_('Geo point'), null=True, blank=True)
 
-    name = models.CharField(max_length=128)
-    description = models.TextField(_("Description"))
-    address = models.TextField(_("Address"))
+    name = models.CharField(verbose_name=_('name'), max_length=128)
+    description = models.TextField(verbose_name=_("Description"))
+    address = models.TextField(verbose_name=_("Address"))
 
     objects = gismodels.GeoManager()
 
@@ -149,7 +147,7 @@ class Site(Followable):
 
 class ActivityType(models.Model):
     image = models.ImageField(_('image'))
-    title = models.CharField(max_length=128)
+    title = models.CharField(_('title'), max_length=128)
 
     def __str__(self):
         return self.title
@@ -210,7 +208,7 @@ class Invoice(models.Model):
 
 
 class InventoryList(models.Model):
-    name = models.CharField(max_length=256)
+    name = models.CharField(_('name'), max_length=256)
 
     def __str__(self):
         return self.name
@@ -218,13 +216,13 @@ class InventoryList(models.Model):
 
 class StaffProfile(Followable):
     user = models.OneToOneField(UserModel)
-    description = models.TextField()
+    description = models.TextField(_('description'))
 
 
 class Event(Followable):
     start_at = models.DateTimeField(_('date started'), db_index=True)
-    name = models.CharField(max_length=128, default='')
-    description = models.TextField(max_length=1024, default='')
+    name = models.CharField(_("name"), max_length=128, default='')
+    description = models.TextField(verbose_name=_("Description"), max_length=1024, default='')
     court = models.ForeignKey(Court)
     invoice = models.ForeignKey(Invoice, null=True, blank=True)
     inventory_list = models.ForeignKey(InventoryList, null=True, blank=True)
@@ -238,7 +236,7 @@ class Event(Followable):
 
 
 class Equipment(models.Model):
-    name = models.CharField(max_length=256)
+    name = models.CharField(_("name"), max_length=256)
 
     def __str__(self):
         return self.name
@@ -246,7 +244,7 @@ class Equipment(models.Model):
 
 class Inventory(models.Model):
     equipment = models.ForeignKey(Equipment)
-    amount = models.IntegerField()
+    amount = models.IntegerField(_("amount"))
     inventory_list = models.ForeignKey(InventoryList)
 
     def __str__(self):
@@ -254,7 +252,7 @@ class Inventory(models.Model):
 
 
 class Proposal(models.Model):
-    comment = models.TextField(max_length=256, default='')
+    comment = models.TextField(_("comment"), max_length=256, default='')
     user = models.ForeignKey(UserModel)
     event = models.ForeignKey(Event)
     status = models.IntegerField(choices=ProposalStatuses.CHOICES,
@@ -267,7 +265,7 @@ class Proposal(models.Model):
 
 
 class Application(models.Model):
-    comment = models.TextField(max_length=256, default='')
+    comment = models.TextField(_("comment"), max_length=256, default='')
     event = models.ForeignKey(Event)
     inventory_list = models.ForeignKey(InventoryList, null=True, blank=True)
     user = models.ForeignKey(UserModel)
