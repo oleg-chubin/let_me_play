@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-17 21:41+0000\n"
+"POT-Creation-Date: 2015-08-18 20:12+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,6 +26,24 @@ msgstr "начните набирать для поиска пользовате
 #: let_me_app/autocomplete_light_registry.py:19
 msgid "Please type to find equipment"
 msgstr "начните набирать для поиска оборудования"
+
+#: let_me_app/forms.py:87
+msgid "start date"
+msgstr "начальная дата"
+
+#: let_me_app/forms.py:90
+msgid "end date"
+msgstr "конечная дата"
+
+#: let_me_app/forms.py:94
+msgid "radius"
+msgstr "радиус"
+
+#: let_me_app/forms.py:96
+#, fuzzy
+#| msgid "active"
+msgid "activity type"
+msgstr "тип активности"
 
 #: let_me_app/models.py:26
 msgid "New"
@@ -93,14 +111,8 @@ msgstr ""
 
 #: let_me_app/models.py:138 let_me_app/models.py:211 let_me_app/models.py:224
 #: let_me_app/models.py:239
-#, fuzzy
-msgid "last name"
-msgstr "Фамилия"
-
-
 msgid "name"
 msgstr "Имя"
-
 
 #: let_me_app/models.py:139 let_me_app/models.py:160 let_me_app/models.py:225
 #: templates/courts/details.html:32 templates/events/details.html:97
@@ -160,6 +172,11 @@ msgstr "емэил"
 #: let_me_auth/models.py:14
 msgid "first name"
 msgstr "Имя"
+
+#: let_me_auth/models.py:15
+#, fuzzy
+msgid "last name"
+msgstr "Фамилия"
 
 #: let_me_auth/models.py:16
 msgid "staff status"

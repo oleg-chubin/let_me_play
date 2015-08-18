@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-17 21:41+0000\n"
+"POT-Creation-Date: 2015-08-18 20:12+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,6 +23,22 @@ msgstr ""
 
 #: let_me_app/autocomplete_light_registry.py:19
 msgid "Please type to find equipment"
+msgstr ""
+
+#: let_me_app/forms.py:87
+msgid "start date"
+msgstr ""
+
+#: let_me_app/forms.py:90
+msgid "end date"
+msgstr ""
+
+#: let_me_app/forms.py:94
+msgid "radius"
+msgstr ""
+
+#: let_me_app/forms.py:96
+msgid "activity type"
 msgstr ""
 
 #: let_me_app/models.py:26

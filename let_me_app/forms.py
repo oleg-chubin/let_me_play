@@ -5,6 +5,7 @@ Created on Jul 4, 2015
 '''
 from django import forms
 from django.contrib.gis import forms as geo_forms
+from django.utils.translation import ugettext_lazy as _
 
 import autocomplete_light
 from leaflet.forms.widgets import LeafletWidget
@@ -83,15 +84,16 @@ class CourtForm(forms.ModelForm):
 
 class EventSearchForm(forms.Form):
     start_date = forms.DateTimeField(
-        required=False, widget=floppyforms_widgets.DateTimeInput())
+        label=_("start date"), required=False, 
+        widget=floppyforms_widgets.DateTimeInput())
     end_date = forms.DateTimeField(
-        required=False, widget=floppyforms_widgets.DateTimeInput())
+        label=_("end date"), required=False, widget=floppyforms_widgets.DateTimeInput())
     geo_point = geo_forms.PointField(
         required=False, widget=floppyforms_widgets.HiddenInput())
     radius = forms.IntegerField(
-        required=False, widget=floppyforms_widgets.NumberInput())
+        label=_("radius"), required=False, widget=floppyforms_widgets.NumberInput())
     activity_type = forms.ModelMultipleChoiceField(
-        models.ActivityType.objects.all(),
+        models.ActivityType.objects.all(), label=_("activity type"),
         required=False, widget=floppyforms_widgets.SelectMultiple()
     )
 
