@@ -363,7 +363,7 @@ class AcceptProposalView(EventActionMixin, BaseView):
         persistence.create_event_visit(proposal.event, proposal.user, None)
 
 
-class DeclineApplicationEventView(EventActionMixin, BaseView):    
+class DeclineApplicationEventView(EventActionMixin, BaseView):
     def check_permissions(self, request, *args, **kwargs):
         return Group.objects.filter(
             court__event=kwargs['event'], user=request.user).exists()
@@ -384,7 +384,7 @@ class AcceptApplicationView(EventActionMixin, BaseView):
     def check_permissions(self, request, *args, **kwargs):
         return Group.objects.filter(
             court__event=kwargs['event'], user=request.user).exists()
-            
+
     def get_queryset(self, request, *args, **kwargs):
         return models.Application.objects.filter(
             event_id=kwargs['event'],
@@ -636,6 +636,17 @@ class CreateEventView(TemplateView):
         view_forms = kwargs.get('forms') or self.get_forms(None, None, **kwargs)
         return {'forms': view_forms}
 
+    def check_permissions(self, request, court):
+        return True
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+
+        if not self.check_permissions(request, context.get('court')):
+            return http.HttpResponseForbidden()
+
+        return self.render_to_response(context)
+
     @transaction.atomic
     def post(self, request, *args, **kwargs):
         view_forms = self.get_forms(request.POST, request.FILES, **kwargs)
@@ -650,6 +661,10 @@ class CreateEventView(TemplateView):
                 self.get_context_data(forms=view_forms, **kwargs))
 
         instances = self.get_instances(view_forms, **kwargs)
+
+        if not self.check_permissions(request, instances['court']):
+            return http.HttpResponseForbidden()
+
         instances['site'].save()
         instances['court'].site = instances['site']
         instances['court'].save()
@@ -683,6 +698,10 @@ class CreateSiteEventView(CreateEventView):
 class CreateCourtEventView(CreateEventView):
     template_name = 'events/create_for_court.html'
 
+    def check_permissions(self, request, court):
+        return (court.admin_group.user_set.filter(id=request.user.id).exists()
+            or self.request.user.is_staff)
+
     def get_context_data(self, **kwargs):
         context = super(CreateCourtEventView, self).get_context_data(**kwargs)
         context['court'] = get_object_or_404(models.Court, pk=kwargs['court'])
@@ -698,6 +717,10 @@ class CloneEventView(TemplateView):
         result['event'] = (kwargs.get('source_event') or
             get_object_or_404(models.Event, pk=kwargs['event']))
         return result
+
+    def check_permissions(self, request, court):
+        return (court.admin_group.user_set.filter(id=request.user.id).exists()
+            or self.request.user.is_staff)
 
     def get_forms(self, data, files, **kwargs):
         data_forms = OrderedDict()

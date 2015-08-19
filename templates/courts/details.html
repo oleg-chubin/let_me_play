@@ -68,10 +68,13 @@
         {% include "courts/buttons/"|add:action|add:'.html' %}
         <div class="or"></div>
       {% endfor %}
+
+    {% if is_admin %}
       <a href="{% url 'let_me_app:create_court_event' court=object.id site=object.site_id %}" class="btn btn-primary">
         <span class="glyphicon glyphicon-record" aria-hidden="true"></span>
         {% trans "Create event" %}
       </a>
+    {% endif %}
     </div>
 
   </div>
