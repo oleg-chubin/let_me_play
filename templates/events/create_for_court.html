@@ -43,6 +43,9 @@
         {% with forms.event as form %}
             {% include "form.html" %}
         {% endwith %}
+        {% with forms.visitors as form %}
+            {% include "form.html" %}
+        {% endwith %}
       <div class="ui-group-buttons pull-right marginBottom10">
         <button type="submit" class="btn btn-success">{% trans "Save" %}</button>
         <div class="or"></div>
