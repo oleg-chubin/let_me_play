@@ -363,7 +363,11 @@ class AcceptProposalView(EventActionMixin, BaseView):
         persistence.create_event_visit(proposal.event, proposal.user, None)
 
 
-class DeclineApplicationEventView(EventActionMixin, BaseView):
+class DeclineApplicationEventView(EventActionMixin, BaseView):    
+    def check_permissions(self, request, *args, **kwargs):
+        return Group.objects.filter(
+            court__event=kwargs['event'], user=request.user).exists()
+
     def get_queryset(self, request, *args, **kwargs):
         return models.Application.objects.filter(
             event_id=kwargs['event'],
@@ -377,6 +381,10 @@ class DeclineApplicationEventView(EventActionMixin, BaseView):
 
 
 class AcceptApplicationView(EventActionMixin, BaseView):
+    def check_permissions(self, request, *args, **kwargs):
+        return Group.objects.filter(
+            court__event=kwargs['event'], user=request.user).exists()
+            
     def get_queryset(self, request, *args, **kwargs):
         return models.Application.objects.filter(
             event_id=kwargs['event'],

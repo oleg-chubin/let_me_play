@@ -66,5 +66,7 @@ def create_event_visit(event, user, inventory_list):
     if created:
         chat = list(models.InternalMessage.objects.filter(subject=event))
         if chat:
-            models.ChatParticipant.objects.create(user=user, chat=chat[0])
+            models.ChatParticipant.objects.get_or_create(
+                user=user, chat=chat[0]
+            )
     return visit
