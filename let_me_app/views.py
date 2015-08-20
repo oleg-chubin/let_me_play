@@ -395,8 +395,11 @@ class AcceptApplicationView(EventActionMixin, BaseView):
     def process_object(self, application):
         application.status = models.ApplicationStatuses.ACCEPTED
         application.save()
+        inventory_list = persistence.clone_inventory_list(
+            application.inventory_list
+        )
         persistence.create_event_visit(
-            application.event, application.user, None
+            application.event, application.user, inventory_list
         )
 
 
