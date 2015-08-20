@@ -60,10 +60,12 @@
   {% include "autocomplete_light/static.html" %}
   {% leaflet_js %}
   <script type="text/javascript">
-      function map_init_basic (map, options) {
-          L.marker([{{ court.site.geo_point.1 }}, {{ court.site.geo_point.0 }}]).addTo(map);
-          map.panTo(new L.LatLng({{ court.site.geo_point.1 }}, {{ court.site.geo_point.0 }}));
-      }
+      {% with longitude=court.site.geo_point.0|stringformat:"f" latitude=court.site.geo_point.1|stringformat:"f" %}
+          function map_init_basic (map, options) {
+              L.marker([{{ latitude }}, {{ longitude }}]).addTo(map);
+              map.panTo(new L.LatLng({{ latitude }}, {{ longitude }}));
+          }
+      {% endwith %}
   </script>
   {% for form in forms.values %}
       {{ form.media }}
