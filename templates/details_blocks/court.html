@@ -1,0 +1,19 @@
+{% load i18n %}
+
+    <li class="list-group-item">
+      <div class="row toggle" id="dropdown-detail-2" data-toggle="detail-2">
+        <div class="col-xs-10"> <h4>{% trans "Court" %}</h4> </div>
+        <div class="col-xs-2"><span class="glyphicon glyphicon-menu-down pull-right toggle-icon"></span>
+            <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
+      </div>
+      <div id="detail-2">
+        <p>
+          <strong>{% trans "Type" %}</strong>
+          {{ object.court.activity_type.title }}
+        </p>
+        <p>
+          <strong>{% trans "Description" %}</strong>
+          {{ object.court.description|linebreaksbr }}
+        </p>
+      </div>
+    </li>

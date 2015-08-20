@@ -17,47 +17,44 @@
 {% endblock %}
 
 {% block main %}
-<div class="row-fluid">
-  <div class="col-md-6">
-    {% leaflet_map "yourmap" callback="window.map_init_basic" %}
-    {% with images=object.galleryimage_set.all %}
-      {% include "images/gallery.html" %}
-    {% endwith %}
-  </div>
-  <div class="col-md-6">
-    <h2>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">
       {% followdropdown object "escort/follow_menu.html" %}
         {{ object.name }}
       {% endfollowdropdown %}
-    </h2>
-    <h3>{% trans "Address" %}</h3>
-    <p>
-      {{ object.address|linebreaksbr }}
-    </p>
-    <h3>{% trans "Description " %}</h3>
-    <p>
-      {{ object.description|linebreaksbr }}
-    </p>
-    <h3>{% trans "Courts" %}</h3>
-    <ul>
-      {% for court in object.court_set.all %}
-        <li>
-          {% followdropdown court "escort/follow_menu.html" %}
-            <a href="{% url "let_me_app:view_court" pk=court.id %}">
-              {{ court.description|truncatewords_html:4 }}
-            </a>
-          {% endfollowdropdown %}
-        </li>
-      {% endfor %}
-    </ul>
-
-    <div class="ui-group-buttons pull-right marginBottom10">
+    </h3>
+  </div>
+  <ul class="list-group">
+    {% include "details_blocks/site.html" with site=object %}
+    <li class="list-group-item">
+      <div class="row toggle" id="dropdown-detail-4" data-toggle="detail-4">
+        <div class="col-xs-10"> <h4>{% trans "Courts" %}</h4> </div>
+        <div class="col-xs-2"><span class="glyphicon glyphicon-menu-down pull-right toggle-icon"></span>
+            <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
+      </div>
+      <div id="detail-4">
+        <ul>
+          {% for court in object.court_set.all %}
+            <li>
+              {% followdropdown court "escort/follow_menu.html" %}
+                <a href="{% url "let_me_app:view_court" pk=court.id %}">
+                  {{ court.description|truncatewords_html:4 }}
+                </a>
+              {% endfollowdropdown %}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </li>
+  </ul>
+  <div class="panel-footer">
+    <div class="ui-group-buttons">
         <a href="{% url 'let_me_app:create_site_event' site=object.id %}" class="btn btn-primary">
           <span class="glyphicon glyphicon-record" aria-hidden="true"></span>
           {% trans "Create event" %}
         </a>
     </div>
-
   </div>
 </div>
 
@@ -68,9 +65,11 @@
   {% include "autocomplete_light/static.html" %}
   {% leaflet_js %}
   <script type="text/javascript">
-      function map_init_basic (map, options) {
-          L.marker([{{ object.geo_point.1 }}, {{ object.geo_point.0 }}]).addTo(map);
-          map.panTo(new L.LatLng({{ object.geo_point.1 }}, {{ object.geo_point.0 }}));
-      }
+      {% with longitude=object.geo_point.0|stringformat:"f" latitude=object.geo_point.1|stringformat:"f" %}
+          function map_init_basic (map, options) {
+              L.marker([{{ latitude }}, {{ longitude }}]).addTo(map);
+              map.panTo(new L.LatLng({{ latitude }}, {{ longitude }}));
+          }
+      {% endwith %}
   </script>
 {% endblock %}
