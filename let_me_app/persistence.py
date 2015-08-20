@@ -70,3 +70,24 @@ def create_event_visit(event, user, inventory_list):
                 user=user, chat=chat[0]
             )
     return visit
+
+
+def clone_inventory_list(inventory_list):
+    if inventory_list is None:
+        return
+    cloned_list = models.InventoryList.objects.create(name=inventory_list.name)
+
+    inventory_collection = []
+    for inventory in inventory_list.inventory_set.all():
+        inventory_collection.append(
+            models.Inventory(
+                amount=inventory.amount,
+                inventory_list=cloned_list,
+                equipment=inventory.equipment
+            )
+        )
+
+    models.Inventory.objects.bulk_create(inventory_collection)
+
+    return cloned_list
+

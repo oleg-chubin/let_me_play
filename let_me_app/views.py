@@ -748,8 +748,15 @@ class CloneEventView(TemplateView):
         event = view_forms['event'].save(commit=False)
 
         event.court_id = source_event.court_id
+
+        event.inventory_list = persistence.clone_inventory_list(
+            source_event.inventory_list
+        )
+
         persistence.save_event_and_related_things(
-            event, request.user, visitors=view_forms['visitors'].cleaned_data['users']
+            event,
+            request.user,
+            visitors=view_forms['visitors'].cleaned_data['users']
         )
 
         view_forms['event'].save_m2m()
