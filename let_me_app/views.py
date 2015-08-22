@@ -196,6 +196,8 @@ class UserManagedEventListView(ListView):
 
 class EventActionMixin(object):
     def get_success_url(self, **kwargs):
+        if 'next' in self.request.GET:
+            return self.request.GET.get('next')
         return reverse('let_me_app:view_event', kwargs={'pk': kwargs['event']})
 
     def get_queryset(self, request, *args, **kwargs):
@@ -261,6 +263,8 @@ class CreateApplicationView(BaseView):
 
 
 class DetailRelatedPostView(BaseView):
+    model = models.Event
+
     def get_form(self):
         pass
 
@@ -275,20 +279,20 @@ class DetailRelatedPostView(BaseView):
         if request.user.is_anonymous():
             return http.HttpResponseForbidden()
 
-        event = get_object_or_404(models.Event, id=kwargs['event'])
+        obj = get_object_or_404(self.model, id=kwargs['pk'])
 
-        if not self.action_is_allowed(event):
+        if not self.action_is_allowed(obj):
             return http.HttpResponseForbidden()
 
         form = self.get_form()
 
         if form.is_valid():
-            self.save_on_success(event, form)
+            self.save_on_success(obj, form)
 
-        return http.HttpResponseRedirect(
-            reverse('let_me_app:view_event', kwargs={'pk': event.id})
-        )
+        return http.HttpResponseRedirect(self.get_success_url(obj))
 
+    def get_success_url(self, obj):
+        return reverse('let_me_app:view_event', kwargs={'pk': obj.id})
 
 class CreateProposalView(DetailRelatedPostView):
     def get_form(self):
@@ -308,7 +312,7 @@ class CreateProposalView(DetailRelatedPostView):
             )
 
 
-class AddInventoryView(DetailRelatedPostView):
+class AddEventInventoryView(DetailRelatedPostView):
     def get_form(self):
         return forms.InventoryForm(data=self.request.POST)
 
@@ -317,10 +321,59 @@ class AddInventoryView(DetailRelatedPostView):
             id=self.request.user.id).exists()
 
     def save_on_success(self, event, form):
-        inventory_list, _ = models.InventoryList.objects.get_or_create(event=event)
+        if not event.inventory_list:
+            inventory_list = models.InventoryList.objects.create(name=event.name)
+            event.inventory_list = inventory_list
+            event.save()
         inventory = form.save(commit=False)
-        inventory.inventory_list = inventory_list
+        inventory.inventory_list = event.inventory_list
         inventory.save()
+
+
+class AddApplicationInventoryView(DetailRelatedPostView):
+    model = models.Application
+
+    def get_form(self):
+        return forms.InventoryForm(data=self.request.POST)
+
+    def action_is_allowed(self, application):
+        return application.user_id == self.request.user.id
+
+    def save_on_success(self, application, form):
+        if not application.inventory_list:
+            inventory_list = models.InventoryList.objects.create(
+                name=application.event.name)
+            application.inventory_list = inventory_list
+            application.save()
+        inventory = form.save(commit=False)
+        inventory.inventory_list = application.inventory_list
+        inventory.save()
+
+    def get_success_url(self, obj):
+        return reverse('let_me_app:view_event', kwargs={'pk': obj.event.id})
+
+
+class AddVisitInventoryView(DetailRelatedPostView):
+    model = models.Visit
+
+    def get_form(self):
+        return forms.InventoryForm(data=self.request.POST)
+
+    def action_is_allowed(self, visit):
+        return visit.user_id == self.request.user.id
+
+    def save_on_success(self, visit, form):
+        if not visit.inventory_list:
+            inventory_list = models.InventoryList.objects.create(
+                name=visit.event.name)
+            visit.inventory_list = inventory_list
+            visit.save()
+        inventory = form.save(commit=False)
+        inventory.inventory_list = visit.inventory_list
+        inventory.save()
+
+    def get_success_url(self, obj):
+        return reverse('let_me_app:view_event', kwargs={'pk': obj.event.id})
 
 
 class CreateVisitView(DetailRelatedPostView):
@@ -432,7 +485,6 @@ class DismissVisitorEventView(EventActionMixin, BaseView):
 class CancelInventoryEventView(EventActionMixin, BaseView):
     def get_queryset(self, request, *args, **kwargs):
         return models.Inventory.objects.filter(
-            inventory_list__event=kwargs['event'],
             id=kwargs['inventory'],
         )
 

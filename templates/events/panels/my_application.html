@@ -9,15 +9,20 @@
     <h4>{% trans "Comment" %}</h4>
     {{ application.comment }}
     <h4>{% trans "Inventory" %}</h4>
-    {% if application.inventory_list %}
       <ul>
         {% for inventory in application.inventory_list.inventory_set.all %}
-          <li>{{ inventory.equipment }} ({{inventory.amount}})</li>
+          <li>
+              {{ inventory.equipment }} ({{inventory.amount}})
+              <div class="ui-group-buttons">
+                {% include "events/buttons/cancel_inventory.html" %}
+              </div>
+          </li>
         {% endfor %}
       </ul>
-    {% else %}
-      {% trans "Nothing" %}
-    {% endif %}
+      <div class="ui-group-buttons">
+        {% url 'let_me_app:add_application_inventory' pk=application.id as form_url %}
+        {% include "events/buttons/add_inventory.html" %}
+      </div>
   </div>
 
     <div class="ui-group-buttons pull-right marginBottom10">

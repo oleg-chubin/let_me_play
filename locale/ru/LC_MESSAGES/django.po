@@ -556,10 +556,8 @@ msgid "Message"
 msgstr "Событие"
 
 #: templates/events/panels/my_application.html:5
-#, fuzzy
-#| msgid "Applications"
 msgid "My application"
-msgstr "Заявки"
+msgstr "Моя заявка"
 
 #: templates/events/panels/my_application.html:9
 #: templates/events/panels/my_proposal.html:8
@@ -615,7 +613,7 @@ msgstr "Управляемые события"
 
 #: templates/events/user_proposals.html:12
 msgid "My proposals"
-msgstr "My Предложения"
+msgstr "Мое Предложения"
 
 #: templates/navbar.html:25
 msgid "Events managed"
