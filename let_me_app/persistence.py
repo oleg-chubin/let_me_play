@@ -27,7 +27,7 @@ def get_event_actions_for_user(user, event_object, is_admin=False):
     )
     visit_exists = visits.exists()
 
-    admin_actions = ['propose_event', 'create_visit', 'add_inventory']
+    admin_actions = ['propose_event', 'create_visit']
     if is_admin:
         result.extend(admin_actions)
 
@@ -43,11 +43,12 @@ def get_event_actions_for_user(user, event_object, is_admin=False):
 
 
 def save_event_and_related_things(event, user, visitors=tuple()):
-        event.save()
-        chat = models.InternalMessage.objects.create(subject=event)
-        for visitor in visitors:
-            create_event_visit(event, visitor, None)
-        return event
+    event.save()
+    chat = models.InternalMessage.objects.create(subject=event)
+
+    for visitor in visitors:
+        create_event_visit(event, visitor, None)
+    return event
 
 
 def get_my_chats(user):

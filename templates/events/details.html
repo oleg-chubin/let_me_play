@@ -101,6 +101,10 @@
             {% endif %}
           {% endfor %}
         </ul>
+        <div class="ui-group-buttons">
+            {% url 'let_me_app:add_event_inventory' pk=object.id as form_url %}
+            {% include "events/buttons/add_inventory.html" %}
+        </div>
       </div>
     </li>
     <li class="list-group-item">
@@ -166,10 +170,16 @@
         <div id="detail-7">
           <ul>
             {% for proposal in active_proposals %}
-              <li>
-                  {{ proposal.user.email }}<div class="ui-group-buttons">{% with invitee=proposal.user %}{% include "events/buttons/cancel_proposal.html" %} {% endwith %}
-                  </div>
-              </li>
+              {% if proposal.status == PROPOSAL_STATUSES.ACTIVE %}
+                  <li>
+                      {{ proposal.user.email }}
+                      <div class="ui-group-buttons">
+                        {% with invitee=proposal.user %}
+                          {% include "events/buttons/cancel_proposal.html" %}
+                        {% endwith %}
+                      </div>
+                  </li>
+              {% endif %}
             {% endfor %}
           </ul>
         </div>
@@ -210,4 +220,5 @@
       {% endwith %}
   </script>
   <script src="{% static "js/expandable_listgroup.js" %}"></script>
+  <script src="{% static "js/modal.js" %}"></script>
 {% endblock %}

@@ -6,7 +6,7 @@
 {% block modal_labelledby %}modalCreateVisit{% endblock %}
 
 {% block modal_content %}
-  <form method="post" enctype="multipart/form-data" action="{% url 'let_me_app:create_visit' event=object.id %}">
+  <form method="post" enctype="multipart/form-data" action="{% url 'let_me_app:create_visit' pk=object.id %}">
     {% csrf_token %}
     {{ block.super }}
 </form>
