@@ -121,8 +121,6 @@ class EventView(DetailView):
         event = result['object']
         is_admin = event.court.admin_group.user_set.filter(
             email=self.request.user.email).exists()
-        result['event_actions'] = persistence.get_event_actions_for_user(
-            self.request.user, event, is_admin=is_admin)
         result['is_admin'] = is_admin
         result['proposal_form'] = forms.EventProposalForm()
         result['visit_form'] = forms.EventVisitForm()
@@ -133,7 +131,7 @@ class EventView(DetailView):
         result['active_visits'] =event.visit_set.filter(
             status__in=[models.VisitStatuses.PENDING, models.VisitStatuses.COMPLETED]
         ).select_related('user')
-        result['active_proposals'] =event.proposal_set.all().select_related('user')
+        result['active_proposals'] = event.proposal_set.all().select_related('user')
 
         for prop in result['active_proposals']:
             if (prop.user == self.request.user
@@ -160,7 +158,9 @@ class UserEventListView(ListView):
 
     def get_queryset(self, **kwargs):
         result = super(UserEventListView, self).get_queryset(**kwargs)
-        return result.filter(user=self.request.user).order_by('-event__start_at')
+        return result.filter(
+            user=self.request.user,
+            event__start_at__gte=timezone.now()).order_by('-event__start_at')
 
     def get_context_data(self, **kwargs):
         result = super(UserEventListView, self).get_context_data(**kwargs)
@@ -176,7 +176,9 @@ class UserProposalsListView(ListView):
 
     def get_queryset(self, **kwargs):
         result = super(UserProposalsListView, self).get_queryset(**kwargs)
-        return result.filter(user=self.request.user).order_by('-event__start_at')
+        return result.filter(
+            user=self.request.user,
+            event__start_at__gte=timezone.now()).order_by('-event__start_at')
 
     def get_context_data(self, **kwargs):
         result = super(UserProposalsListView, self).get_context_data(**kwargs)
@@ -192,7 +194,9 @@ class UserManagedEventListView(ListView):
 
     def get_queryset(self, **kwargs):
         result = super(UserManagedEventListView, self).get_queryset(**kwargs)
-        return result.filter(court__admin_group__user=self.request.user).order_by('-start_at')
+        return result.filter(
+            court__admin_group__user=self.request.user,
+            start_at__gte=timezone.now()).order_by('-start_at')
 
 class EventActionMixin(object):
     def get_success_url(self, **kwargs):
@@ -549,8 +553,6 @@ class CourtDetailView(DetailView):
         is_admin = result['is_admin'] = court.admin_group.user_set.filter(
             email=self.request.user.email).exists() or self.request.user.is_staff
 
-        result['court_actions'] = persistence.get_court_actions_for_user(
-            self.request.user, court, is_admin=is_admin)
         result['is_admin'] = is_admin
         result['group_admin_form'] = forms.GroupAdminForm()
         return result
@@ -575,7 +577,9 @@ class EventSearchView(ListView):
     model = models.Event
 
     def get_queryset(self):
-        queryset = super(EventSearchView, self).get_queryset().order_by('start_at')
+        queryset = super(EventSearchView, self).get_queryset()
+        queryset = queryset.filter(start_at__gte=timezone.now())
+        queryset = queryset.order_by('start_at')
 
         queryset = queryset.select_related(
             'inventory_list', 'court', 'court__site', 'court__activity_type')

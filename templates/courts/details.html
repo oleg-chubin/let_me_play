@@ -70,24 +70,19 @@
                 </li>
               {% endfor %}
             </ul>
+            <div class="ui-group-buttons">
+                {% include "courts/buttons/add_to_admin_group.html" %}
+            </div>
           </div>
         </li>
     {% endif %}
       </ul>
       <div class="panel-footer">
-        <div class="ui-group-buttons">
-          {% for action in court_actions %}
-            {% include "courts/buttons/"|add:action|add:'.html' %}
-            <div class="or"></div>
-          {% endfor %}
-
         {% if is_admin %}
-          <a href="{% url 'let_me_app:create_court_event' court=object.id site=object.site_id %}" class="btn btn-primary">
-            <span class="glyphicon glyphicon-record" aria-hidden="true"></span>
-            {% trans "Create event" %}
-          </a>
-        {% endif %}
+        <div class="ui-group-buttons">
+            {% include "courts/buttons/create_event.html" %}
         </div>
+        {% endif %}
       </div>
 
   </div>

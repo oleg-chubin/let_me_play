@@ -5,6 +5,7 @@ Created on Jul 3, 2015
 '''
 from let_me_app import models
 from django.db.models import F
+from django.utils import timezone
 from functools import wraps
 
 
@@ -28,13 +29,18 @@ def for_authentificated_users(func):
 @for_authentificated_users
 def user_events(request):
     proposals = models.Proposal.objects.filter(
-        user=request.user, status=models.ProposalStatuses.ACTIVE)
+        user=request.user,
+        event__start_at__gte=timezone.now(),
+        status=models.ProposalStatuses.ACTIVE)
     visits = models.Visit.objects.filter(
-        user=request.user, status=models.VisitStatuses.PENDING)
+        user=request.user,
+        event__start_at__gte=timezone.now(),
+        status=models.VisitStatuses.PENDING)
     unread_chats = models.ChatParticipant.objects.filter(
         user=request.user, chat__last_update__gt=F('last_seen'))
     applications = models.Application.objects.filter(
         event__court__admin_group__user=request.user,
+        event__start_at__gte=timezone.now(),
         status=models.ApplicationStatuses.ACTIVE
     )
 
