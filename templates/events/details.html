@@ -101,10 +101,12 @@
             {% endif %}
           {% endfor %}
         </ul>
-        <div class="ui-group-buttons">
+        {% if is_admin %}
+          <div class="ui-group-buttons">
             {% url 'let_me_app:add_event_inventory' pk=object.id as form_url %}
             {% include "events/buttons/add_inventory.html" %}
-        </div>
+          </div>
+        {% endif %}
       </div>
     </li>
     <li class="list-group-item">
@@ -134,6 +136,11 @@
             </li>
           {% endfor %}
         </ul>
+        {% if is_admin %}
+          <div class="ui-group-buttons">
+            {% include "events/buttons/create_visit.html" %}
+          </div>
+        {% endif %}
       </div>
     </li>
     {% if is_admin %}
@@ -182,6 +189,9 @@
               {% endif %}
             {% endfor %}
           </ul>
+          <div class="ui-group-buttons">
+            {% include "events/buttons/propose_event.html" %}
+          </div>
         </div>
       </li>
       {% endif %}
@@ -189,12 +199,9 @@
   {% ifequal object.status 1 %}
     <div class="panel-footer">
       <div class="ui-group-buttons">
-        {% for action in event_actions %}
-          {% include "events/buttons/"|add:action|add:'.html' %}
-          {% if not forloop.last %}
-            <div class="or"></div>
-          {% endif %}
-        {% endfor %}
+        {% if not my_active_visit and not my_active_proposal and not my_active_application %}
+          {% include "events/buttons/apply_for_event.html" %}
+        {% endif %}
       </div>
     </div>
   {% endifequal %}

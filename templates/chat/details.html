@@ -19,6 +19,14 @@
 {% block main %}
   <div class="panel panel-default">
     <div class="panel-heading">
+    {% if object.subject %}
+      <h3>
+        {{ object.subject.event }}
+        <a href="{% url 'let_me_app:view_event' pk=object.subject_id %}">
+          <span class="glyphicon glyphicon-link"></span>
+        </a>
+      </h3>
+    {% endif %}
     {% for participant in object.chatparticipant_set.all %}
       <span class="btn btn-labeled btn-success">
         {{ participant.user }}
