@@ -8,19 +8,17 @@
 {% endblock %}
 {% block "description" %}
   {% if object.text == 'created' %}
-    {% trans "Chat" %}
-    <a href="{% url "let_me_app:chat_details" pk=object.object.internalmessage.id %}">
-      {{ object.object.event.name }}
-    </a> {% trans "has been created for user" %} 
-    <a href="{% url "let_me_app:chat_details" pk=object.object.event.id %}">
+    {% trans "New proposal to" %}
+    <a href="{% url "let_me_app:view_event" pk=object.object.event.id %}">
       {{ object.object.event.name }}
     </a>
+    {% trans "has been created for user" %} {{ object.object.user }}
   {% else %}
-    {% trans "New message in " %}
+    {% trans "Proposal to" %}
     <a href="{% url "let_me_app:view_event" pk=object.object.event.id %}">
       {{ object.object.event.name }}
     </a> {% trans "for user" %} {{ object.object.user }}
     {% trans "has been" %}
-    {{ object.object.status|as_status:APPLICATION_STATUSES.CHOICES }}
+    {{ object.object.status|as_status:PROPOSAL_STATUSES.CHOICES }}
   {% endif %}
 {% endblock %}

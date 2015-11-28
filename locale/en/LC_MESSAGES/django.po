@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-18 20:12+0000\n"
+"POT-Creation-Date: 2015-11-28 21:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -111,13 +111,12 @@ msgid "name"
 msgstr ""
 
 #: let_me_app/models.py:139 let_me_app/models.py:160 let_me_app/models.py:225
-#: templates/courts/details.html:32 templates/events/details.html:97
-#: templates/events/details.html.py:120 templates/events/details.html:137
+#: templates/details_blocks/court.html:15
+#: templates/details_blocks/site.html:33 templates/events/details.html:81
 msgid "Description"
 msgstr ""
 
-#: let_me_app/models.py:140 templates/events/details.html:101
-#: templates/sites/details.html:33
+#: let_me_app/models.py:140 templates/details_blocks/site.html:37
 msgid "Address"
 msgstr ""
 
@@ -221,7 +220,6 @@ msgid "Chats"
 msgstr ""
 
 #: templates/chat/details.html:15
-#: templates/dashboard/messages/let_me_app.proposal.html:11
 msgid "Chat"
 msgstr ""
 
@@ -245,42 +243,38 @@ msgstr ""
 msgid "More..."
 msgstr ""
 
-#: templates/courts/buttons/add_to_admin_group.html:4
-msgid "Extend admin group"
+#: templates/courts/buttons/create_event.html:4
+#: templates/events/modals/create_visit.html:15 templates/navbar.html:30
+#: templates/navbar.html.py:40 templates/sites/details.html:55
+msgid "Create event"
 msgstr ""
 
-#: templates/courts/details.html:13 templates/events/clone_event.html:14
-#: templates/events/clone_event.html:27
+#: templates/courts/details.html:13 templates/details_blocks/site.html:21
+#: templates/events/clone_event.html:14 templates/events/clone_event.html:27
 #: templates/events/create_for_court.html:14
 #: templates/events/create_for_court.html:27
 #: templates/events/create_for_site.html:14
 #: templates/events/create_for_site.html:26 templates/events/details.html:15
-#: templates/events/details.html.py:85 templates/sites/details.html:15
+#: templates/sites/details.html:15
 msgid "Site"
 msgstr ""
 
 #: templates/courts/details.html:14
 #: templates/dashboard/messages/let_me_app.court.html:7
-#: templates/events/clone_event.html:15 templates/events/clone_event.html:37
+#: templates/details_blocks/court.html:5 templates/events/clone_event.html:15
+#: templates/events/clone_event.html:37
 #: templates/events/create_for_court.html:15
 #: templates/events/create_for_court.html:37 templates/events/details.html:16
-#: templates/events/details.html.py:110
 msgid "Court"
 msgstr ""
 
-#: templates/courts/details.html:36 templates/events/search.html:15
+#: templates/courts/details.html:32 templates/events/search.html:15
 #: templates/navbar.html:20
 msgid "Events"
 msgstr ""
 
-#: templates/courts/details.html:50
+#: templates/courts/details.html:54
 msgid "Admin group"
-msgstr ""
-
-#: templates/courts/details.html:73
-#: templates/events/modals/create_visit.html:15 templates/navbar.html:30
-#: templates/navbar.html.py:40 templates/sites/details.html:57
-msgid "Create event"
 msgstr ""
 
 #: templates/courts/modals/add_to_admin_group.html:15
@@ -336,7 +330,7 @@ msgid "application for event"
 msgstr ""
 
 #: templates/dashboard/messages/let_me_app.application.html:20
-#: templates/dashboard/messages/let_me_app.proposal.html:23
+#: templates/dashboard/messages/let_me_app.proposal.html:21
 #: templates/dashboard/messages/let_me_app.visit.html:20
 msgid "has been"
 msgstr ""
@@ -358,7 +352,7 @@ msgstr ""
 #: templates/events/create_for_court.html:16
 #: templates/events/create_for_court.html:41
 #: templates/events/create_for_site.html:15 templates/events/details.html:17
-#: templates/events/details.html.py:127
+#: templates/events/details.html.py:71
 msgid "Event"
 msgstr ""
 
@@ -383,15 +377,19 @@ msgstr ""
 msgid "Proposal"
 msgstr ""
 
-#: templates/dashboard/messages/let_me_app.proposal.html:14
+#: templates/dashboard/messages/let_me_app.proposal.html:11
+msgid "New proposal to"
+msgstr ""
+
+#: templates/dashboard/messages/let_me_app.proposal.html:15
 msgid "has been created for user"
 msgstr ""
 
-#: templates/dashboard/messages/let_me_app.proposal.html:19
-msgid "New message in "
+#: templates/dashboard/messages/let_me_app.proposal.html:17
+msgid "Proposal to"
 msgstr ""
 
-#: templates/dashboard/messages/let_me_app.proposal.html:22
+#: templates/dashboard/messages/let_me_app.proposal.html:20
 msgid "for user"
 msgstr ""
 
@@ -407,6 +405,18 @@ msgstr ""
 msgid "visit for event"
 msgstr ""
 
+#: templates/details_blocks/court.html:11
+msgid "Type"
+msgstr ""
+
+#: templates/details_blocks/site.html:6
+msgid "Map"
+msgstr ""
+
+#: templates/details_blocks/site.html:29 templates/events/details.html:77
+msgid "Name"
+msgstr ""
+
 #: templates/escort/follow_menu.html:19
 msgid "Not follow"
 msgstr ""
@@ -417,12 +427,6 @@ msgstr ""
 
 #: templates/events/buttons/accept_proposal.html:6
 msgid "Accept proposal"
-msgstr ""
-
-#: templates/events/buttons/add_inventory.html:4
-#: templates/events/modals/add_inventory.html:15
-#: templates/events/modals/add_inventory.html:25
-msgid "Add inventory"
 msgstr ""
 
 #: templates/events/buttons/apply_for_event.html:4
@@ -437,7 +441,7 @@ msgstr ""
 
 #: templates/events/buttons/cancel_event.html:6
 #: templates/events/clone_event.html:49
-#: templates/events/create_for_court.html:49
+#: templates/events/create_for_court.html:52
 #: templates/events/create_for_site.html:46
 #: templates/events/create_new.html:29
 msgid "Cancel"
@@ -455,23 +459,12 @@ msgstr ""
 msgid "Complete"
 msgstr ""
 
-#: templates/events/buttons/create_visit.html:4
-#: templates/events/modals/create_visit.html:22
-msgid "Create visit"
-msgstr ""
-
 #: templates/events/buttons/decline_proposal.html:6
 msgid "Decline proposal"
 msgstr ""
 
-#: templates/events/buttons/propose_event.html:4
-#: templates/events/modals/propose_event.html:15
-#: templates/events/modals/propose_event.html:25
-msgid "Propose event"
-msgstr ""
-
 #: templates/events/clone_event.html:47
-#: templates/events/create_for_court.html:47
+#: templates/events/create_for_court.html:50
 #: templates/events/create_for_site.html:44
 #: templates/events/create_new.html:27 templates/user/settings.html:26
 msgid "Save"
@@ -486,39 +479,41 @@ msgstr ""
 msgid "Create new event"
 msgstr ""
 
-#: templates/events/details.html:70
-msgid "Map"
-msgstr ""
-
-#: templates/events/details.html:93 templates/events/details.html.py:133
-msgid "Name"
-msgstr ""
-
-#: templates/events/details.html:116
-msgid "Type"
-msgstr ""
-
-#: templates/events/details.html:144
+#: templates/events/details.html:88
 #: templates/events/panels/my_application.html:11
 #: templates/events/panels/my_visit.html:17
 msgid "Inventory"
 msgstr ""
 
-#: templates/events/details.html:164
+#: templates/events/details.html:114
 msgid "Visitors"
 msgstr ""
 
-#: templates/events/details.html:194 templates/navbar.html:93
+#: templates/events/details.html:149 templates/navbar.html:93
 msgid "Applications"
 msgstr ""
 
-#: templates/events/details.html:218 templates/navbar.html:73
+#: templates/events/details.html:173 templates/navbar.html:73
 msgid "Proposals"
+msgstr ""
+
+#: templates/events/modals/add_inventory.html:15
+#: templates/events/modals/add_inventory.html:25
+msgid "Add inventory"
 msgstr ""
 
 #: templates/events/modals/apply_for_event.html:14
 #: templates/events/modals/propose_event.html:21
 msgid "Message"
+msgstr ""
+
+#: templates/events/modals/create_visit.html:22
+msgid "Create visit"
+msgstr ""
+
+#: templates/events/modals/propose_event.html:15
+#: templates/events/modals/propose_event.html:25
+msgid "Propose event"
 msgstr ""
 
 #: templates/events/panels/my_application.html:5
@@ -528,12 +523,6 @@ msgstr ""
 #: templates/events/panels/my_application.html:9
 #: templates/events/panels/my_proposal.html:8
 msgid "Comment"
-msgstr ""
-
-#: templates/events/panels/my_application.html:19
-#: templates/events/panels/my_visit.html:15
-#: templates/events/panels/my_visit.html:25
-msgid "Nothing"
 msgstr ""
 
 #: templates/events/panels/my_proposal.html:4
@@ -546,6 +535,10 @@ msgstr ""
 
 #: templates/events/panels/my_visit.html:9
 msgid "Receipt"
+msgstr ""
+
+#: templates/events/panels/my_visit.html:15
+msgid "Nothing"
 msgstr ""
 
 #: templates/events/search.html:29
@@ -613,11 +606,7 @@ msgstr ""
 msgid "You are not logged in. "
 msgstr ""
 
-#: templates/sites/details.html:37
-msgid "Description "
-msgstr ""
-
-#: templates/sites/details.html:41
+#: templates/sites/details.html:32
 msgid "Courts"
 msgstr ""
 

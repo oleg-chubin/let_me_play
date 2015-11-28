@@ -7,7 +7,7 @@ from let_me_play.views import SettingsView
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'let_me_app.views.home', name='home'),
+    url(r'^$', 'let_me_auth.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),

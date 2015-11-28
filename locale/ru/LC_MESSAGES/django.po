@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-18 20:12+0000\n"
+"POT-Creation-Date: 2015-11-28 21:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -40,8 +40,6 @@ msgid "radius"
 msgstr "радиус"
 
 #: let_me_app/forms.py:96
-#, fuzzy
-#| msgid "active"
 msgid "activity type"
 msgstr "тип активности"
 
@@ -115,13 +113,12 @@ msgid "name"
 msgstr "Имя"
 
 #: let_me_app/models.py:139 let_me_app/models.py:160 let_me_app/models.py:225
-#: templates/courts/details.html:32 templates/events/details.html:97
-#: templates/events/details.html.py:120 templates/events/details.html:137
+#: templates/details_blocks/court.html:15
+#: templates/details_blocks/site.html:33 templates/events/details.html:81
 msgid "Description"
 msgstr "описание"
 
-#: let_me_app/models.py:140 templates/events/details.html:101
-#: templates/sites/details.html:33
+#: let_me_app/models.py:140 templates/details_blocks/site.html:37
 msgid "Address"
 msgstr "Адрес"
 
@@ -150,8 +147,6 @@ msgid "estimated price"
 msgstr "приблизительная стоимость"
 
 #: let_me_app/models.py:219
-#, fuzzy
-#| msgid "Description"
 msgid "description"
 msgstr "описание"
 
@@ -160,8 +155,6 @@ msgid "amount"
 msgstr "количество"
 
 #: let_me_app/models.py:255 let_me_app/models.py:268
-#, fuzzy
-#| msgid "Comment"
 msgid "comment"
 msgstr "Комментарий"
 
@@ -174,7 +167,6 @@ msgid "first name"
 msgstr "Имя"
 
 #: let_me_auth/models.py:15
-#, fuzzy
 msgid "last name"
 msgstr "Фамилия"
 
@@ -230,13 +222,10 @@ msgid "Chats"
 msgstr "Чаты"
 
 #: templates/chat/details.html:15
-#: templates/dashboard/messages/let_me_app.proposal.html:11
 msgid "Chat"
 msgstr "Чат"
 
 #: templates/chat/list.html:22
-#, fuzzy
-#| msgid "Chats"
 msgid "Chat list"
 msgstr "Чаты"
 
@@ -259,63 +248,55 @@ msgstr "Групповой чат"
 msgid "More..."
 msgstr "Детальнее..."
 
-#: templates/courts/buttons/add_to_admin_group.html:4
-msgid "Extend admin group"
-msgstr "Добавить в админ группу"
+#: templates/courts/buttons/create_event.html:4
+#: templates/events/modals/create_visit.html:15 templates/navbar.html:30
+#: templates/navbar.html.py:40 templates/sites/details.html:55
+msgid "Create event"
+msgstr "Создать событие"
 
-#: templates/courts/details.html:13 templates/events/clone_event.html:14
-#: templates/events/clone_event.html:27
+#: templates/courts/details.html:13 templates/details_blocks/site.html:21
+#: templates/events/clone_event.html:14 templates/events/clone_event.html:27
 #: templates/events/create_for_court.html:14
 #: templates/events/create_for_court.html:27
 #: templates/events/create_for_site.html:14
 #: templates/events/create_for_site.html:26 templates/events/details.html:15
-#: templates/events/details.html.py:85 templates/sites/details.html:15
+#: templates/sites/details.html:15
 msgid "Site"
 msgstr "Точка"
 
 #: templates/courts/details.html:14
 #: templates/dashboard/messages/let_me_app.court.html:7
-#: templates/events/clone_event.html:15 templates/events/clone_event.html:37
+#: templates/details_blocks/court.html:5 templates/events/clone_event.html:15
+#: templates/events/clone_event.html:37
 #: templates/events/create_for_court.html:15
 #: templates/events/create_for_court.html:37 templates/events/details.html:16
-#: templates/events/details.html.py:110
 msgid "Court"
 msgstr "Площадка"
 
-#: templates/courts/details.html:36 templates/events/search.html:15
+#: templates/courts/details.html:32 templates/events/search.html:15
 #: templates/navbar.html:20
 msgid "Events"
 msgstr "События"
 
-#: templates/courts/details.html:50
+#: templates/courts/details.html:54
 msgid "Admin group"
 msgstr "Админ группа"
-
-#: templates/courts/details.html:73
-#: templates/events/modals/create_visit.html:15 templates/navbar.html:30
-#: templates/navbar.html.py:40 templates/sites/details.html:57
-msgid "Create event"
-msgstr "Создать событие"
 
 #: templates/courts/modals/add_to_admin_group.html:15
 msgid "Add User to admin group"
 msgstr "Добавить пользователя в админ группу"
 
 #: templates/courts/modals/add_to_admin_group.html:22
-#, fuzzy
-#| msgid "User"
 msgid "Add User"
-msgstr "Пользователь"
+msgstr "Добавить пользователя"
 
 #: templates/dashboard/list.html:14
 msgid "Dashboard"
 msgstr "Лента"
 
 #: templates/dashboard/messages/let_me_app.application.html:7
-#, fuzzy
-#| msgid "Applications"
 msgid "Application"
-msgstr "Заявки"
+msgstr "Заявкa"
 
 #: templates/dashboard/messages/let_me_app.application.html:7
 #: templates/dashboard/messages/let_me_app.court.html:7
@@ -350,13 +331,11 @@ msgid "User's"
 msgstr "Пользовательский"
 
 #: templates/dashboard/messages/let_me_app.application.html:16
-#, fuzzy
-#| msgid "Apply for event"
 msgid "application for event"
-msgstr "Попроситься на событие"
+msgstr "Заявка на событие"
 
 #: templates/dashboard/messages/let_me_app.application.html:20
-#: templates/dashboard/messages/let_me_app.proposal.html:23
+#: templates/dashboard/messages/let_me_app.proposal.html:21
 #: templates/dashboard/messages/let_me_app.visit.html:20
 msgid "has been"
 msgstr "был"
@@ -370,62 +349,54 @@ msgid "for site"
 msgstr "для точки"
 
 #: templates/dashboard/messages/let_me_app.court.html:22
-#, fuzzy
-#| msgid "was updated"
 msgid "Court was updated"
-msgstr "был обновлен"
+msgstr "Площадка была обновлен"
 
 #: templates/dashboard/messages/let_me_app.event.html:7
 #: templates/events/clone_event.html:16
 #: templates/events/create_for_court.html:16
 #: templates/events/create_for_court.html:41
 #: templates/events/create_for_site.html:15 templates/events/details.html:17
-#: templates/events/details.html.py:127
+#: templates/events/details.html.py:71
 msgid "Event"
 msgstr "События"
 
 #: templates/dashboard/messages/let_me_app.event.html:11
-#, fuzzy
-#| msgid "Create event"
 msgid "There is new event"
-msgstr "Создать событие"
+msgstr "Есть новое событие"
 
 #: templates/dashboard/messages/let_me_app.event.html:15
 msgid "for court"
 msgstr "для площадки"
 
 #: templates/dashboard/messages/let_me_app.event.html:21
-#, fuzzy
-#| msgid "was updated"
 msgid "Event was updated"
-msgstr "был обновлен"
+msgstr "Событие было обновлено"
 
 #: templates/dashboard/messages/let_me_app.peeper.html:7
 #: templates/dashboard/messages/let_me_app.peeper.html:11
-#, fuzzy
-#| msgid "Not follow"
 msgid "now follows"
-msgstr "Не следить"
+msgstr "Теперь следит"
 
 #: templates/dashboard/messages/let_me_app.proposal.html:7
-#, fuzzy
-#| msgid "Proposals"
 msgid "Proposal"
-msgstr "Предложения"
+msgstr "Предложениe"
 
-#: templates/dashboard/messages/let_me_app.proposal.html:14
+#: templates/dashboard/messages/let_me_app.proposal.html:11
+msgid "New proposal to"
+msgstr "Новое предложение на"
+
+#: templates/dashboard/messages/let_me_app.proposal.html:15
 msgid "has been created for user"
 msgstr "создали для пользователя"
 
-#: templates/dashboard/messages/let_me_app.proposal.html:19
-msgid "New message in "
-msgstr "Новое сообщение в "
+#: templates/dashboard/messages/let_me_app.proposal.html:17
+msgid "Proposal to"
+msgstr "Предложениe посетить"
 
-#: templates/dashboard/messages/let_me_app.proposal.html:22
-#, fuzzy
-#| msgid "user"
+#: templates/dashboard/messages/let_me_app.proposal.html:20
 msgid "for user"
-msgstr "пользователь"
+msgstr "для пользователя"
 
 #: templates/dashboard/messages/let_me_app.visit.html:7
 msgid "Visit"
@@ -439,6 +410,18 @@ msgstr "договорился о событии"
 msgid "visit for event"
 msgstr "посещения события"
 
+#: templates/details_blocks/court.html:11
+msgid "Type"
+msgstr "Тип"
+
+#: templates/details_blocks/site.html:6
+msgid "Map"
+msgstr "Карта"
+
+#: templates/details_blocks/site.html:29 templates/events/details.html:77
+msgid "Name"
+msgstr "Имя"
+
 #: templates/escort/follow_menu.html:19
 msgid "Not follow"
 msgstr "Не следить"
@@ -450,12 +433,6 @@ msgstr "Следить"
 #: templates/events/buttons/accept_proposal.html:6
 msgid "Accept proposal"
 msgstr "Принять предложение"
-
-#: templates/events/buttons/add_inventory.html:4
-#: templates/events/modals/add_inventory.html:15
-#: templates/events/modals/add_inventory.html:25
-msgid "Add inventory"
-msgstr "Добавить инвентарь"
 
 #: templates/events/buttons/apply_for_event.html:4
 #: templates/events/modals/apply_for_event.html:12
@@ -469,7 +446,7 @@ msgstr "Отменить заявку"
 
 #: templates/events/buttons/cancel_event.html:6
 #: templates/events/clone_event.html:49
-#: templates/events/create_for_court.html:49
+#: templates/events/create_for_court.html:52
 #: templates/events/create_for_site.html:46
 #: templates/events/create_new.html:29
 msgid "Cancel"
@@ -487,23 +464,12 @@ msgstr "Клонировать"
 msgid "Complete"
 msgstr "Завершить"
 
-#: templates/events/buttons/create_visit.html:4
-#: templates/events/modals/create_visit.html:22
-msgid "Create visit"
-msgstr "Создать посещение"
-
 #: templates/events/buttons/decline_proposal.html:6
 msgid "Decline proposal"
 msgstr "Отклонить предложение"
 
-#: templates/events/buttons/propose_event.html:4
-#: templates/events/modals/propose_event.html:15
-#: templates/events/modals/propose_event.html:25
-msgid "Propose event"
-msgstr "Предложить событие"
-
 #: templates/events/clone_event.html:47
-#: templates/events/create_for_court.html:47
+#: templates/events/create_for_court.html:50
 #: templates/events/create_for_site.html:44
 #: templates/events/create_new.html:27 templates/user/settings.html:26
 msgid "Save"
@@ -515,45 +481,45 @@ msgid "details"
 msgstr "детали"
 
 #: templates/events/create_new.html:14
-#, fuzzy
-#| msgid "Create event"
 msgid "Create new event"
 msgstr "Создать событие"
 
-#: templates/events/details.html:70
-msgid "Map"
-msgstr "Карта"
-
-#: templates/events/details.html:93 templates/events/details.html.py:133
-msgid "Name"
-msgstr "Имя"
-
-#: templates/events/details.html:116
-msgid "Type"
-msgstr "Тип"
-
-#: templates/events/details.html:144
+#: templates/events/details.html:88
 #: templates/events/panels/my_application.html:11
 #: templates/events/panels/my_visit.html:17
 msgid "Inventory"
 msgstr "Инвентарь"
 
-#: templates/events/details.html:164
+#: templates/events/details.html:114
 msgid "Visitors"
 msgstr "Посетитель"
 
-#: templates/events/details.html:194 templates/navbar.html:93
+#: templates/events/details.html:149 templates/navbar.html:93
 msgid "Applications"
 msgstr "Заявки"
 
-#: templates/events/details.html:218 templates/navbar.html:73
+#: templates/events/details.html:173 templates/navbar.html:73
 msgid "Proposals"
 msgstr "Предложения"
+
+#: templates/events/modals/add_inventory.html:15
+#: templates/events/modals/add_inventory.html:25
+msgid "Add inventory"
+msgstr "Добавить инвентарь"
 
 #: templates/events/modals/apply_for_event.html:14
 #: templates/events/modals/propose_event.html:21
 msgid "Message"
 msgstr "Событие"
+
+#: templates/events/modals/create_visit.html:22
+msgid "Create visit"
+msgstr "Создать посещение"
+
+#: templates/events/modals/propose_event.html:15
+#: templates/events/modals/propose_event.html:25
+msgid "Propose event"
+msgstr "Предложить событие"
 
 #: templates/events/panels/my_application.html:5
 msgid "My application"
@@ -563,12 +529,6 @@ msgstr "Моя заявка"
 #: templates/events/panels/my_proposal.html:8
 msgid "Comment"
 msgstr "Комментарий"
-
-#: templates/events/panels/my_application.html:19
-#: templates/events/panels/my_visit.html:15
-#: templates/events/panels/my_visit.html:25
-msgid "Nothing"
-msgstr "Ничего"
 
 #: templates/events/panels/my_proposal.html:4
 msgid "My Proposal"
@@ -581,6 +541,10 @@ msgstr "Мой визит"
 #: templates/events/panels/my_visit.html:9
 msgid "Receipt"
 msgstr "Счет"
+
+#: templates/events/panels/my_visit.html:15
+msgid "Nothing"
+msgstr "Ничего"
 
 #: templates/events/search.html:29
 msgid "Find"
@@ -632,7 +596,6 @@ msgid "User stats"
 msgstr "Статистика пользователя"
 
 #: templates/navbar.html:63
-#, fuzzy
 msgid "Messages"
 msgstr "События"
 
@@ -648,25 +611,17 @@ msgstr "Выйти"
 msgid "You are not logged in. "
 msgstr "Вы не зашли в систему"
 
-#: templates/sites/details.html:37
-msgid "Description "
-msgstr "описание"
-
-#: templates/sites/details.html:41
+#: templates/sites/details.html:32
 msgid "Courts"
 msgstr "Площадки"
 
 #: templates/user/settings.html:12
-#, fuzzy
-#| msgid "User stats"
 msgid "User settings"
-msgstr "Статистика пользователя"
+msgstr "Настройки пользователя"
 
 #: templates/user/settings.html:21
-#, fuzzy
-#| msgid "Applications"
 msgid "Localization"
-msgstr "Заявки"
+msgstr "Переводы"
 
 #: venv/lib/python3.4/site-packages/django/contrib/sitemaps/apps.py:8
 msgid "Site Maps"
@@ -1876,6 +1831,15 @@ msgstr ""
 #: venv/lib/python3.4/site-packages/sorl/thumbnail/admin/compat.py:61
 msgid "Clear image"
 msgstr ""
+
+#~ msgid "New message in "
+#~ msgstr "Новое сообщение в "
+
+#~ msgid "Extend admin group"
+#~ msgstr "Добавить в админ группу"
+
+#~ msgid "Description "
+#~ msgstr "описание"
 
 #~ msgid "Go"
 #~ msgstr "Далее"
