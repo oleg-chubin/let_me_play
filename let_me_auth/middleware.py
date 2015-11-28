@@ -6,6 +6,7 @@ Created on Jul 22, 2015
 from django.http import HttpResponseRedirect
 from django.conf import settings
 from re import compile
+from urllib.parse import urlencode
 
 
 EXEMPT_URLS = [compile(settings.LOGIN_URL.lstrip('/'))]
@@ -37,4 +38,7 @@ class LoginRequiredMiddleware:
             path = request.path_info.lstrip('/')
             if not (any(m.match(path) for m in EXEMPT_URLS) or
                     request.resolver_match.namespace in LOGIN_EXEMPT_NAMESPACES):
-                return HttpResponseRedirect(settings.LOGIN_URL)
+                login_path = settings.LOGIN_URL
+                if path and path != login_path:
+                    login_path = "%s?%s" % (login_path, urlencode({'next': path}))
+                return HttpResponseRedirect(login_path)

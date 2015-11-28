@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 # from django.template.context import RequestContext
 from annoying.decorators import render_to
+from django.template.context import RequestContext
 
 
 def context(**extra):
@@ -15,7 +16,11 @@ def login(request):
     # context = RequestContext(request, {
     #     'request': request, 'user': request.user})
     # return render_to_response('login.html', context_instance=context)
-    return render(request, 'login.html')
+    context = {'next_url': request.REQUEST.get('next', reverse('home'))}
+    return render(
+        request, 'login.html',
+        context_instance = RequestContext(request, context)
+    )
 
 
 @login_required()
