@@ -14,6 +14,9 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 
 
+ABSENT_MAIL_HOST = "no.mail.for.me"
+
+
 @partial
 def require_email(strategy, details, user=None, is_new=False, *args, **kwargs):
     if kwargs.get('ajax') or user and user.email:
@@ -33,7 +36,7 @@ def email_creator(strategy, details, user=None, is_new=False, *args, **kwargs):
     request = kwargs['request']
     if not details.get('email'):
         details['email'] = "{}.{}@{}".format(
-            details['username'], backend, request.get_host()
+            details['username'], backend, ABSENT_MAIL_HOST
         )
 
 
