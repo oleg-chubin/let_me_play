@@ -36,7 +36,7 @@ def email_creator(strategy, details, user=None, is_new=False, *args, **kwargs):
     request = kwargs['request']
     if not details.get('email'):
         details['email'] = "{}.{}@{}".format(
-            details['username'], backend, ABSENT_MAIL_HOST
+            details['username'], backend.name, ABSENT_MAIL_HOST
         )
 
 
