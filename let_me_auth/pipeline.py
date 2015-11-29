@@ -28,6 +28,15 @@ def require_email(strategy, details, user=None, is_new=False, *args, **kwargs):
             return redirect('require_email')
 
 
+def email_creator(strategy, details, user=None, is_new=False, *args, **kwargs):
+    backend = kwargs['backend']
+    request = kwargs['request']
+    if not details.get('email'):
+        details['email'] = "{}.{}@{}".format(
+            details['username'], backend, request.get_host()
+        )
+
+
 def user_password(strategy, user, is_new=False, *args, **kwargs):
     backend = kwargs['backend']
     if backend.name != 'email':

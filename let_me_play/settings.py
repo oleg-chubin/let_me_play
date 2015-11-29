@@ -181,7 +181,9 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_details',
     'social.pipeline.social_auth.social_uid',
     'social.pipeline.social_auth.auth_allowed',
+    'let_me_auth.pipeline.twitter_email_creator',
     'social.pipeline.social_auth.social_user',
+
 #    'social.pipeline.user.get_username',
 #    'let_me_auth.pipeline.require_email',
     'let_me_auth.pipeline.user_password',
