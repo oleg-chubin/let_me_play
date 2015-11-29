@@ -88,6 +88,7 @@ AUTHENTICATION_BACKENDS = (
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'social.apps.django_app.middleware.SocialAuthExceptionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -183,6 +184,8 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_user',
 #    'social.pipeline.user.get_username',
 #    'let_me_auth.pipeline.require_email',
+    'let_me_auth.pipeline.user_password',
+    'let_me_auth.pipeline.get_user_by_email',
     'social.pipeline.mail.mail_validation',
     'social.pipeline.user.create_user',
     'social.pipeline.social_auth.associate_user',
