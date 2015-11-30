@@ -43,7 +43,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',)
 
 if DEBUG:
-    INSTALLED_APPS += ('debug_toolbar',)
+    INSTALLED_APPS += ('debug_toolbar', 'template_timings_panel')
 
 INSTALLED_APPS += (
     'annoying',
@@ -58,6 +58,22 @@ INSTALLED_APPS += (
 
     'floppyforms',
 
+)
+
+if DEBUG:
+    DEBUG_TOOLBAR_PANELS = [
+        'debug_toolbar.panels.sql.SQLPanel',
+        'template_timings_panel.panels.TemplateTimings.TemplateTimings',
+    ]   
+
+TEMPLATE_LOADERS = (
+    (
+        'django.template.loaders.cached.Loader', 
+        (
+            'django.template.loaders.filesystem.Loader',
+            'django.template.loaders.app_directories.Loader',
+        )
+    ),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -182,16 +198,12 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_uid',
     'social.pipeline.social_auth.auth_allowed',
     'social.pipeline.social_auth.social_user',
-
-#    'social.pipeline.user.get_username',
-#    'let_me_auth.pipeline.require_email',
     'let_me_auth.pipeline.email_creator',
     'social.pipeline.mail.mail_validation',
     'social.pipeline.user.create_user',
     'let_me_auth.pipeline.user_password',
     'let_me_auth.pipeline.get_user_by_email',
     'social.pipeline.social_auth.associate_user',
-#    'social.pipeline.debug.debug',
     'social.pipeline.social_auth.load_extra_data',
     'social.pipeline.user.user_details',
     #'social.pipeline.debug.debug'
