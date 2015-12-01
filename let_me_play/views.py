@@ -15,7 +15,6 @@ def set_language(request):
     if not next:
         next = '/'
     response = http.HttpResponseRedirect(next)
-    import ipdb; ipdb.set_trace()
     if request.method == 'GET':
         lang_code = request.GET.get('language', None)
         if lang_code and check_for_language(lang_code):
