@@ -42,6 +42,7 @@ def email_creator(strategy, details, user=None, is_new=False, *args, **kwargs):
 
 def user_password(strategy, user, is_new=False, *args, **kwargs):
     backend = kwargs['backend']
+
     if backend.name != 'email' or (is_new or backend.setting('PASSWORDLESS', False)):
         return
 
@@ -100,4 +101,5 @@ def partial_pipeline_data(backend, user=None, *args, **kwargs):
             return xargs, xkwargs
         else:
             backend.strategy.clean_partial_pipeline()
+
 utils.partial_pipeline_data = partial_pipeline_data

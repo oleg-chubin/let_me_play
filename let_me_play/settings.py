@@ -50,10 +50,12 @@ INSTALLED_APPS += (
     'sorl.thumbnail',
     'django.contrib.gis',
     'leaflet',
+
+    'let_me_auth',
+
     'social.apps.django_app.default',
 
     'let_me_app',
-    'let_me_auth',
     'let_me_escort',
 
     'floppyforms',
