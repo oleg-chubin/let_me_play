@@ -92,6 +92,7 @@ def partial_pipeline_data(backend, user=None, *args, **kwargs):
     if partial:
         idx, backend_name, xargs, xkwargs = \
             backend.strategy.partial_from_session(partial)
+        xkwargs['details']['password'] = xkwargs['response']['password']
         if backend_name == backend.name:
             kwargs.setdefault('pipeline_index', idx)
             if user:  # don't update user if it's None

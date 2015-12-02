@@ -186,9 +186,10 @@ DEFAULT_VIEW_NAME = 'let_me_escort:view_dashboard'
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/done/'
+# SOCIAL_AUTH_PROTECTED_USER_FIELDS = ['email']
 SOCIAL_AUTH_STRATEGY = 'social.strategies.django_strategy.DjangoStrategy'
 SOCIAL_AUTH_STORAGE = 'social.apps.django_app.default.models.DjangoStorage'
-SOCIAL_AUTH_USER_FIELDS = ['email']
+SOCIAL_AUTH_USER_FIELDS = ['email', 'password']
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/home/'
 SOCIAL_AUTH_LOGIN_URL = '/login/'
 # SOCIAL_AUTH_EMAIL_FORM_URL = '/signup-email'
