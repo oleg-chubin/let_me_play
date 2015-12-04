@@ -52,3 +52,6 @@ class User(AbstractBaseUser, Followable, PermissionsMixin):
     def get_short_name(self):
         "Returns the short name for the user."
         return self.first_name or self.email
+
+    def __str__(self):
+        return self.get_full_name()
