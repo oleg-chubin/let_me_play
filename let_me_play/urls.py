@@ -8,6 +8,7 @@ from let_me_play.views import SettingsView
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'let_me_auth.views.home', name='home'),
+    url(r'^', include('django.contrib.auth.urls')),
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),

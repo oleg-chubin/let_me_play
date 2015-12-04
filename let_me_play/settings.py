@@ -67,16 +67,16 @@ if DEBUG:
         'debug_toolbar.panels.sql.SQLPanel',
         'template_timings_panel.panels.TemplateTimings.TemplateTimings',
     ]
-
-TEMPLATE_LOADERS = (
-    (
-        'django.template.loaders.cached.Loader',
+else:
+    TEMPLATE_LOADERS = (
         (
-            'django.template.loaders.filesystem.Loader',
-            'django.template.loaders.app_directories.Loader',
-        )
-    ),
-)
+            'django.template.loaders.cached.Loader',
+            (
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
+            )
+        ),
+    )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
@@ -204,10 +204,12 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_user',
     'social.pipeline.user.get_username',
     'let_me_auth.pipeline.email_creator',
-    'social.pipeline.mail.mail_validation',
+    'let_me_auth.pipeline.get_user_from_verification_code',
+#     'social.pipeline.mail.mail_validation',
     'social.pipeline.social_auth.associate_by_email',
     'social.pipeline.user.create_user',
-    'let_me_auth.pipeline.user_password',
+    'let_me_auth.pipeline.mail_validation',
+#     'let_me_auth.pipeline.user_password',
 #     'let_me_auth.pipeline.get_user_by_email',
     'social.pipeline.social_auth.associate_user',
     'social.pipeline.social_auth.load_extra_data',

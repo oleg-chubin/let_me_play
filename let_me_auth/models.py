@@ -8,6 +8,10 @@ from django.utils import timezone
 from let_me_app.models import Followable
 from .managers import UserManager
 
+class Newcomer(models.Model):
+    user = models.ForeignKey('User')
+    code = models.CharField(_('first name'), max_length=40, db_index=True)
+
 
 class User(AbstractBaseUser, Followable, PermissionsMixin):
     email = models.EmailField(_('email address'), unique=True)

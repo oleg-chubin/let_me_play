@@ -6,6 +6,9 @@ from django.core.urlresolvers import reverse
 # from django.template.context import RequestContext
 from annoying.decorators import render_to
 from django.template.context import RequestContext
+from django.contrib.auth.forms import SetPasswordForm
+from django import forms
+from let_me_auth.models import User
 
 
 def context(**extra):
@@ -18,7 +21,7 @@ def login(request):
     # return render_to_response('login.html', context_instance=context)
     context = {'next_url': request.REQUEST.get('next', reverse('home'))}
     return render(
-        request, 'login.html',
+        request, 'registration/login.html',
         context_instance = RequestContext(request, context)
     )
 
@@ -41,7 +44,7 @@ def done(request):
     return context()
 
 
-@render_to('login.html')
+@render_to('registration/login.html')
 def validation_sent(request):
     return context(
         validation_sent=True,
@@ -49,13 +52,41 @@ def validation_sent(request):
     )
 
 
-@render_to('login.html')
+class CustomSetPasswordForm(SetPasswordForm):
+    verification_code = forms.CharField(widget=forms.HiddenInput)
+
+    def save(self, commit=True):
+        self.user.is_active = True
+        return super(CustomSetPasswordForm, self).save(commit=commit)
+
+
+@render_to('registration/login.html')
+def set_password(request):
+    post_reset_redirect = "/"
+    code = request.REQUEST.get('verification_code')
+    user = User.objects.filter(newcomer__code=code)[:1]
+    if not user or user[0].is_active:
+        return redirect('login')
+    else:
+        user = user[0]
+
+    if request.method == 'POST':
+        form = CustomSetPasswordForm(user, request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(post_reset_redirect)
+    else:
+        form = CustomSetPasswordForm(user, initial={'verification_code': code})
+    return {'form': form, 'initial_password': True}
+
+
+@render_to('registration/login.html')
 def require_email(request):
     backend = request.session['partial_pipeline']['backend']
     return context(email_required=True, backend=backend)
 
 
-@render_to('login.html')
+@render_to('registration/login.html')
 def signup(request):
     return context(signup=True)
 
