@@ -154,7 +154,7 @@
           <ul>
             {% for application in active_applications %}
               <li>
-                {{ application.user.email }} ({{ application.comment|truncatewords_html:4 }})
+                {{ application.user.get_full_name }} ({{ application.comment|truncatewords_html:4 }})
 
                 <div class="ui-group-buttons marginBottom10">
                   {% with application.user as applicant %}
@@ -179,7 +179,7 @@
             {% for proposal in active_proposals %}
               {% if proposal.status == PROPOSAL_STATUSES.ACTIVE %}
                   <li>
-                      {{ proposal.user.email }}
+                      {{ proposal.user.get_full_name }}
                       <div class="ui-group-buttons">
                         {% with invitee=proposal.user %}
                           {% include "events/buttons/cancel_proposal.html" %}

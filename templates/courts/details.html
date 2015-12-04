@@ -60,7 +60,7 @@
               {% for group_user in object.admin_group.user_set.all %}
                 <li>
                   {% followdropdown group_user "escort/follow_menu.html" %}
-                    {{ group_user.email }}
+                    {{ group_user.get_full_name }}
                   {% endfollowdropdown %}
                    <div class="ui-group-buttons">
                      {% with user=group_user %}
