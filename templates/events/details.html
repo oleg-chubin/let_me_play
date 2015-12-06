@@ -203,6 +203,17 @@
           {% include "events/buttons/apply_for_event.html" %}
         {% endif %}
       </div>
+
+      <div class="pull-right">
+        <!-- Put this script tag to the <head> of your page -->
+        <script type="text/javascript" src="http://vk.com/js/api/share.js?93" charset="windows-1251"></script>
+
+        <!-- Put this script tag to the place, where the Share button will be -->
+        <script type="text/javascript"><!--
+        document.write(VK.Share.button(false,{type: "round", text: "Сохранить"}));
+        --></script>
+      </div>
+
     </div>
   {% endifequal %}
 </div>

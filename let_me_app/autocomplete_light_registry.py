@@ -10,7 +10,7 @@ from let_me_app.models import Equipment
 
 
 class UserAutocomplete(autocomplete_light.AutocompleteModelBase):
-    search_fields = ['email', '^first_name', 'last_name']
+    search_fields = ['email', '^first_name', '^last_name']
     attrs = {'placeholder': _("Please type to find users")}
 
 
