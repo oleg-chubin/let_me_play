@@ -12,7 +12,6 @@ from leaflet.forms.widgets import LeafletWidget
 from floppyforms import widgets as floppyforms_widgets
 
 from let_me_app import models
-from let_me_auth import models as auth_models
 
 
 class BootstrapMultipleChoiceWidget(autocomplete_light.MultipleChoiceWidget):
@@ -84,7 +83,7 @@ class CourtForm(forms.ModelForm):
 
 class EventSearchForm(forms.Form):
     start_date = forms.DateTimeField(
-        label=_("start date"), required=False, 
+        label=_("start date"), required=False,
         widget=floppyforms_widgets.DateTimeInput())
     end_date = forms.DateTimeField(
         label=_("end date"), required=False, widget=floppyforms_widgets.DateTimeInput())
@@ -123,3 +122,19 @@ class EventForm(forms.ModelForm):
 
 class EventVisitForm(forms.Form):
     users = BootstrapModelMultipleChoiceField('UserAutocomplete')
+
+
+class EventStaffForm(forms.ModelForm):
+    staff = BootstrapModelMultipleChoiceField('StaffProfileAutocomplete')
+
+    class Meta:
+        model = models.EventStaff
+        widgets = {
+            'event': floppyforms_widgets.HiddenInput(),
+            'invoice': floppyforms_widgets.HiddenInput(),
+            'role': floppyforms_widgets.Select(),
+        }
+
+EventStaffFormSet = forms.inlineformset_factory(
+    models.Event, models.EventStaff, form=EventStaffForm, extra=2
+)

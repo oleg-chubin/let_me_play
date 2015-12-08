@@ -218,6 +218,9 @@ class StaffProfile(Followable):
     user = models.OneToOneField(UserModel)
     description = models.TextField(_('description'))
 
+    def __str__(self):
+        return str(self.user)
+
 
 class Event(Followable):
     start_at = models.DateTimeField(_('date started'), db_index=True)
@@ -233,6 +236,23 @@ class Event(Followable):
 
     def __str__(self):
         return "{} ({})".format(self.name, self.start_at)
+
+
+class StaffRole(models.Model):
+    name = models.CharField(_("name"), max_length=128, default='')
+
+    def __str__(self):
+        return self.name
+
+
+class EventStaff(models.Model):
+    event = models.ForeignKey(Event)
+    staff = models.ForeignKey(StaffProfile)
+    role = models.ForeignKey(StaffRole)
+    invoice = models.ForeignKey(Invoice, null=True, blank=True)
+
+    def __str__(self):
+        return "{} ({})".format(self.staff, self.role)
 
 
 class Equipment(models.Model):

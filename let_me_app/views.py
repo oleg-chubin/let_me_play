@@ -19,6 +19,7 @@ from extra_views.generic import GenericInlineFormSet
 
 from let_me_app import persistence, forms, models
 from django.db import transaction
+from let_me_app.forms import EventStaffForm
 
 
 
@@ -765,6 +766,18 @@ class CreateCourtEventView(CreateEventView):
         context = super(CreateCourtEventView, self).get_context_data(**kwargs)
         context['court'] = get_object_or_404(models.Court, pk=kwargs['court'])
         return context
+
+
+class CreateStaffView(TemplateView):
+    template_name = 'events/create_staff.html'
+
+    def get_context_data(self, **kwargs):
+        event = get_object_or_404(models.Event, pk=kwargs['pk'])
+        result = {
+            'event': event,
+            'staff_formset': forms.EventStaffFormSet(instance=event)
+        }
+        return result
 
 
 class CloneEventView(TemplateView):
