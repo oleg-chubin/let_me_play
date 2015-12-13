@@ -12,6 +12,8 @@ from leaflet.forms.widgets import LeafletWidget
 from floppyforms import widgets as floppyforms_widgets
 
 from let_me_app import models
+from django.forms.models import BaseInlineFormSet
+from django.forms.formsets import DELETION_FIELD_NAME
 
 
 class BootstrapMultipleChoiceWidget(autocomplete_light.MultipleChoiceWidget):
@@ -30,6 +32,11 @@ class BootstrapChoiceWidget(autocomplete_light.ChoiceWidget):
 
 class BootstrapModelMultipleChoiceField(autocomplete_light.ModelMultipleChoiceField):
     widget=BootstrapMultipleChoiceWidget
+
+
+class TrashCheckboxInput(floppyforms_widgets.CheckboxInput):
+    template_name = 'floppyforms/trash_checkbox.html'
+
 
 class ChatMessageForm(forms.Form):
     message = forms.CharField()
@@ -125,16 +132,29 @@ class EventVisitForm(forms.Form):
 
 
 class EventStaffForm(forms.ModelForm):
-    staff = BootstrapModelMultipleChoiceField('StaffProfileAutocomplete')
-
     class Meta:
         model = models.EventStaff
         widgets = {
+            'staff': BootstrapChoiceWidget('StaffProfileAutocomplete'),
             'event': floppyforms_widgets.HiddenInput(),
             'invoice': floppyforms_widgets.HiddenInput(),
-            'role': floppyforms_widgets.Select(),
+            'role': floppyforms_widgets.Select()
         }
 
+    def __init__(self, *args, **kwargs):
+        super(EventStaffForm, self).__init__(*args, **kwargs)
+        self.fields['role'].widget.is_required = False
+
+
+class CustomInlineFormset(BaseInlineFormSet):
+    def add_fields(self, form, index):
+        super(CustomInlineFormset, self).add_fields(form, index)
+        if self.can_delete:
+            form.fields[DELETION_FIELD_NAME] = forms.BooleanField(
+                label=_('Delete'), required=False, widget=TrashCheckboxInput)
+
+
 EventStaffFormSet = forms.inlineformset_factory(
-    models.Event, models.EventStaff, form=EventStaffForm, extra=2
+    models.Event, models.EventStaff, formset=CustomInlineFormset,
+    form=EventStaffForm, extra=2
 )

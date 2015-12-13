@@ -91,3 +91,17 @@
     border-bottom-right-radius:.25em;
     padding-left:15px
 }
+
+.btn .formset-remove{
+    display: none;
+}
+.btn.active .formset-remove{
+    display: block;
+}
+
+.btn .formset-saved{
+    display: block;
+}
+.btn.active .formset-saved{
+    display: none;
+}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-28 21:49+0000\n"
+"POT-Creation-Date: 2015-12-13 13:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,27 +18,33 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: let_me_app/autocomplete_light_registry.py:14
+#: let_me_app/autocomplete_light_registry.py:19
 msgid "Please type to find users"
 msgstr ""
 
-#: let_me_app/autocomplete_light_registry.py:19
+#: let_me_app/autocomplete_light_registry.py:24
 msgid "Please type to find equipment"
 msgstr ""
 
-#: let_me_app/forms.py:87
+#: let_me_app/forms.py:93
 msgid "start date"
 msgstr ""
 
-#: let_me_app/forms.py:90
+#: let_me_app/forms.py:96
 msgid "end date"
 msgstr ""
 
-#: let_me_app/forms.py:94
+#: let_me_app/forms.py:100
 msgid "radius"
 msgstr ""
 
-#: let_me_app/forms.py:96
+#: let_me_app/forms.py:102
 msgid "activity type"
+msgstr ""
+
+#: let_me_app/forms.py:154
+#: venv/lib/python3.4/site-packages/django/forms/formsets.py:371
+msgid "Delete"
 msgstr ""
 
 #: let_me_app/models.py:26
@@ -105,12 +111,12 @@ msgstr ""
 msgid "Geo point"
 msgstr ""
 
-#: let_me_app/models.py:138 let_me_app/models.py:211 let_me_app/models.py:224
-#: let_me_app/models.py:239
+#: let_me_app/models.py:138 let_me_app/models.py:211 let_me_app/models.py:227
+#: let_me_app/models.py:242 let_me_app/models.py:261
 msgid "name"
 msgstr ""
 
-#: let_me_app/models.py:139 let_me_app/models.py:160 let_me_app/models.py:225
+#: let_me_app/models.py:139 let_me_app/models.py:160 let_me_app/models.py:228
 #: templates/details_blocks/court.html:15
 #: templates/details_blocks/site.html:33 templates/events/details.html:81
 msgid "Description"
@@ -124,7 +130,7 @@ msgstr ""
 msgid "title"
 msgstr ""
 
-#: let_me_app/models.py:187 let_me_app/models.py:223
+#: let_me_app/models.py:187 let_me_app/models.py:226
 msgid "date started"
 msgstr ""
 
@@ -148,53 +154,69 @@ msgstr ""
 msgid "description"
 msgstr ""
 
-#: let_me_app/models.py:247
+#: let_me_app/models.py:249
+msgid "event"
+msgstr ""
+
+#: let_me_app/models.py:250
+msgid "staff"
+msgstr ""
+
+#: let_me_app/models.py:251
+msgid "role"
+msgstr ""
+
+#: let_me_app/models.py:253
+msgid "invoice"
+msgstr ""
+
+#: let_me_app/models.py:269
 msgid "amount"
 msgstr ""
 
-#: let_me_app/models.py:255 let_me_app/models.py:268
+#: let_me_app/models.py:277 let_me_app/models.py:290
 msgid "comment"
 msgstr ""
 
-#: let_me_auth/models.py:13
-msgid "email address"
-msgstr ""
-
-#: let_me_auth/models.py:14
+#: let_me_auth/models.py:13 let_me_auth/models.py:18
 msgid "first name"
 msgstr ""
 
-#: let_me_auth/models.py:15
-msgid "last name"
-msgstr ""
-
-#: let_me_auth/models.py:16
-msgid "staff status"
-msgstr ""
-
 #: let_me_auth/models.py:17
-msgid "Designates whether the user can log into this admin site."
+msgid "email address"
 msgstr ""
 
 #: let_me_auth/models.py:19
-msgid "active"
+msgid "last name"
 msgstr ""
 
 #: let_me_auth/models.py:20
+msgid "staff status"
+msgstr ""
+
+#: let_me_auth/models.py:21
+msgid "Designates whether the user can log into this admin site."
+msgstr ""
+
+#: let_me_auth/models.py:23
+msgid "active"
+msgstr ""
+
+#: let_me_auth/models.py:24
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
 msgstr ""
 
-#: let_me_auth/models.py:22
+#: let_me_auth/models.py:26
 msgid "date joined"
 msgstr ""
 
-#: let_me_auth/models.py:29
+#: let_me_auth/models.py:33
 msgid "user"
 msgstr ""
 
-#: let_me_auth/models.py:30
+#: let_me_auth/models.py:34
 msgid "users"
 msgstr ""
 
@@ -207,8 +229,9 @@ msgstr ""
 #: templates/events/clone_event.html:13
 #: templates/events/create_for_court.html:13
 #: templates/events/create_for_site.html:13
-#: templates/events/create_new.html:13 templates/events/details.html:14
-#: templates/events/search.html:14 templates/events/user_events.html:11
+#: templates/events/create_new.html:13 templates/events/create_staff.html:13
+#: templates/events/details.html:14 templates/events/search.html:14
+#: templates/events/user_events.html:11
 #: templates/events/user_managed_events.html:12
 #: templates/events/user_proposals.html:11 templates/sites/details.html:14
 #: templates/user/settings.html:11
@@ -254,7 +277,8 @@ msgstr ""
 #: templates/events/create_for_court.html:14
 #: templates/events/create_for_court.html:27
 #: templates/events/create_for_site.html:14
-#: templates/events/create_for_site.html:26 templates/events/details.html:15
+#: templates/events/create_for_site.html:26
+#: templates/events/create_staff.html:14 templates/events/details.html:15
 #: templates/sites/details.html:15
 msgid "Site"
 msgstr ""
@@ -264,7 +288,8 @@ msgstr ""
 #: templates/details_blocks/court.html:5 templates/events/clone_event.html:15
 #: templates/events/clone_event.html:37
 #: templates/events/create_for_court.html:15
-#: templates/events/create_for_court.html:37 templates/events/details.html:16
+#: templates/events/create_for_court.html:37
+#: templates/events/create_staff.html:15 templates/events/details.html:16
 msgid "Court"
 msgstr ""
 
@@ -351,8 +376,9 @@ msgstr ""
 #: templates/events/clone_event.html:16
 #: templates/events/create_for_court.html:16
 #: templates/events/create_for_court.html:41
-#: templates/events/create_for_site.html:15 templates/events/details.html:17
-#: templates/events/details.html.py:71
+#: templates/events/create_for_site.html:15
+#: templates/events/create_staff.html:16 templates/events/create_staff.html:26
+#: templates/events/details.html:17 templates/events/details.html.py:71
 msgid "Event"
 msgstr ""
 
@@ -443,7 +469,7 @@ msgstr ""
 #: templates/events/clone_event.html:49
 #: templates/events/create_for_court.html:52
 #: templates/events/create_for_site.html:46
-#: templates/events/create_new.html:29
+#: templates/events/create_new.html:29 templates/events/create_staff.html:46
 msgid "Cancel"
 msgstr ""
 
@@ -466,7 +492,8 @@ msgstr ""
 #: templates/events/clone_event.html:47
 #: templates/events/create_for_court.html:50
 #: templates/events/create_for_site.html:44
-#: templates/events/create_new.html:27 templates/user/settings.html:26
+#: templates/events/create_new.html:27 templates/events/create_staff.html:44
+#: templates/user/settings.html:26
 msgid "Save"
 msgstr ""
 
@@ -479,21 +506,25 @@ msgstr ""
 msgid "Create new event"
 msgstr ""
 
+#: templates/events/create_staff.html:39 templates/events/details.html:114
+msgid "Staff"
+msgstr ""
+
 #: templates/events/details.html:88
 #: templates/events/panels/my_application.html:11
 #: templates/events/panels/my_visit.html:17
 msgid "Inventory"
 msgstr ""
 
-#: templates/events/details.html:114
+#: templates/events/details.html:135
 msgid "Visitors"
 msgstr ""
 
-#: templates/events/details.html:149 templates/navbar.html:93
+#: templates/events/details.html:170 templates/navbar.html:93
 msgid "Applications"
 msgstr ""
 
-#: templates/events/details.html:173 templates/navbar.html:73
+#: templates/events/details.html:194 templates/navbar.html:73
 msgid "Proposals"
 msgstr ""
 
@@ -1074,10 +1105,6 @@ msgstr[1] ""
 #: venv/lib/python3.4/site-packages/django/forms/formsets.py:367
 #: venv/lib/python3.4/site-packages/django/forms/formsets.py:369
 msgid "Order"
-msgstr ""
-
-#: venv/lib/python3.4/site-packages/django/forms/formsets.py:371
-msgid "Delete"
 msgstr ""
 
 #: venv/lib/python3.4/site-packages/django/forms/models.py:710

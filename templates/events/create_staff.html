@@ -34,6 +34,8 @@
         {{ event.start_at }}
       </p>
     <form method="post">
+  {% csrf_token %}
+      {% include "form.html" with form=staff_formset.management_form %}
       <legend>{% trans "Staff" %}</legend>
       {% for form in staff_formset.forms %}
         {% include "form.html" %}

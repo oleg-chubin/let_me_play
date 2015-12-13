@@ -246,10 +246,12 @@ class StaffRole(models.Model):
 
 
 class EventStaff(models.Model):
-    event = models.ForeignKey(Event)
-    staff = models.ForeignKey(StaffProfile)
-    role = models.ForeignKey(StaffRole)
-    invoice = models.ForeignKey(Invoice, null=True, blank=True)
+    event = models.ForeignKey(Event, verbose_name=_("event"))
+    staff = models.ForeignKey(StaffProfile, verbose_name=_("staff"))
+    role = models.ForeignKey(StaffRole, verbose_name=_("role"))
+    invoice = models.ForeignKey(
+        Invoice, null=True, blank=True, verbose_name=_("invoice")
+    )
 
     def __str__(self):
         return "{} ({})".format(self.staff, self.role)
