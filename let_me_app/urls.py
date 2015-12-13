@@ -82,6 +82,10 @@ urlpatterns = patterns('',
         views.SiteDetailView.as_view(),
         name='view_site'),
 
+    url(r'^nominate/staff/for/event/(?P<pk>[0-9]+)/$',
+        views.CreateStaffView.as_view(),
+        name='nominate_staff'),
+
     url(r'^create/new/event/$',
         views.CreateEventView.as_view(),
         name='create_new_event'),

@@ -19,6 +19,7 @@ from extra_views.generic import GenericInlineFormSet
 
 from let_me_app import persistence, forms, models
 from django.db import transaction
+from let_me_app.forms import EventStaffForm
 
 
 
@@ -765,6 +766,38 @@ class CreateCourtEventView(CreateEventView):
         context = super(CreateCourtEventView, self).get_context_data(**kwargs)
         context['court'] = get_object_or_404(models.Court, pk=kwargs['court'])
         return context
+
+
+class CreateStaffView(TemplateView):
+    template_name = 'events/create_staff.html'
+
+    def get_context_data(self, **kwargs):
+        event = get_object_or_404(models.Event, pk=kwargs['pk'])
+        formset = forms.EventStaffFormSet(
+                instance=event, data=kwargs.get('data'))
+        result = {
+            'event': event,
+            'staff_formset': formset}
+
+        return result
+
+    def check_permissions(self, request, court):
+        return (court.admin_group.user_set.filter(id=request.user.id).exists()
+            or self.request.user.is_staff)
+
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(data=request.POST, **kwargs)
+        formset = context['staff_formset']
+        if formset.is_valid():
+            formset.save()
+            return http.HttpResponseRedirect(
+                reverse(
+                    'let_me_app:view_event',
+                    kwargs={'pk': context['event'].id}
+                )
+            )
+        return self.render_to_response(context)
 
 
 class CloneEventView(TemplateView):
