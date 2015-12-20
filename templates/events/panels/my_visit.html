@@ -8,9 +8,7 @@
   <div>
     <h4>{% trans "Receipt" %}</h4>
     {% if visit.receipt %}
-      {{ visit.date }}
-      {{ visit.price }}
-      {{ visit.status }}
+      {{ visit.receipt }}
     {% else %}
       {% trans "Nothing" %}
     {% endif %}
@@ -25,13 +23,17 @@
           </li>
         {% endfor %}
       </ul>
-      <div class="ui-group-buttons">
-        {% url 'let_me_app:add_visit_inventory' pk=visit.id as form_url %}
-        {% include "events/buttons/add_inventory.html" %}
-      </div>
+      {% if visit.status == VISIT_STATUSES.PENDING %}
+          <div class="ui-group-buttons">
+            {% url 'let_me_app:add_visit_inventory' pk=visit.id as form_url %}
+            {% include "events/buttons/add_inventory.html" %}
+          </div>
+      {% endif %}
   </div>
 
+  {% if visit.status == VISIT_STATUSES.PENDING %}
     <div class="ui-group-buttons pull-right marginBottom10">
       {% include "events/buttons/cancel_visit.html" %}
     </div>
+  {% endif %}
 {% endblock %}

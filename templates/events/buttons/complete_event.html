@@ -1,7 +1,5 @@
 {% load i18n %}
-<form method="post" action="{% url 'let_me_app:complete_event' event=object.id %}">
-{% csrf_token %}
-</form>
-<a href="#" onClick="$(this).parent().find('form').submit()">
-  {% trans "Complete" %}
+
+<a href="{% url 'let_me_app:complete_event' event=object.id %}">
+  <span class="glyphicon glyphicon-ok-sign"></span> {% trans "Complete" %}
 </a>

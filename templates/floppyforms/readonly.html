@@ -1,0 +1,17 @@
+<div class="btn-group"  >
+    <label class="btn" for="{{ attrs.id }}">
+        {% if optgroups %}
+          {% for group_name, group_choices in optgroups %}
+            {% for option in group_choices %}
+              {% if option.0 in value %}
+                <input id="{{ attrs.id }}" value="{{option.0}}" type="hidden" name="{{ name }}" autocomplete="off" >
+                {{option.1}}
+              {% endif %}
+            {%  endfor %}
+          {%  endfor %}
+        {% else %}
+          {{ value }}
+          <input id="{{ attrs.id }}" value="{{value}}" type="hidden" name="{{ name }}" autocomplete="off" >
+        {% endif %}
+    </label>
+</div>

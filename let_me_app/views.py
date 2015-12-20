@@ -19,7 +19,7 @@ from extra_views.generic import GenericInlineFormSet
 
 from let_me_app import persistence, forms, models
 from django.db import transaction
-from let_me_app.forms import EventStaffForm
+from let_me_app.models import VisitStatuses
 
 
 
@@ -529,21 +529,6 @@ class CancelEventView(EventActionMixin, BaseView):
         event.save()
 
 
-class CompleteEventView(EventActionMixin, BaseView):
-    def check_permissions(self, request, *args, **kwargs):
-        return Group.objects.filter(
-            court__event=kwargs['event'], user=request.user).exists()
-
-    def get_queryset(self, request, *args, **kwargs):
-        return models.Event.objects.filter(
-            id=kwargs['event'], status=models.VisitStatuses.PENDING
-        )
-
-    def process_object(self, event):
-        event.status = models.EventStatuses.COMPLETED
-        event.save()
-
-
 class CourtDetailView(DetailView):
     template_name = 'courts/details.html'
     model = models.Court
@@ -858,4 +843,50 @@ class CloneEventView(TemplateView):
         )
 
 
+class CompleteEventView(TemplateView):
+    template_name = 'events/complete_event.html'
+
+    def get_context_data(self, **kwargs):
+        event = get_object_or_404(
+            models.Event,
+            pk=kwargs['event'],
+            status=models.EventStatuses.PENDING
+        )
+        formset = forms.CompleteEventVisitFormSet(
+                instance=event, data=kwargs.get('data'))
+        result = {
+            'event': event,
+            'visit_formset': formset}
+
+        return result
+
+    def check_permissions(self, request, court):
+        return (court.admin_group.user_set.filter(id=request.user.id).exists()
+            or self.request.user.is_staff)
+
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(data=request.POST, **kwargs)
+        formset = context['visit_formset']
+        if formset.is_valid():
+            formset.save(commit=False)
+            context['event'].status = models.EventStatuses.COMPLETED
+            context['event'].save()
+            for form in formset.forms:
+                instance = form.instance
+                receipt = instance.receipt or models.Receipt()
+                if (instance.status == VisitStatuses.COMPLETED
+                        and form.cleaned_data['income'] is not None):
+                    receipt.price = form.cleaned_data['income']
+                    receipt.status = models.PriceStatuses.PAID
+                    receipt.save()
+                    instance.receipt = receipt
+                form.instance.save()
+            return http.HttpResponseRedirect(
+                reverse(
+                    'let_me_app:view_event',
+                    kwargs={'pk': context['event'].id}
+                )
+            )
+        return self.render_to_response(context)
 

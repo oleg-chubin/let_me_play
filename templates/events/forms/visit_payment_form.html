@@ -1,0 +1,23 @@
+{% load floppyforms %}
+
+<div>
+  <div class="form-group">
+    {% form form using %}
+        {% formconfig row using "events/forms/rows/bootstrap_inline_row.html" %}
+          <span class="col-lg-6">{% formrow form.user %}</span>
+          <div class="col-lg-6">
+            <div class="input-group">
+            {% for field in form.visible_fields %}
+                {% if field.name != 'user' %}
+                    {% block row %}{% formrow field %}{% endblock %}
+                {% endif %}
+            {% endfor %}
+            {% for field in form.hidden_fields %}
+                {% formfield field %}
+            {% endfor %}
+            </div>
+          </div>
+    {% endform %}
+  </div>
+
+</div>
