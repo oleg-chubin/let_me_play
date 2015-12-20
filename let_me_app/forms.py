@@ -38,6 +38,14 @@ class TrashCheckboxInput(floppyforms_widgets.CheckboxInput):
     template_name = 'floppyforms/trash_checkbox.html'
 
 
+class AddonCheckbox(floppyforms_widgets.CheckboxInput):
+    template_name = 'floppyforms/addon_checkbox.html'
+
+
+class ReadonlySelect(floppyforms_widgets.Select):
+    template_name = 'floppyforms/readonly.html'
+
+
 class ChatMessageForm(forms.Form):
     message = forms.CharField()
 
@@ -158,3 +166,37 @@ EventStaffFormSet = forms.inlineformset_factory(
     models.Event, models.EventStaff, formset=CustomInlineFormset,
     form=EventStaffForm, extra=2
 )
+
+
+class CompleteEventVisitForm(forms.ModelForm):
+    income = forms.IntegerField(
+        label=_("Income"), required=False, widget=floppyforms_widgets.NumberInput)
+    status = forms.BooleanField(
+        label=_("Visit was payed"), required=False,
+        widget=AddonCheckbox)
+
+    class Meta:
+        model = models.Visit
+        fields = ('status', 'receipt', 'income', 'user')
+        widgets = {
+            'receipt': floppyforms_widgets.HiddenInput(),
+            'user': ReadonlySelect(),
+        }
+
+    class Media:
+        js = ('js/complete_event_form.js', )
+
+
+
+    def clean_status(self):
+        if self.cleaned_data['status']:
+            return models.VisitStatuses.COMPLETED
+        else:
+            return models.VisitStatuses.MISSED
+
+
+CompleteEventVisitFormSet = forms.inlineformset_factory(
+    models.Event, models.Visit, formset=CustomInlineFormset,
+    form=CompleteEventVisitForm, extra=0, can_delete=False
+)
+

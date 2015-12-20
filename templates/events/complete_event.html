@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% load staticfiles static let_me_escort leaflet_tags i18n %}
+
+{% block extra_head %}
+  {% leaflet_css %}
+  <link href="{% static "css/event.css" %}" rel="stylesheet">
+  <link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block breadcrumbs %}
+  <ol class="breadcrumb">
+    <li><a href="#">{% trans "Home" %}</a></li>
+    <li><a href="{% url 'let_me_app:view_site' pk=event.court.site_id %}">{% trans "Site" %}</a></li>
+    <li><a href="{% url 'let_me_app:view_court' pk=event.court.id %}">{% trans "Court" %}</a></li>
+    <li class="active">{% trans "Event" %}</li>
+  </ol>
+{% endblock %}
+
+{% block main %}
+<div class="row-fluid">
+  <div class="col-md-6">
+    {% leaflet_map "yourmap" callback="window.map_init_basic" %}
+  </div>
+  <div class="col-md-6">
+      <legend>{% trans "Event" %}</legend>
+      <p>
+        {{ event.name }}
+      </p>
+      <p>
+        {{ event.description|linebreaksbr }}
+      </p>
+      <p>
+        {{ event.start_at }}
+      </p>
+    <form method="post" class="form-horizontal">
+
+  {% csrf_token %}
+      {% include "form.html" with form=visit_formset.management_form %}
+      <legend>{% trans "Visitors" %}</legend>
+      {% for form in visit_formset.forms %}
+        {% include "events/forms/visit_payment_form.html" %}
+      {% endfor %}
+      <div>
+          <div class="ui-group-buttons marginBottom10 pull-right">
+            <button type="submit" class="btn btn-success">{% trans "Save" %}</button>
+            <div class="or"></div>
+            <a href="{% url 'let_me_app:view_event' pk=event.id %}" class="btn btn-danger">{% trans "Cancel" %}</a>
+          </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+  {% leaflet_js %}
+  <script type="text/javascript">
+      {% with longitude=event.court.site.geo_point.0|stringformat:"f" latitude=event.court.site.geo_point.1|stringformat:"f" %}
+          function map_init_basic (map, options) {
+              L.marker([{{ latitude }}, {{ longitude }}]).addTo(map);
+              map.panTo(new L.LatLng({{ latitude }}, {{ longitude }}));
+          }
+      {% endwith %}
+  </script>
+  {{ visit_formset.forms.0.media }}
+{% endblock %}

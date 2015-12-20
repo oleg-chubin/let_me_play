@@ -51,8 +51,10 @@
                   <span class="glyphicon glyphicon-cog" style="margin-right: 0px;"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
-                <li> {% include "events/buttons/complete_event.html" %}</li>
-                <li> {% include "events/buttons/cancel_event.html" %}</li>
+                {% if object.status == EVENT_STATUSES.PENDING %}
+                    <li> {% include "events/buttons/complete_event.html" %}</li>
+                    <li> {% include "events/buttons/cancel_event.html" %}</li>
+                {% endif %}
                 <li> {% include "events/buttons/clone_event.html" %}</li>
               </ul>
           </div>
@@ -94,18 +96,24 @@
           {% for inventory in object.inventory_list.inventory_set.all %}
             <li> {{ inventory.equipment }} ({{ inventory.amount }})
             {% if is_admin %}
-              <div class="ui-group-buttons">
-                {% include "events/buttons/cancel_inventory.html" %}
-              </div>
+
+                {% if object.status == EVENT_STATUSES.PENDING %}
+                  <div class="ui-group-buttons">
+                    {% include "events/buttons/cancel_inventory.html" %}
+                  </div>
+                {% endif %}
             </li>
             {% endif %}
           {% endfor %}
         </ul>
         {% if is_admin %}
-          <div class="ui-group-buttons">
-            {% url 'let_me_app:add_event_inventory' pk=object.id as form_url %}
-            {% include "events/buttons/add_inventory.html" %}
-          </div>
+
+            {% if object.status == EVENT_STATUSES.PENDING %}
+              <div class="ui-group-buttons">
+                {% url 'let_me_app:add_event_inventory' pk=object.id as form_url %}
+                {% include "events/buttons/add_inventory.html" %}
+              </div>
+            {% endif %}
         {% endif %}
       </div>
     </li>
@@ -124,9 +132,12 @@
           {% endfor %}
         </ul>
         {% if is_admin %}
-          <div class="ui-group-buttons">
-            {% include "events/buttons/create_staff.html" %}
-          </div>
+
+            {% if object.status == EVENT_STATUSES.PENDING %}
+              <div class="ui-group-buttons">
+                {% include "events/buttons/create_staff.html" %}
+              </div>
+            {% endif %}
         {% endif %}
       </div>
     </li>
@@ -140,13 +151,15 @@
         <ul>
           {% for visit in active_visits %}
             <li>
-              {% if visit.status == 1 %}
+              {% if visit.status == VISIT_STATUSES.PENDING or visit.status == VISIT_STATUSES.COMPLETED %}
                 {{ visit.user }}
                 {% with visit.user as visitor %}
                   {% if is_admin %}
-                    <div class="ui-group-buttons">
-                      {% include "events/buttons/dismiss_visit.html" %}
-                    </div>
+                    {% if object.status == EVENT_STATUSES.PENDING %}
+                      <div class="ui-group-buttons">
+                        {% include "events/buttons/dismiss_visit.html" %}
+                      </div>
+                    {% endif %}
                   {% endif %}
                 {% endwith %}
               {% else %}
@@ -158,9 +171,11 @@
           {% endfor %}
         </ul>
         {% if is_admin %}
-          <div class="ui-group-buttons">
-            {% include "events/buttons/create_visit.html" %}
-          </div>
+            {% if object.status == EVENT_STATUSES.PENDING %}
+              <div class="ui-group-buttons">
+                {% include "events/buttons/create_visit.html" %}
+              </div>
+            {% endif %}
         {% endif %}
       </div>
     </li>
@@ -177,13 +192,15 @@
               <li>
                 {{ application.user.get_full_name }} ({{ application.comment|truncatewords_html:4 }})
 
-                <div class="ui-group-buttons marginBottom10">
-                  {% with application.user as applicant %}
-                    {% include "events/buttons/accept_application.html" %}
-                  {% endwith %}
-                  <div class="or"></div>
-                  {% include "events/buttons/decline_application.html" %}
-                </div>
+                {% if object.status == EVENT_STATUSES.PENDING %}
+                    <div class="ui-group-buttons marginBottom10">
+                      {% with application.user as applicant %}
+                        {% include "events/buttons/accept_application.html" %}
+                      {% endwith %}
+                      <div class="or"></div>
+                      {% include "events/buttons/decline_application.html" %}
+                    </div>
+                {% endif %}
               </li>
             {% endfor %}
           </ul>
@@ -201,29 +218,38 @@
               {% if proposal.status == PROPOSAL_STATUSES.ACTIVE %}
                   <li>
                       {{ proposal.user.get_full_name }}
-                      <div class="ui-group-buttons">
-                        {% with invitee=proposal.user %}
-                          {% include "events/buttons/cancel_proposal.html" %}
-                        {% endwith %}
-                      </div>
+
+                        {% if object.status == EVENT_STATUSES.PENDING %}
+                          <div class="ui-group-buttons">
+                            {% with invitee=proposal.user %}
+                              {% include "events/buttons/cancel_proposal.html" %}
+                            {% endwith %}
+                          </div>
+                        {% endif %}
+
                   </li>
               {% endif %}
             {% endfor %}
           </ul>
-          <div class="ui-group-buttons">
-            {% include "events/buttons/propose_event.html" %}
-          </div>
+            {% if object.status == EVENT_STATUSES.PENDING %}
+              <div class="ui-group-buttons">
+                {% include "events/buttons/propose_event.html" %}
+              </div>
+            {% endif %}
         </div>
       </li>
       {% endif %}
     </ul>
   {% ifequal object.status 1 %}
     <div class="panel-footer">
-      <div class="ui-group-buttons">
-        {% if not my_active_visit and not my_active_proposal and not my_active_application %}
-          {% include "events/buttons/apply_for_event.html" %}
+
+        {% if object.status == EVENT_STATUSES.PENDING %}
+          <div class="ui-group-buttons">
+            {% if not my_active_visit and not my_active_proposal and not my_active_application %}
+              {% include "events/buttons/apply_for_event.html" %}
+            {% endif %}
+          </div>
         {% endif %}
-      </div>
 
       <div class="pull-right">
         <!-- Put this script tag to the <head> of your page -->

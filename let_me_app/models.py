@@ -307,6 +307,9 @@ class Receipt(models.Model):
     status = models.IntegerField(choices=PriceStatuses.CHOICES,
                                  default=PriceStatuses.NEW)
 
+    def __str__(self):
+        return "{} ({})".format(self.price, dict(PriceStatuses.CHOICES)[self.status])
+
 
 class Visit(models.Model):
     inventory_list = models.ForeignKey(InventoryList, null=True, blank=True)
