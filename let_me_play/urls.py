@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     url('', include('social.apps.django_app.urls', namespace='social')),
     url('', include('let_me_auth.urls', namespace='let_me_auth')),
     url('^let/me/', include('let_me_app.urls', namespace='let_me_app')),
+    url('^show/me/', include('show_me_app.urls', namespace='show_me_app')),
     url('my/settings/', SettingsView.as_view(), name="user_settings"),
 
     url('^escort/', include('let_me_escort.urls', namespace='let_me_escort')),
