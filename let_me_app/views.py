@@ -20,6 +20,7 @@ from extra_views.generic import GenericInlineFormSet
 from let_me_app import persistence, forms, models
 from django.db import transaction
 from let_me_app.models import VisitStatuses
+from let_me_auth.models import User
 
 
 
@@ -129,10 +130,20 @@ class EventView(DetailView):
         result['active_applications'] =event.application_set.filter(
             status=models.ApplicationStatuses.ACTIVE
         ).select_related('user')
-        result['active_visits'] =event.visit_set.filter(
-            status__in=[models.VisitStatuses.PENDING, models.VisitStatuses.COMPLETED]
-        ).select_related('user')
+        result['active_visits'] = event.visit_set.select_related('user')
         result['active_proposals'] = event.proposal_set.all().select_related('user')
+
+        user_inventory = models.Inventory.objects.filter(
+            inventory_list__visit__event=event,
+            inventory_list__visit__status=models.VisitStatuses.PENDING)
+        user_inventory = user_inventory.select_related('equipment')
+        user_inventory = user_inventory.values('equipment__name', 'amount', 'inventory_list_id')
+        inventory_lists = {
+            i.inventory_list_id: i.user for i in result['active_visits']
+        }
+        for inventory in user_inventory:
+            inventory['user'] = inventory_lists[inventory['inventory_list_id']]
+        result['user_inventory'] = user_inventory
 
         for prop in result['active_proposals']:
             if (prop.user == self.request.user
@@ -146,7 +157,8 @@ class EventView(DetailView):
             result['my_active_application'] = my_active_applications[0]
 
         my_active_visits = [
-            i for i in result['active_visits'] if i.user == self.request.user
+            i for i in result['active_visits']
+            if i.user == self.request.user and i.status in [models.VisitStatuses.PENDING, models.VisitStatuses.COMPLETED]
         ]
         if my_active_visits:
             result['my_active_visit'] = my_active_visits[0]
@@ -804,7 +816,8 @@ class CloneEventView(TemplateView):
         data_forms['event'] = forms.EventForm(
             data=self.request.POST, files=self.request.FILES, prefix='event')
         data_forms['visitors'] = forms.EventVisitForm(
-            data=data, prefix='event', initial={'users': [self.request.user]}
+            data=data, prefix='event',
+            initial={'users': User.objects.filter(visit__event=kwargs['event'])}
         )
         return data_forms
 

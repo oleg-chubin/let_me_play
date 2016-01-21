@@ -102,7 +102,7 @@
       <div id="detail-4">
         <ul>
           {% for inventory in object.inventory_list.inventory_set.all %}
-            <li> {{ inventory.equipment }} ({{ inventory.amount }})
+            <li> <strong>{{ inventory.equipment }}<strong> {{ inventory.amount }}
             {% if is_admin %}
 
                 {% if object.status == EVENT_STATUSES.PENDING %}
@@ -110,8 +110,11 @@
                     {% include "events/buttons/cancel_inventory.html" %}
                   </div>
                 {% endif %}
-            </li>
             {% endif %}
+            </li>
+          {% endfor %}
+          {% for inventory in user_inventory %}
+            <li> <strong>{{ inventory.equipment__name }}</strong> {{ inventory.amount }} <small>({{inventory.user}})</small></li>
           {% endfor %}
         </ul>
         {% if is_admin %}
@@ -171,9 +174,16 @@
                   {% endif %}
                 {% endwith %}
               {% else %}
-                <del>
-                  {{ visit.user }}
-                </del>
+
+                {% if is_admin %}
+                    <del>
+                      {{ visit.user }}
+                    </del>
+                    <span class="label label-info">
+                      {{ visit.status|as_status:VISIT_STATUSES.CHOICES }}
+                    </span>
+                {% endif %}
+
               {% endif %}
             </li>
           {% endfor %}
@@ -290,7 +300,7 @@
               L.marker([{{ latitude }}, {{ longitude }}]).addTo(map);
               map.panTo(new L.LatLng({{ latitude }}, {{ longitude }}));
 
-                $('.modal').on('shown.bs.modal', function () {
+                $('#mapModal.modal').on('shown.bs.modal', function () {
                         map.invalidateSize();
                 } );
           }

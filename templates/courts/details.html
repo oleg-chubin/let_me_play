@@ -100,6 +100,10 @@
           function map_init_basic (map, options) {
               L.marker([{{ latitude }}, {{ longitude }}]).addTo(map);
               map.panTo(new L.LatLng({{ latitude }}, {{ longitude }}));
+
+              $('#mapModal.modal').on('shown.bs.modal', function () {
+                    map.invalidateSize();
+              } );
           }
       {% endwith %}
   </script>
