@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-20 07:05+0000\n"
+"POT-Creation-Date: 2016-01-21 09:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -124,17 +124,17 @@ msgid "Geo point"
 msgstr "Гео точка"
 
 #: let_me_app/models.py:138 let_me_app/models.py:211 let_me_app/models.py:227
-#: let_me_app/models.py:242 let_me_app/models.py:261
+#: let_me_app/models.py:243 let_me_app/models.py:262
 msgid "name"
 msgstr "Имя"
 
 #: let_me_app/models.py:139 let_me_app/models.py:160 let_me_app/models.py:228
 #: templates/details_blocks/court.html:15
-#: templates/details_blocks/site.html:33 templates/events/details.html:83
+#: templates/details_blocks/site.html:17 templates/events/details.html:91
 msgid "Description"
 msgstr "описание"
 
-#: let_me_app/models.py:140 templates/details_blocks/site.html:37
+#: let_me_app/models.py:140 templates/details_blocks/site.html:21
 msgid "Address"
 msgstr "Адрес"
 
@@ -166,31 +166,37 @@ msgstr "приблизительная стоимость"
 msgid "description"
 msgstr "описание"
 
-#: let_me_app/models.py:249
+#: let_me_app/models.py:233 templates/events/details.html:87
+#, fuzzy
+#| msgid "estimated price"
+msgid "Preliminary price"
+msgstr "приблизительная стоимость"
+
+#: let_me_app/models.py:250
 #, fuzzy
 #| msgid "Event"
 msgid "event"
 msgstr "События"
 
-#: let_me_app/models.py:250
+#: let_me_app/models.py:251
 #, fuzzy
 #| msgid "Staff"
 msgid "staff"
 msgstr "Персонал"
 
-#: let_me_app/models.py:251
+#: let_me_app/models.py:252
 msgid "role"
 msgstr "Роль"
 
-#: let_me_app/models.py:253
+#: let_me_app/models.py:254
 msgid "invoice"
 msgstr "Платежка"
 
-#: let_me_app/models.py:269
+#: let_me_app/models.py:270
 msgid "amount"
 msgstr "количество"
 
-#: let_me_app/models.py:277 let_me_app/models.py:290
+#: let_me_app/models.py:278 let_me_app/models.py:291
 msgid "comment"
 msgstr "Комментарий"
 
@@ -292,7 +298,7 @@ msgstr "Детальнее..."
 msgid "Create event"
 msgstr "Создать событие"
 
-#: templates/courts/details.html:13 templates/details_blocks/site.html:21
+#: templates/courts/details.html:13 templates/details_blocks/site.html:5
 #: templates/events/clone_event.html:14 templates/events/clone_event.html:27
 #: templates/events/complete_event.html:14
 #: templates/events/create_for_court.html:14
@@ -459,13 +465,17 @@ msgstr "посещения события"
 msgid "Type"
 msgstr "Тип"
 
-#: templates/details_blocks/site.html:6
+#: templates/details_blocks/site.html:13 templates/events/details.html:79
+msgid "Name"
+msgstr "Имя"
+
+#: templates/details_blocks/site.html:27 templates/details_blocks/site.html:35
 msgid "Map"
 msgstr "Карта"
 
-#: templates/details_blocks/site.html:29 templates/events/details.html:79
-msgid "Name"
-msgstr "Имя"
+#: templates/details_blocks/site.html:28
+msgid "Show"
+msgstr "Показать"
 
 #: templates/escort/follow_menu.html:19
 msgid "Not follow"
@@ -523,7 +533,7 @@ msgstr "Отклонить предложение"
 msgid "Save"
 msgstr "Сохранить"
 
-#: templates/events/complete_event.html:40 templates/events/details.html:146
+#: templates/events/complete_event.html:40 templates/events/details.html:154
 msgid "Visitors"
 msgstr "Посетитель"
 
@@ -536,21 +546,27 @@ msgstr "детали"
 msgid "Create new event"
 msgstr "Создать событие"
 
-#: templates/events/create_staff.html:39 templates/events/details.html:122
+#: templates/events/create_staff.html:39 templates/events/details.html:130
 msgid "Staff"
 msgstr "Персонал"
 
-#: templates/events/details.html:90
+#: templates/events/details.html:83
+#, fuzzy
+#| msgid "start date"
+msgid "Start at"
+msgstr "начальная дата"
+
+#: templates/events/details.html:98
 #: templates/events/panels/my_application.html:11
 #: templates/events/panels/my_visit.html:15
 msgid "Inventory"
 msgstr "Инвентарь"
 
-#: templates/events/details.html:185 templates/navbar.html:93
+#: templates/events/details.html:193 templates/navbar.html:93
 msgid "Applications"
 msgstr "Заявки"
 
-#: templates/events/details.html:211 templates/navbar.html:73
+#: templates/events/details.html:219 templates/navbar.html:73
 msgid "Proposals"
 msgstr "Предложения"
 

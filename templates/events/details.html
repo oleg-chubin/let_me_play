@@ -42,7 +42,7 @@
   <div class="panel-heading">
     <h3 class="panel-title">
       {% followdropdown object "escort/follow_menu.html" %}
-        {{ object.name }}
+        {{ object.name }} ({{object.start_at}})
       {% endfollowdropdown %}
       {% if is_admin %}
         <div class="pull-right action-buttons">
@@ -78,6 +78,14 @@
         <p>
           <strong>{% trans "Name" %}</strong>
           {{ object.name|linebreaksbr }}
+        </p>
+        <p>
+          <strong>{% trans "Start at" %}</strong>
+          {{ object.start_at }}
+        </p>
+        <p>
+          <strong>{% trans "Preliminary price" %}</strong>
+          {{ object.preliminary_price }}
         </p>
         <p>
           <strong>{% trans "Description" %}</strong>
@@ -281,6 +289,10 @@
           function map_init_basic (map, options) {
               L.marker([{{ latitude }}, {{ longitude }}]).addTo(map);
               map.panTo(new L.LatLng({{ latitude }}, {{ longitude }}));
+
+                $('.modal').on('shown.bs.modal', function () {
+                        map.invalidateSize();
+                } );
           }
       {% endwith %}
   </script>
