@@ -102,7 +102,7 @@
       <div id="detail-4">
         <ul>
           {% for inventory in object.inventory_list.inventory_set.all %}
-            <li> <strong>{{ inventory.equipment }}<strong> {{ inventory.amount }}
+            <li> <strong>{{ inventory.equipment }}</strong> {{ inventory.amount }}
             {% if is_admin %}
 
                 {% if object.status == EVENT_STATUSES.PENDING %}
