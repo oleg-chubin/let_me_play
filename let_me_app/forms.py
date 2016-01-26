@@ -186,8 +186,6 @@ class CompleteEventVisitForm(forms.ModelForm):
     class Media:
         js = ('js/complete_event_form.js', )
 
-
-
     def clean_status(self):
         if self.cleaned_data['status']:
             return models.VisitStatuses.COMPLETED
@@ -199,4 +197,38 @@ CompleteEventVisitFormSet = forms.inlineformset_factory(
     models.Event, models.Visit, formset=CustomInlineFormset,
     form=CompleteEventVisitForm, extra=0, can_delete=False
 )
+
+
+class VisitIndexForm(forms.ModelForm):
+    value = forms.FloatField(
+        label=_("Value"), required=False, widget=floppyforms_widgets.TextInput)
+    parametr = forms.ModelChoiceField(
+        models.IndexParametr.objects.all(), label=_("Parametr"),
+        required=False, widget=floppyforms_widgets.Select)
+
+    class Meta:
+        model = models.VisitIndex
+
+
+VisitIndexFormSet = forms.inlineformset_factory(
+    models.Visit, models.VisitIndex, formset=CustomInlineFormset,
+    form=VisitIndexForm, extra=1
+)
+
+
+class CoachRecommendationForm(forms.ModelForm):
+    recommendation = forms.CharField(
+        label=_("Value"), required=False, widget=floppyforms_widgets.Textarea)
+
+    class Meta:
+        model = models.CoachRecommendation
+
+
+CoachRecommendationFormSet = forms.inlineformset_factory(
+    models.Visit, models.CoachRecommendation, formset=CustomInlineFormset,
+    form=VisitIndexForm, extra=1, max_num=1, can_delete=False
+)
+
+
+
 

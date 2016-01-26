@@ -55,6 +55,10 @@
                   </a>
                   <ul class="dropdown-menu" role="menu">
                     <li><a href="{% url 'user_settings' %}">{% trans "Settings" %}</a></li>
+                    {% if user %}
+                      <li><a href="{% url 'user_settings' %}">{% trans "Profile" %}</a></li>
+                      <li><a href="{% url 'let_me_app:view_index_charts' user_id=user.id %}">{% trans "Visit indexes" %}</a></li>
+                    {% endif %}
                     <li class="divider"></li>
                     <li><a href="#">{% trans "User stats" %}</a></li>
                     <li class="divider"></li>
