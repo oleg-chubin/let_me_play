@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% load staticfiles static let_me_escort leaflet_tags i18n %}
+
+{% block extra_head %}
+  {% leaflet_css %}
+  <link href="{% static "css/event.css" %}" rel="stylesheet">
+  <link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block breadcrumbs %}
+  <ol class="breadcrumb">
+    <li><a href="#">{% trans "Home" %}</a></li>
+    <li><a href="{% url 'let_me_app:view_site' pk=visit.event.court.site_id %}">{% trans "Site" %}</a></li>
+    <li><a href="{% url 'let_me_app:view_court' pk=visit.event.court.id %}">{% trans "Court" %}</a></li>
+    <li><a href="{% url 'let_me_app:view_event' pk=visit.event_id %}">{% trans "Event" %}</a></li>
+    <li class="active">{% trans "Visit" %}</li>
+  </ol>
+{% endblock %}
+
+{% block main %}
+<div class="row-fluid">
+  <div class="col-md-12">
+      <legend>{% trans "Event" %}</legend>
+      <p>
+        {{ visit.event.name }}
+      </p>
+      <p>
+        {{ visit.event.description|linebreaksbr }}
+      </p>
+      <p>
+        {{ visit.event.start_at }}
+      </p>
+
+    <form method="post">
+  {% csrf_token %}
+      {% include "form.html" with form=formsets.visit_indexes.management_form %}
+      <legend>{% trans "Visit indexes" %}</legend>
+      {% for form in formsets.visit_indexes.forms %}
+        <div class="form-group">
+            <div class="form-inline">
+                {% include "form.html" %}
+            </div>
+        </div>
+      {% endfor %}
+      {% include "form.html" with form=formsets.recommendation.management_form %}
+      <legend>{% trans "Recommendations" %}</legend>
+      {% for form in formsets.recommendation.forms %}
+        {% include "form.html" %}
+      {% endfor %}
+      <div class="ui-group-buttons pull-right marginBottom10">
+        <button type="submit" class="btn btn-success">{% trans "Save" %}</button>
+        <div class="or"></div>
+        <a href="{% url 'let_me_app:view_event' pk=visit.event.id %}" class="btn btn-danger">{% trans "Cancel" %}</a>
+      </div>
+    </form>
+
+    <form method="post" class="form-horizontal">
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+  !!!{{ formsets.visit_indexes.forms.0.media }}
+  !!!{{ formsets.recommendation.forms.0.media }}
+{% endblock %}

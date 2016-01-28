@@ -4,14 +4,16 @@ from django.contrib import admin
 from let_me_app.models import (InternalMessage, Peeper, PrivateComment,
     Changelog, Site, Court, Occasion, BookingPolicy, Invoice, InventoryList,
     Event, Equipment, Inventory, Proposal, Application, Receipt, Visit,
-    ChatParticipant, GalleryImage, ActivityType, StaffRole, EventStaff, StaffProfile)
+    ChatParticipant, GalleryImage, ActivityType, StaffRole, EventStaff,
+    StaffProfile, IndexParametr, CoachRecommendation, VisitIndex)
 from let_me_app import admin_forms
 
 
 model_list = (InternalMessage, Peeper, PrivateComment, GalleryImage,
     Changelog, Court, Occasion, BookingPolicy, Invoice, ChatParticipant,
     Event, Equipment, Inventory, Proposal, Application, Receipt, Visit, Site,
-    ActivityType, StaffRole, EventStaff, StaffProfile
+    ActivityType, StaffRole, EventStaff, StaffProfile, IndexParametr,
+    CoachRecommendation, VisitIndex
 )
 
 for model in model_list:

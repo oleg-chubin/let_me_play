@@ -59,6 +59,18 @@ class VisitStatuses:
     )
 
 
+class RecommendationStatuses:
+    ACTIVE = 1
+    OUTDATED = 2
+    CANCELED = 3
+
+    CHOICES = (
+        (ACTIVE, _("Active")),
+        (OUTDATED, _("Outdated")),
+        (CANCELED, _("Canceled")),
+    )
+
+
 class EventStatuses:
     PENDING = 1
     COMPLETED = 2
@@ -214,8 +226,8 @@ class InventoryList(models.Model):
         return self.name
 
 
-class StaffProfile(Followable):
-    user = models.OneToOneField(UserModel)
+class StaffProfile(models.Model):
+    user = models.OneToOneField(UserModel, primary_key=True)
     description = models.TextField(_('description'))
 
     def __str__(self):
@@ -229,7 +241,7 @@ class Event(Followable):
     court = models.ForeignKey(Court)
     invoice = models.ForeignKey(Invoice, null=True, blank=True)
     inventory_list = models.ForeignKey(InventoryList, null=True, blank=True)
-    staff = models.ManyToManyField(StaffProfile, blank=True)
+#     staff = models.ManyToManyField(StaffProfile, blank=True)
     preliminary_price = models.IntegerField(_("Preliminary price"))
     status = models.IntegerField(
         choices=EventStatuses.CHOICES, default=EventStatuses.PENDING
@@ -325,3 +337,25 @@ class Visit(models.Model):
             dict(VisitStatuses.CHOICES)[self.status], self.user, self.event
         )
 
+
+class IndexParametr(models.Model):
+    name = models.CharField(_("name"), max_length=256)
+    units = models.CharField(_("units"), max_length=16)
+
+    def __str__(self):
+        return "{} ({})".format(self.name, self.units)
+
+
+class CoachRecommendation(models.Model):
+    recommendation = models.TextField(
+        verbose_name=_("Description"), max_length=1024, default='')
+    coach = models.ForeignKey(StaffProfile)
+    visit = models.ForeignKey(Visit)
+    status = models.IntegerField(choices=RecommendationStatuses.CHOICES,
+                                 default=RecommendationStatuses.ACTIVE)
+
+
+class VisitIndex(models.Model):
+    visit = models.ForeignKey(Visit)
+    parametr = models.ForeignKey(IndexParametr)
+    value = models.FloatField(verbose_name=_("Value"))

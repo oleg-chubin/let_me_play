@@ -21,6 +21,7 @@ from let_me_app import persistence, forms, models
 from django.db import transaction
 from let_me_app.models import VisitStatuses
 from let_me_auth.models import User
+import itertools
 
 
 
@@ -118,6 +119,27 @@ class EventView(DetailView):
         queryset = queryset.prefetch_related('inventory_list__inventory_set')
         return queryset
 
+    def _get_user_inventory(self, event, visits):
+        user_inventory = models.Inventory.objects.filter(
+            inventory_list__visit__event=event,
+            inventory_list__visit__status=models.VisitStatuses.PENDING)
+        user_inventory = user_inventory.select_related('equipment')
+        user_inventory = user_inventory.values('equipment__name', 'amount', 'inventory_list_id')
+        inventory_lists = {i.inventory_list_id: i.user for i in visits}
+        for inventory in user_inventory:
+            inventory['user'] = inventory_lists[inventory['inventory_list_id']]
+        return user_inventory
+
+    def _get_coach_recommendation(self, visit):
+        recommendation = models.CoachRecommendation.objects.filter(visit=visit)
+        recommendation = recommendation.select_related('coach__user')[:1]
+        if recommendation:
+            return recommendation[0]
+
+    def _get_visit_indexes(self, visit):
+        indexes = models.VisitIndex.objects.filter(visit=visit)
+        return indexes.values('parametr__name', 'parametr__units', 'value')
+
     def get_context_data(self, **kwargs):
         result = super(EventView, self).get_context_data(**kwargs)
         event = result['object']
@@ -127,28 +149,23 @@ class EventView(DetailView):
         result['proposal_form'] = forms.EventProposalForm()
         result['visit_form'] = forms.EventVisitForm()
         result['inventory_form'] = forms.InventoryForm()
-        result['active_applications'] =event.application_set.filter(
+        result['active_applications'] = event.application_set.filter(
             status=models.ApplicationStatuses.ACTIVE
-        ).select_related('user')
-        result['active_visits'] = event.visit_set.select_related('user')
-        result['active_proposals'] = event.proposal_set.all().select_related('user')
+        ).select_related('user').order_by('id')
 
-        user_inventory = models.Inventory.objects.filter(
-            inventory_list__visit__event=event,
-            inventory_list__visit__status=models.VisitStatuses.PENDING)
-        user_inventory = user_inventory.select_related('equipment')
-        user_inventory = user_inventory.values('equipment__name', 'amount', 'inventory_list_id')
-        inventory_lists = {
-            i.inventory_list_id: i.user for i in result['active_visits']
-        }
-        for inventory in user_inventory:
-            inventory['user'] = inventory_lists[inventory['inventory_list_id']]
-        result['user_inventory'] = user_inventory
+        result['staff_list'] = event.eventstaff_set.all()
+        result['is_event_staff'] = self.request.user.id in [i.staff_id for i in result['staff_list']]
+
+        result['active_visits'] = event.visit_set.select_related('user').order_by('id')
+        result['active_proposals'] = event.proposal_set.all().select_related('user').order_by('id')
+        result['user_inventory'] = self._get_user_inventory(
+            event, result['active_visits'])
 
         for prop in result['active_proposals']:
             if (prop.user == self.request.user
                     and prop.status==models.ProposalStatuses.ACTIVE):
                 result['my_active_proposal'] = prop
+
 
         my_active_applications = [
             i for i in result['active_applications'] if i.user == self.request.user
@@ -162,6 +179,14 @@ class EventView(DetailView):
         ]
         if my_active_visits:
             result['my_active_visit'] = my_active_visits[0]
+
+            result['coach_recommendation'] = self._get_coach_recommendation(
+                result['my_active_visit']
+            )
+            result['visit_indexes'] = self._get_visit_indexes(
+                result['my_active_visit']
+            )
+
         return result
 
 
@@ -795,6 +820,110 @@ class CreateStaffView(TemplateView):
                 )
             )
         return self.render_to_response(context)
+
+
+class IndexCharts(ListView):
+    template_name = 'charts/visit_indexes.html'
+    model = models.VisitIndex
+
+    def get_queryset(self):
+        user_id = int(self.kwargs['user_id'])
+        queryset = super(IndexCharts, self).get_queryset()
+        queryset = queryset.filter(visit__user_id=user_id)
+        if self.request.user.id != user_id:
+            queryset = queryset.filter(
+                visit__event__eventstaff__staff__user=self.request.user)
+        queryset = queryset.order_by('parametr', 'visit__event__start_at')
+        queryset = queryset.values('parametr_id', 'parametr__name', 'value', 'visit__event__start_at')
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context_data = super(IndexCharts, self).get_context_data(**kwargs)
+        param_groups = itertools.groupby(
+            context_data['object_list'], lambda x: (x['parametr_id'], x['parametr__name']))
+        context_data['param_groups'] = [(i, list(j)) for i, j in param_groups]
+        return context_data
+
+
+class IndexRecommendations(ListView):
+    template_name = 'charts/recommendations.html'
+    model = models.CoachRecommendation
+
+    def get_queryset(self):
+        user_id = int(self.kwargs['user_id'])
+        queryset = super(IndexRecommendations, self).get_queryset()
+        queryset = queryset.filter(visit__user_id=user_id)
+        if self.request.user.id != user_id:
+            queryset = queryset.filter(
+                visit__event__eventstaff__staff__user=self.request.user)
+        queryset = queryset.order_by('status', '-visit__event__start_at')
+        queryset = queryset.select_related('visit__event', 'coach__user')
+        return queryset
+
+
+class AnnotateVisitView(TemplateView):
+    template_name = 'visits/annotate_visit.html'
+
+    def get(self, request, *args, **kwargs):
+        visit = get_object_or_404(models.Visit, pk=kwargs['visit_id'])
+        kwargs['object'] = visit
+        if not self.check_permissions(request, visit):
+            return http.HttpResponseForbidden()
+        return super(AnnotateVisitView, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        result = super(AnnotateVisitView, self).get_context_data(**kwargs)
+        result['visit'] = kwargs['object']
+
+        if 'formsets' in kwargs:
+            result['formsets'] = kwargs['formsets']
+        else:
+            result['formsets'] = self.get_formsets(result['visit'], None, None)
+        return result
+
+    def check_permissions(self, request, visit):
+        query = models.EventStaff.objects.filter(
+            event_id=visit.event_id, staff_id=request.user.id)
+        return query.exists()
+
+    def get_formsets(self, visit, data, files, **kwargs):
+        data_forms = OrderedDict()
+        data_forms['visit_indexes'] = forms.VisitIndexFormSet(
+            instance=visit, data=data, files=files)
+        data_forms['recommendation'] = forms.CoachRecommendationFormSet(
+            instance=visit, data=data, files=files)
+        return data_forms
+
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        visit = get_object_or_404(models.Visit, pk=kwargs['visit_id'])
+
+        if not self.check_permissions(request, visit):
+            return http.HttpResponseForbidden()
+
+        view_formsets = self.get_formsets(
+            visit, request.POST, request.FILES, **kwargs)
+
+        validation_result = True
+        for formset in view_formsets.values():
+            validation_result = validation_result and formset.is_valid()
+
+        if not validation_result:
+            return self.render_to_response(
+                self.get_context_data(
+                    formsets=view_formsets, object=visit, **kwargs)
+            )
+
+        for key, formset in view_formsets.items():
+            formset.save(commit=(key != 'recommendation'))
+
+        for form in view_formsets['recommendation'].forms:
+            form.instance.coach = request.user.staffprofile
+            form.instance.save()
+
+        return http.HttpResponseRedirect(
+            reverse('let_me_app:view_event', kwargs={'pk': visit.event_id})
+        )
 
 
 class CloneEventView(TemplateView):

@@ -136,7 +136,7 @@
       </div>
       <div id="detail-8">
         <ul>
-          {% for staff in object.eventstaff_set.all %}
+          {% for staff in staff_list %}
             <li>
               {{ staff }}
             </li>
@@ -163,7 +163,14 @@
           {% for visit in active_visits %}
             <li>
               {% if visit.status == VISIT_STATUSES.PENDING or visit.status == VISIT_STATUSES.COMPLETED %}
-                {{ visit.user }}
+                {% if is_event_staff %}
+                  <a href="{% url 'let_me_app:annotate_visit' visit_id=visit.id %}">
+                    {{ visit.user }}
+                  </a>
+                {% else %}
+                  {{ visit.user }}
+                {% endif %}
+
                 {% with visit.user as visitor %}
                   {% if is_admin %}
                     {% if object.status == EVENT_STATUSES.PENDING %}
@@ -175,14 +182,12 @@
                 {% endwith %}
               {% else %}
 
-                {% if is_admin %}
-                    <del>
-                      {{ visit.user }}
-                    </del>
-                    <span class="label label-info">
-                      {{ visit.status|as_status:VISIT_STATUSES.CHOICES }}
-                    </span>
-                {% endif %}
+                <del>
+                  {{ visit.user }}
+                </del>
+                <span class="label label-info">
+                  {{ visit.status|as_status:VISIT_STATUSES.CHOICES }}
+                </span>
 
               {% endif %}
             </li>
