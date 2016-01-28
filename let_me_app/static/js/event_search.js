@@ -34,14 +34,15 @@ function draw_markers(map){
 
 
 $(function(){
+
   form_geo_value = $('form').find('input[name=geo_point]').val();
 
   function map_init_basic (map, options) {
     circles = [];
     if (form_geo_value.length) {
         draw_circle(map, circles, form_geo_value);
-        draw_markers(map);
     }
+    draw_markers(map);
 
     $('.event_item').closest('article').mouseover(function(){
       for (i in markers){markers[i].setOpacity(0.2);}

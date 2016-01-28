@@ -182,7 +182,7 @@ TEMPLATE_DIRS = (
 )
 
 LOGIN_EXEMPT_NAMESPACES = ('social', 'let_me_auth')
-DEFAULT_VIEW_NAME = 'let_me_escort:view_dashboard'
+DEFAULT_VIEW_NAME = 'let_me_app:search_events'
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/done/'
@@ -269,8 +269,8 @@ DATABASES['default'] = dj_database_url.config()
 AUTH_USER_MODEL = 'let_me_auth.User'
 
 LEAFLET_CONFIG = {
-    'DEFAULT_CENTER': (6.0, 45.0),
-    'DEFAULT_ZOOM': 16,
+    'DEFAULT_CENTER': (53.9002, 27.557144),
+    'DEFAULT_ZOOM': 10,
     'MIN_ZOOM': 3,
     'MAX_ZOOM': 18,
 }
