@@ -30,8 +30,12 @@
         <div class="row toggle" id="dropdown-detail-{{forloop.counter}}" data-toggle="detail-{{forloop.counter}}">
           <div class="col-xs-10">
             <h4>
-              {% if object.subject_id %}
-                {% blocktrans with event_name=object.subject.event.name %}
+              {% if object.chat.last_update > object.last_seen %}
+                <span class="label label-warning"><span class="glyphicon glyphicon-envelope"></span></span>
+              {% endif %}
+
+              {% if object.chat.subject_id %}
+                {% blocktrans with event_name=object.chat.subject.event.name %}
                 Event "{{ event_name}}" discussion
                 {% endblocktrans %}
               {% else %}
@@ -43,17 +47,11 @@
             <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
         </div>
         <div id="detail-{{forloop.counter}}">
-            <p>
-              <strong> <i class="glyphicon glyphicon-user"></i></strong>
-                {% for participant in object.chatparticipant_set.all %}
-                  {{ participant.user }}
-                {% endfor %}
-            </p>
-            {% with recent_message=object|recent_chat_message %}
+            {% with recent_message=object.chat|recent_chat_message %}
               {% if recent_message %}
                 <p>
                   <strong> <i class="glyphicon glyphicon-calendar"></i> </strong>
-                  {{ object.last_update }}
+                  {{ object.chat.last_update }}
                 </p>
                 <p>
                   <strong><i class="glyphicon glyphicon-envelope"></i></strong>
@@ -63,7 +61,7 @@
             {% endwith %}
             <p>
               <strong><i class="glyphicon glyphicon-link"></i></strong>
-              <a href="{% url "let_me_app:chat_details" pk=object.id %}">
+              <a href="{% url "let_me_app:chat_details" pk=object.chat.id %}">
                {% trans "More..." %}
               </a>
             </p>

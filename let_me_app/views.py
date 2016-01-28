@@ -40,13 +40,15 @@ class CreateCourtView(CreateWithInlinesView):
 
 class ChatList(ListView):
     template_name = 'chat/list.html'
-    model = models.InternalMessage
+    model = models.ChatParticipant
 
     def get_queryset(self, **kwargs):
         query = super(ChatList, self).get_queryset(**kwargs)
-        query = query.filter(chatparticipant__user=self.request.user)
-        query = query.select_related('subject__event')
-        query = query.prefetch_related('chatparticipant_set__user')
+        query = query.filter(user=self.request.user)
+        query = query.select_related(
+            'chat', 'chat__subject__event', 'user'
+        )
+        query = query.order_by('-chat__last_update')
         return query
 
 
