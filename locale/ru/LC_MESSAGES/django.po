@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-21 09:03+0000\n"
+"POT-Creation-Date: 2016-01-28 08:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,10 +54,17 @@ msgid "Income"
 msgstr "Платеж"
 
 #: let_me_app/forms.py:175
-#, fuzzy
-#| msgid "Court was updated"
 msgid "Visit was payed"
-msgstr "Площадка была обновлен"
+msgstr "Посещение оплачено"
+
+#: let_me_app/forms.py:204 let_me_app/forms.py:221 let_me_app/models.py:361
+#: templates/events/panels/my_visit.html:56
+msgid "Value"
+msgstr "Значение"
+
+#: let_me_app/forms.py:206
+msgid "Parametr"
+msgstr "Параметр"
 
 #: let_me_app/models.py:26
 msgid "New"
@@ -71,7 +78,7 @@ msgstr "Оплачено"
 msgid "Not paid"
 msgstr "Не оплачено"
 
-#: let_me_app/models.py:39
+#: let_me_app/models.py:39 let_me_app/models.py:68
 msgid "Active"
 msgstr "Активное"
 
@@ -80,6 +87,7 @@ msgid "Accepted"
 msgstr "Принято"
 
 #: let_me_app/models.py:41 let_me_app/models.py:56 let_me_app/models.py:70
+#: let_me_app/models.py:82
 msgid "Canceled"
 msgstr "Отменено"
 
@@ -87,11 +95,11 @@ msgstr "Отменено"
 msgid "Declined"
 msgstr "Отклонено"
 
-#: let_me_app/models.py:54 let_me_app/models.py:68
+#: let_me_app/models.py:54 let_me_app/models.py:80
 msgid "Pending"
 msgstr "Запланировано"
 
-#: let_me_app/models.py:55 let_me_app/models.py:69
+#: let_me_app/models.py:55 let_me_app/models.py:81
 msgid "Completed"
 msgstr "Завершено"
 
@@ -99,106 +107,108 @@ msgstr "Завершено"
 msgid "Missed"
 msgstr "Пропущенно"
 
-#: let_me_app/models.py:84 let_me_app/models.py:149
+#: let_me_app/models.py:69
+msgid "Outdated"
+msgstr "Не актуально"
+
+#: let_me_app/models.py:96 let_me_app/models.py:161
 msgid "image"
 msgstr "Изображение"
 
-#: let_me_app/models.py:85
+#: let_me_app/models.py:97
 msgid "thumbnail"
 msgstr "пример изображения"
 
-#: let_me_app/models.py:86
+#: let_me_app/models.py:98
 msgid "note"
 msgstr "замечание"
 
-#: let_me_app/models.py:101 let_me_app/models.py:122 let_me_app/models.py:128
+#: let_me_app/models.py:113 let_me_app/models.py:134 let_me_app/models.py:140
 msgid "date created"
 msgstr "дата создания"
 
-#: let_me_app/models.py:104 let_me_app/models.py:123 let_me_app/models.py:129
+#: let_me_app/models.py:116 let_me_app/models.py:135 let_me_app/models.py:141
 msgid "text"
 msgstr "техт"
 
-#: let_me_app/models.py:136
+#: let_me_app/models.py:148
 msgid "Geo point"
 msgstr "Гео точка"
 
-#: let_me_app/models.py:138 let_me_app/models.py:211 let_me_app/models.py:227
-#: let_me_app/models.py:243 let_me_app/models.py:262
+#: let_me_app/models.py:150 let_me_app/models.py:223 let_me_app/models.py:239
+#: let_me_app/models.py:255 let_me_app/models.py:274 let_me_app/models.py:342
 msgid "name"
 msgstr "Имя"
 
-#: let_me_app/models.py:139 let_me_app/models.py:160 let_me_app/models.py:228
-#: templates/details_blocks/court.html:15
+#: let_me_app/models.py:151 let_me_app/models.py:172 let_me_app/models.py:240
+#: let_me_app/models.py:351 templates/details_blocks/court.html:15
 #: templates/details_blocks/site.html:17 templates/events/details.html:91
 msgid "Description"
 msgstr "описание"
 
-#: let_me_app/models.py:140 templates/details_blocks/site.html:21
+#: let_me_app/models.py:152 templates/details_blocks/site.html:21
 msgid "Address"
 msgstr "Адрес"
 
-#: let_me_app/models.py:150
+#: let_me_app/models.py:162
 msgid "title"
 msgstr "название"
 
-#: let_me_app/models.py:187 let_me_app/models.py:226
+#: let_me_app/models.py:199 let_me_app/models.py:238
 msgid "date started"
 msgstr "Дата начала"
 
-#: let_me_app/models.py:188
+#: let_me_app/models.py:200
 msgid "duration (minutes)"
 msgstr "продолжительность (мин)"
 
-#: let_me_app/models.py:189
+#: let_me_app/models.py:201
 msgid "period (hours)"
 msgstr "период (часы)"
 
-#: let_me_app/models.py:196
+#: let_me_app/models.py:208
 msgid "registration start within period"
 msgstr "старт регистрации"
 
-#: let_me_app/models.py:197
+#: let_me_app/models.py:209
 msgid "estimated price"
 msgstr "приблизительная стоимость"
 
-#: let_me_app/models.py:219
+#: let_me_app/models.py:231
 msgid "description"
 msgstr "описание"
 
-#: let_me_app/models.py:233 templates/events/details.html:87
-#, fuzzy
-#| msgid "estimated price"
+#: let_me_app/models.py:245 templates/events/details.html:87
 msgid "Preliminary price"
-msgstr "приблизительная стоимость"
+msgstr "Приблизительная стоимость"
 
-#: let_me_app/models.py:250
-#, fuzzy
-#| msgid "Event"
+#: let_me_app/models.py:262
 msgid "event"
-msgstr "События"
+msgstr "Событие"
 
-#: let_me_app/models.py:251
-#, fuzzy
-#| msgid "Staff"
+#: let_me_app/models.py:263
 msgid "staff"
 msgstr "Персонал"
 
-#: let_me_app/models.py:252
+#: let_me_app/models.py:264
 msgid "role"
 msgstr "Роль"
 
-#: let_me_app/models.py:254
+#: let_me_app/models.py:266
 msgid "invoice"
 msgstr "Платежка"
 
-#: let_me_app/models.py:270
+#: let_me_app/models.py:282
 msgid "amount"
 msgstr "количество"
 
-#: let_me_app/models.py:278 let_me_app/models.py:291
+#: let_me_app/models.py:290 let_me_app/models.py:303
 msgid "comment"
 msgstr "Комментарий"
+
+#: let_me_app/models.py:343
+msgid "units"
+msgstr "единицы измерения"
 
 #: let_me_auth/models.py:13 let_me_auth/models.py:18
 msgid "first name"
@@ -246,9 +256,10 @@ msgstr "пользователи"
 msgid "language"
 msgstr "язык"
 
-#: templates/chat/details.html:13 templates/chat/list.html:12
-#: templates/courts/details.html:12 templates/dashboard/list.html:13
-#: templates/events/clone_event.html:13
+#: templates/charts/recommendations.html:14
+#: templates/charts/visit_indexes.html:14 templates/chat/details.html:13
+#: templates/chat/list.html:12 templates/courts/details.html:12
+#: templates/dashboard/list.html:13 templates/events/clone_event.html:13
 #: templates/events/complete_event.html:13
 #: templates/events/create_for_court.html:13
 #: templates/events/create_for_site.html:13
@@ -257,9 +268,32 @@ msgstr "язык"
 #: templates/events/user_events.html:11
 #: templates/events/user_managed_events.html:12
 #: templates/events/user_proposals.html:11 templates/sites/details.html:14
-#: templates/user/settings.html:11
+#: templates/user/settings.html:11 templates/visits/annotate_visit.html:13
 msgid "Home"
 msgstr "Главная"
+
+#: templates/charts/recommendations.html:15
+#: templates/charts/recommendations.html:23 templates/navbar.html:67
+msgid "Visit recommendations"
+msgstr "Рекомендации"
+
+#: templates/charts/recommendations.html:31
+#, python-format
+msgid " %(coach)s recommendation (%(start_at)s)"
+msgstr " Рекомендация тренера %(coach)s (%(start_at)s)"
+
+#: templates/charts/visit_indexes.html:15
+#: templates/charts/visit_indexes.html:23
+msgid "Indexes charts"
+msgstr "Графики показателей"
+
+#: templates/charts/visit_indexes.html:37
+msgid "date"
+msgstr "дата"
+
+#: templates/charts/visit_indexes.html:37
+msgid "value"
+msgstr "значение"
 
 #: templates/chat/details.html:14 templates/chat/list.html:13
 msgid "Chats"
@@ -306,7 +340,7 @@ msgstr "Создать событие"
 #: templates/events/create_for_site.html:14
 #: templates/events/create_for_site.html:26
 #: templates/events/create_staff.html:14 templates/events/details.html:15
-#: templates/sites/details.html:15
+#: templates/sites/details.html:15 templates/visits/annotate_visit.html:14
 msgid "Site"
 msgstr "Точка"
 
@@ -318,6 +352,7 @@ msgstr "Точка"
 #: templates/events/create_for_court.html:15
 #: templates/events/create_for_court.html:37
 #: templates/events/create_staff.html:15 templates/events/details.html:16
+#: templates/visits/annotate_visit.html:15
 msgid "Court"
 msgstr "Площадка"
 
@@ -409,6 +444,8 @@ msgstr "Площадка была обновлен"
 #: templates/events/create_for_site.html:15
 #: templates/events/create_staff.html:16 templates/events/create_staff.html:26
 #: templates/events/details.html:17 templates/events/details.html.py:73
+#: templates/visits/annotate_visit.html:16
+#: templates/visits/annotate_visit.html:24
 msgid "Event"
 msgstr "События"
 
@@ -450,6 +487,7 @@ msgid "for user"
 msgstr "для пользователя"
 
 #: templates/dashboard/messages/let_me_app.visit.html:7
+#: templates/visits/annotate_visit.html:17
 msgid "Visit"
 msgstr "Посещение"
 
@@ -466,6 +504,7 @@ msgid "Type"
 msgstr "Тип"
 
 #: templates/details_blocks/site.html:13 templates/events/details.html:79
+#: templates/events/panels/my_visit.html:55
 msgid "Name"
 msgstr "Имя"
 
@@ -505,8 +544,9 @@ msgstr "Отменить заявку"
 #: templates/events/create_for_court.html:52
 #: templates/events/create_for_site.html:46
 #: templates/events/create_new.html:29 templates/events/create_staff.html:46
+#: templates/visits/annotate_visit.html:54
 msgid "Cancel"
-msgstr "Отмененить"
+msgstr "Отменить"
 
 #: templates/events/buttons/cancel_visit.html:5
 msgid "Cancel visit"
@@ -529,11 +569,11 @@ msgstr "Отклонить предложение"
 #: templates/events/create_for_court.html:50
 #: templates/events/create_for_site.html:44
 #: templates/events/create_new.html:27 templates/events/create_staff.html:44
-#: templates/user/settings.html:26
+#: templates/user/settings.html:26 templates/visits/annotate_visit.html:52
 msgid "Save"
 msgstr "Сохранить"
 
-#: templates/events/complete_event.html:40 templates/events/details.html:154
+#: templates/events/complete_event.html:40 templates/events/details.html:157
 msgid "Visitors"
 msgstr "Посетитель"
 
@@ -546,13 +586,11 @@ msgstr "детали"
 msgid "Create new event"
 msgstr "Создать событие"
 
-#: templates/events/create_staff.html:39 templates/events/details.html:130
+#: templates/events/create_staff.html:39 templates/events/details.html:133
 msgid "Staff"
 msgstr "Персонал"
 
 #: templates/events/details.html:83
-#, fuzzy
-#| msgid "start date"
 msgid "Start at"
 msgstr "начальная дата"
 
@@ -562,11 +600,11 @@ msgstr "начальная дата"
 msgid "Inventory"
 msgstr "Инвентарь"
 
-#: templates/events/details.html:193 templates/navbar.html:93
+#: templates/events/details.html:208 templates/navbar.html:106
 msgid "Applications"
 msgstr "Заявки"
 
-#: templates/events/details.html:219 templates/navbar.html:73
+#: templates/events/details.html:234 templates/navbar.html:86
 msgid "Proposals"
 msgstr "Предложения"
 
@@ -614,6 +652,18 @@ msgstr "Счет"
 msgid "Nothing"
 msgstr "Ничего"
 
+#: templates/events/panels/my_visit.html:37
+msgid "Recommendation"
+msgstr "Рекомендация"
+
+#: templates/events/panels/my_visit.html:51
+msgid "Indexes"
+msgstr "Показатели"
+
+#: templates/events/panels/my_visit.html:57
+msgid "Units"
+msgstr "Единицы измерения"
+
 #: templates/events/search.html:29
 msgid "Find"
 msgstr "Найти"
@@ -660,22 +710,30 @@ msgid "Settings"
 msgstr "Настройки"
 
 #: templates/navbar.html:59
+msgid "Profile"
+msgstr "Профиль"
+
+#: templates/navbar.html:62 templates/visits/annotate_visit.html:38
+msgid "Visit indexes"
+msgstr "Показатели Посещений"
+
+#: templates/navbar.html:72
 msgid "User stats"
 msgstr "Статистика пользователя"
 
-#: templates/navbar.html:63
+#: templates/navbar.html:76
 msgid "Messages"
-msgstr "События"
+msgstr "Сообщения"
 
-#: templates/navbar.html:83
+#: templates/navbar.html:96
 msgid "Visits"
 msgstr "Посещения"
 
-#: templates/navbar.html:102
+#: templates/navbar.html:115
 msgid "Logout"
 msgstr "Выйти"
 
-#: templates/navbar.html:108
+#: templates/navbar.html:121
 msgid "You are not logged in. "
 msgstr "Вы не зашли в систему"
 
@@ -690,6 +748,10 @@ msgstr "Настройки пользователя"
 #: templates/user/settings.html:21
 msgid "Localization"
 msgstr "Переводы"
+
+#: templates/visits/annotate_visit.html:47
+msgid "Recommendations"
+msgstr "Рекомендации"
 
 #: venv/lib/python3.4/site-packages/django/contrib/sitemaps/apps.py:8
 msgid "Site Maps"

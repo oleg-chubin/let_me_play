@@ -62,5 +62,6 @@
 {% endblock %}
 
 {% block extra_scripts %}
-  {{ visit_formset.forms.0.media }}
+  !!!{{ formsets.visit_indexes.forms.0.media }}
+  !!!{{ formsets.recommendation.forms.0.media }}
 {% endblock %}

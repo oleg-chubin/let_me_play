@@ -218,15 +218,32 @@ VisitIndexFormSet = forms.inlineformset_factory(
 
 class CoachRecommendationForm(forms.ModelForm):
     recommendation = forms.CharField(
-        label=_("Value"), required=False, widget=floppyforms_widgets.Textarea)
+        label=_("Value"), required=False,
+        widget=floppyforms_widgets.Textarea(attrs={"data-provide": "markdown"})
+    )
 
     class Meta:
         model = models.CoachRecommendation
+        fields = ('recommendation',)
+
+    class Media:
+        js = (
+            'js/bootstrap-markdown.js',
+            'js/markdown.js',
+            'js/to-markdown.js',
+            'js/bootstrap-markdown.ru.js',
+        )
+        css = {
+            'all': (
+                'css/bootstrap-markdown.min.css',
+            )
+        }
+
 
 
 CoachRecommendationFormSet = forms.inlineformset_factory(
     models.Visit, models.CoachRecommendation, formset=CustomInlineFormset,
-    form=VisitIndexForm, extra=1, max_num=1, can_delete=False
+    form=CoachRecommendationForm, extra=1, max_num=1, can_delete=False
 )
 
 

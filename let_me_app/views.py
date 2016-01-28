@@ -845,13 +845,28 @@ class IndexCharts(ListView):
         return context_data
 
 
+class IndexRecommendations(ListView):
+    template_name = 'charts/recommendations.html'
+    model = models.CoachRecommendation
+
+    def get_queryset(self):
+        user_id = int(self.kwargs['user_id'])
+        queryset = super(IndexRecommendations, self).get_queryset()
+        queryset = queryset.filter(visit__user_id=user_id)
+        if self.request.user.id != user_id:
+            queryset = queryset.filter(
+                visit__event__eventstaff__staff__user=self.request.user)
+        queryset = queryset.order_by('status', '-visit__event__start_at')
+        queryset = queryset.select_related('visit__event', 'coach__user')
+        return queryset
+
+
 class AnnotateVisitView(TemplateView):
     template_name = 'visits/annotate_visit.html'
 
     def get(self, request, *args, **kwargs):
         visit = get_object_or_404(models.Visit, pk=kwargs['visit_id'])
         kwargs['object'] = visit
-        import ipdb; ipdb.set_trace()
         if not self.check_permissions(request, visit):
             return http.HttpResponseForbidden()
         return super(AnnotateVisitView, self).get(request, *args, **kwargs)
