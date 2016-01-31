@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load staticfiles let_me_escort leaflet_tags i18n %}
+{% load staticfiles let_me_escort leaflet_tags i18n avatar %}
 
 {% block extra_head %}
   {% leaflet_css %}
@@ -56,9 +56,10 @@
                 <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
           </div>
           <div id="detail-5">
-            <ul>
+            <ul class="user-list">
               {% for group_user in object.admin_group.user_set.all %}
                 <li>
+                  <img src="{{group_user|avatar_url}}" class="list-avatar img-responsive img-thumbnail">
                   {% followdropdown group_user "escort/follow_menu.html" %}
                     {{ group_user.get_full_name }}
                   {% endfollowdropdown %}

@@ -1,0 +1,8 @@
+<img id="jcrop-img" src="{{value}}"/>
+<div id="preview-pane">
+  <div class="preview-container" style="height: {{preview_height}}px; width: {{preview_width}}px;">
+    <img src="" class="jcrop-preview" alt="Preview" />
+  </div>
+</div>
+<label for="{{ attrs.id }}"></label>
+<input id="{{ attrs.id }}" type="file" name="{{ name }}" {% for key, val in attrs.items %} {{key}}="{{val}}" {% endfor %}/>

@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n avatar %}
 
 {% block navbar %}
 
@@ -46,7 +46,7 @@
               {% with proposals_count=user_active_proposals.count visits_count=user_active_visits.count messages_count=user_messages.count applications_count=user_active_applications.count %}
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <span class="glyphicon glyphicon-user"> </span>
+                    <img src="{{user|avatar_url}}" class="avatar img-circle">
                     {{ user.get_full_name }}
                     {% with total_count=proposals_count|add:visits_count|add:messages_count|add:applications_count %}
                       <span class="label label-info">{{ total_count }} </span>
@@ -56,7 +56,7 @@
                   <ul class="dropdown-menu" role="menu">
                     <li><a href="{% url 'user_settings' %}">{% trans "Settings" %}</a></li>
                     {% if user %}
-                      <li><a href="{% url 'user_settings' %}">{% trans "Profile" %}</a></li>
+                      <li><a href="{% url 'let_me_auth:update_profile' %}">{% trans "Profile" %}</a></li>
                       <li>
                         <a href="{% url 'let_me_app:view_index_charts' user_id=user.id %}">
                           {% trans "Visit indexes" %}

@@ -51,7 +51,9 @@
             <ul class="meta-search">
               <li><i class="glyphicon glyphicon-calendar"></i> <span>{{ object.start_at|date }}</span></li>
               <li><i class="glyphicon glyphicon-time"></i> <span>{{ object.start_at|time }}</span></li>
-              <li class="event_item" data-record_id="{{object.id}}" data-geo_point="[{{ object.court.site.geo_point.x|stringformat:"f" }}, {{ object.court.site.geo_point.y|stringformat:"f" }}]"><i class="glyphicon glyphicon-tags"></i> <span>{% trans "People" %}</span></li>
+              <li class="event_item" data-record_id="{{object.id}}" data-geo_point="[{{ object.court.site.geo_point.x|stringformat:"f" }}, {{ object.court.site.geo_point.y|stringformat:"f" }}]">
+                <i class="glyphicon glyphicon-tags"></i> <span>{{object.people_count|length}} {% trans "People" %}</span>
+              </li>
             </ul>
           </div>
             <div class="col-xs-12 col-sm-12 col-md-7 excerpet">

@@ -9,6 +9,8 @@ from django.template.context import RequestContext
 from django.contrib.auth.forms import SetPasswordForm
 from django import forms
 from let_me_auth.models import User
+from django.views.generic.edit import UpdateView
+from let_me_auth.forms import UserDetailsForm
 
 
 def context(**extra):
@@ -91,3 +93,12 @@ def signup(request):
     return context(signup=True)
 
 
+class EditUserView(UpdateView):
+    form_class = UserDetailsForm
+    template_name = 'user/details_form.html'
+
+    def get_success_url(self):
+        return reverse('let_me_auth:update_profile')
+
+    def get_object(self):
+        return self.request.user.user
