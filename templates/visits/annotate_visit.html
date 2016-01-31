@@ -10,7 +10,7 @@
 
 {% block breadcrumbs %}
   <ol class="breadcrumb">
-    <li><a href="#">{% trans "Home" %}</a></li>
+    <li><a href="{% url "home" %}">{% trans "Home" %}</a></li>
     <li><a href="{% url 'let_me_app:view_site' pk=visit.event.court.site_id %}">{% trans "Site" %}</a></li>
     <li><a href="{% url 'let_me_app:view_court' pk=visit.event.court.id %}">{% trans "Court" %}</a></li>
     <li><a href="{% url 'let_me_app:view_event' pk=visit.event_id %}">{% trans "Event" %}</a></li>

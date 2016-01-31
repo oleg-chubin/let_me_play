@@ -9,7 +9,7 @@
 
 {% block breadcrumbs %}
 <ol class="breadcrumb">
-  <li><a href="#">{% trans "Home" %}</a></li>
+  <li><a href="{% url "home" %}">{% trans "Home" %}</a></li>
   <li><a href="{% url "let_me_app:view_site" pk=object.site_id %}">{% trans "Site" %}</a></li>
   <li class="active">{% trans "Court" %}</li>
 </ol>
