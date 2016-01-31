@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-28 08:41+0000\n"
+"POT-Creation-Date: 2016-01-31 11:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,7 +55,7 @@ msgstr ""
 msgid "Visit was payed"
 msgstr ""
 
-#: let_me_app/forms.py:204 let_me_app/forms.py:221 let_me_app/models.py:361
+#: let_me_app/forms.py:204 let_me_app/forms.py:221 let_me_app/models.py:360
 #: templates/events/panels/my_visit.html:56
 msgid "Value"
 msgstr ""
@@ -109,7 +109,7 @@ msgstr ""
 msgid "Outdated"
 msgstr ""
 
-#: let_me_app/models.py:96 let_me_app/models.py:161
+#: let_me_app/models.py:96 let_me_app/models.py:161 let_me_auth/models.py:35
 msgid "image"
 msgstr ""
 
@@ -134,12 +134,12 @@ msgid "Geo point"
 msgstr ""
 
 #: let_me_app/models.py:150 let_me_app/models.py:223 let_me_app/models.py:239
-#: let_me_app/models.py:255 let_me_app/models.py:274 let_me_app/models.py:342
+#: let_me_app/models.py:254 let_me_app/models.py:273 let_me_app/models.py:341
 msgid "name"
 msgstr ""
 
 #: let_me_app/models.py:151 let_me_app/models.py:172 let_me_app/models.py:240
-#: let_me_app/models.py:351 templates/details_blocks/court.html:15
+#: let_me_app/models.py:350 templates/details_blocks/court.html:15
 #: templates/details_blocks/site.html:17 templates/events/details.html:91
 msgid "Description"
 msgstr ""
@@ -176,77 +176,93 @@ msgstr ""
 msgid "description"
 msgstr ""
 
-#: let_me_app/models.py:245 templates/events/details.html:87
+#: let_me_app/models.py:244 templates/events/details.html:87
 msgid "Preliminary price"
 msgstr ""
 
-#: let_me_app/models.py:262
+#: let_me_app/models.py:261
 msgid "event"
 msgstr ""
 
-#: let_me_app/models.py:263
+#: let_me_app/models.py:262
 msgid "staff"
 msgstr ""
 
-#: let_me_app/models.py:264
+#: let_me_app/models.py:263
 msgid "role"
 msgstr ""
 
-#: let_me_app/models.py:266
+#: let_me_app/models.py:265
 msgid "invoice"
 msgstr ""
 
-#: let_me_app/models.py:282
+#: let_me_app/models.py:281
 msgid "amount"
 msgstr ""
 
-#: let_me_app/models.py:290 let_me_app/models.py:303
+#: let_me_app/models.py:289 let_me_app/models.py:302
 msgid "comment"
 msgstr ""
 
-#: let_me_app/models.py:343
+#: let_me_app/models.py:342
 msgid "units"
 msgstr ""
 
-#: let_me_auth/models.py:13 let_me_auth/models.py:18
-msgid "first name"
-msgstr ""
-
-#: let_me_auth/models.py:17
-msgid "email address"
+#: let_me_auth/models.py:18
+msgid "Male"
 msgstr ""
 
 #: let_me_auth/models.py:19
-msgid "last name"
+msgid "Female"
 msgstr ""
 
 #: let_me_auth/models.py:20
+msgid "Not specified"
+msgstr ""
+
+#: let_me_auth/models.py:26 let_me_auth/models.py:31
+msgid "first name"
+msgstr ""
+
+#: let_me_auth/models.py:30
+msgid "email address"
+msgstr ""
+
+#: let_me_auth/models.py:32
+msgid "last name"
+msgstr ""
+
+#: let_me_auth/models.py:33
+msgid "cell phone"
+msgstr ""
+
+#: let_me_auth/models.py:36
 msgid "staff status"
 msgstr ""
 
-#: let_me_auth/models.py:21
+#: let_me_auth/models.py:37
 msgid "Designates whether the user can log into this admin site."
 msgstr ""
 
-#: let_me_auth/models.py:23
+#: let_me_auth/models.py:39
 msgid "active"
 msgstr ""
 
-#: let_me_auth/models.py:24
+#: let_me_auth/models.py:40
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
 msgstr ""
 
-#: let_me_auth/models.py:26
+#: let_me_auth/models.py:42
 msgid "date joined"
 msgstr ""
 
-#: let_me_auth/models.py:33
+#: let_me_auth/models.py:49
 msgid "user"
 msgstr ""
 
-#: let_me_auth/models.py:34
+#: let_me_auth/models.py:50
 msgid "users"
 msgstr ""
 
@@ -266,7 +282,8 @@ msgstr ""
 #: templates/events/user_events.html:11
 #: templates/events/user_managed_events.html:12
 #: templates/events/user_proposals.html:11 templates/sites/details.html:14
-#: templates/user/settings.html:11 templates/visits/annotate_visit.html:13
+#: templates/user/details_form.html:11 templates/user/settings.html:11
+#: templates/visits/annotate_visit.html:13
 msgid "Home"
 msgstr ""
 
@@ -305,7 +322,7 @@ msgstr ""
 msgid "Chat list"
 msgstr ""
 
-#: templates/chat/list.html:34
+#: templates/chat/list.html:38
 #, python-format
 msgid ""
 "\n"
@@ -313,11 +330,11 @@ msgid ""
 "                "
 msgstr ""
 
-#: templates/chat/list.html:38
+#: templates/chat/list.html:42
 msgid "Group chat"
 msgstr ""
 
-#: templates/chat/list.html:67
+#: templates/chat/list.html:66
 msgid "More..."
 msgstr ""
 
@@ -564,11 +581,12 @@ msgstr ""
 #: templates/events/create_for_court.html:50
 #: templates/events/create_for_site.html:44
 #: templates/events/create_new.html:27 templates/events/create_staff.html:44
-#: templates/user/settings.html:26 templates/visits/annotate_visit.html:52
+#: templates/user/details_form.html:26 templates/user/settings.html:26
+#: templates/visits/annotate_visit.html:52
 msgid "Save"
 msgstr ""
 
-#: templates/events/complete_event.html:40 templates/events/details.html:157
+#: templates/events/complete_event.html:40 templates/events/details.html:159
 msgid "Visitors"
 msgstr ""
 
@@ -595,11 +613,11 @@ msgstr ""
 msgid "Inventory"
 msgstr ""
 
-#: templates/events/details.html:208 templates/navbar.html:106
+#: templates/events/details.html:212 templates/navbar.html:106
 msgid "Applications"
 msgstr ""
 
-#: templates/events/details.html:234 templates/navbar.html:86
+#: templates/events/details.html:238 templates/navbar.html:86
 msgid "Proposals"
 msgstr ""
 
@@ -671,7 +689,7 @@ msgstr ""
 msgid "results were found"
 msgstr ""
 
-#: templates/events/search.html:54
+#: templates/events/search.html:55
 msgid "People"
 msgstr ""
 
@@ -736,11 +754,11 @@ msgstr ""
 msgid "Courts"
 msgstr ""
 
-#: templates/user/settings.html:12
+#: templates/user/details_form.html:12 templates/user/settings.html:12
 msgid "User settings"
 msgstr ""
 
-#: templates/user/settings.html:21
+#: templates/user/details_form.html:21 templates/user/settings.html:21
 msgid "Localization"
 msgstr ""
 

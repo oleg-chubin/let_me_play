@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-28 08:41+0000\n"
+"POT-Creation-Date: 2016-01-31 11:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -57,7 +57,7 @@ msgstr "Платеж"
 msgid "Visit was payed"
 msgstr "Посещение оплачено"
 
-#: let_me_app/forms.py:204 let_me_app/forms.py:221 let_me_app/models.py:361
+#: let_me_app/forms.py:204 let_me_app/forms.py:221 let_me_app/models.py:360
 #: templates/events/panels/my_visit.html:56
 msgid "Value"
 msgstr "Значение"
@@ -111,7 +111,7 @@ msgstr "Пропущенно"
 msgid "Outdated"
 msgstr "Не актуально"
 
-#: let_me_app/models.py:96 let_me_app/models.py:161
+#: let_me_app/models.py:96 let_me_app/models.py:161 let_me_auth/models.py:35
 msgid "image"
 msgstr "Изображение"
 
@@ -136,12 +136,12 @@ msgid "Geo point"
 msgstr "Гео точка"
 
 #: let_me_app/models.py:150 let_me_app/models.py:223 let_me_app/models.py:239
-#: let_me_app/models.py:255 let_me_app/models.py:274 let_me_app/models.py:342
+#: let_me_app/models.py:254 let_me_app/models.py:273 let_me_app/models.py:341
 msgid "name"
 msgstr "Имя"
 
 #: let_me_app/models.py:151 let_me_app/models.py:172 let_me_app/models.py:240
-#: let_me_app/models.py:351 templates/details_blocks/court.html:15
+#: let_me_app/models.py:350 templates/details_blocks/court.html:15
 #: templates/details_blocks/site.html:17 templates/events/details.html:91
 msgid "Description"
 msgstr "описание"
@@ -178,77 +178,93 @@ msgstr "приблизительная стоимость"
 msgid "description"
 msgstr "описание"
 
-#: let_me_app/models.py:245 templates/events/details.html:87
+#: let_me_app/models.py:244 templates/events/details.html:87
 msgid "Preliminary price"
 msgstr "Приблизительная стоимость"
 
-#: let_me_app/models.py:262
+#: let_me_app/models.py:261
 msgid "event"
 msgstr "Событие"
 
-#: let_me_app/models.py:263
+#: let_me_app/models.py:262
 msgid "staff"
 msgstr "Персонал"
 
-#: let_me_app/models.py:264
+#: let_me_app/models.py:263
 msgid "role"
 msgstr "Роль"
 
-#: let_me_app/models.py:266
+#: let_me_app/models.py:265
 msgid "invoice"
 msgstr "Платежка"
 
-#: let_me_app/models.py:282
+#: let_me_app/models.py:281
 msgid "amount"
 msgstr "количество"
 
-#: let_me_app/models.py:290 let_me_app/models.py:303
+#: let_me_app/models.py:289 let_me_app/models.py:302
 msgid "comment"
 msgstr "Комментарий"
 
-#: let_me_app/models.py:343
+#: let_me_app/models.py:342
 msgid "units"
 msgstr "единицы измерения"
 
-#: let_me_auth/models.py:13 let_me_auth/models.py:18
+#: let_me_auth/models.py:18
+msgid "Male"
+msgstr "Мужской"
+
+#: let_me_auth/models.py:19
+msgid "Female"
+msgstr "Женский"
+
+#: let_me_auth/models.py:20
+msgid "Not specified"
+msgstr "Не определено"
+
+#: let_me_auth/models.py:26 let_me_auth/models.py:31
 msgid "first name"
 msgstr "Имя"
 
-#: let_me_auth/models.py:17
+#: let_me_auth/models.py:30
 msgid "email address"
 msgstr "емэил"
 
-#: let_me_auth/models.py:19
+#: let_me_auth/models.py:32
 msgid "last name"
 msgstr "Фамилия"
 
-#: let_me_auth/models.py:20
+#: let_me_auth/models.py:33
+msgid "cell phone"
+msgstr "мобильный телефон"
+
+#: let_me_auth/models.py:36
 msgid "staff status"
 msgstr "часть команды"
 
-#: let_me_auth/models.py:21
+#: let_me_auth/models.py:37
 msgid "Designates whether the user can log into this admin site."
 msgstr "можно ли в админку"
 
-#: let_me_auth/models.py:23
+#: let_me_auth/models.py:39
 msgid "active"
 msgstr "активный"
 
-#: let_me_auth/models.py:24
+#: let_me_auth/models.py:40
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
 msgstr ""
 
-#: let_me_auth/models.py:26
+#: let_me_auth/models.py:42
 msgid "date joined"
 msgstr "дата присоединения"
 
-#: let_me_auth/models.py:33
+#: let_me_auth/models.py:49
 msgid "user"
 msgstr "пользователь"
 
-#: let_me_auth/models.py:34
+#: let_me_auth/models.py:50
 msgid "users"
 msgstr "пользователи"
 
@@ -268,7 +284,8 @@ msgstr "язык"
 #: templates/events/user_events.html:11
 #: templates/events/user_managed_events.html:12
 #: templates/events/user_proposals.html:11 templates/sites/details.html:14
-#: templates/user/settings.html:11 templates/visits/annotate_visit.html:13
+#: templates/user/details_form.html:11 templates/user/settings.html:11
+#: templates/visits/annotate_visit.html:13
 msgid "Home"
 msgstr "Главная"
 
@@ -307,7 +324,7 @@ msgstr "Чат"
 msgid "Chat list"
 msgstr "Чаты"
 
-#: templates/chat/list.html:34
+#: templates/chat/list.html:38
 #, python-format
 msgid ""
 "\n"
@@ -318,11 +335,11 @@ msgstr ""
 "Обсуждение события \"%(event_name)s\"\n"
 "                "
 
-#: templates/chat/list.html:38
+#: templates/chat/list.html:42
 msgid "Group chat"
 msgstr "Групповой чат"
 
-#: templates/chat/list.html:67
+#: templates/chat/list.html:66
 msgid "More..."
 msgstr "Детальнее..."
 
@@ -569,11 +586,12 @@ msgstr "Отклонить предложение"
 #: templates/events/create_for_court.html:50
 #: templates/events/create_for_site.html:44
 #: templates/events/create_new.html:27 templates/events/create_staff.html:44
-#: templates/user/settings.html:26 templates/visits/annotate_visit.html:52
+#: templates/user/details_form.html:26 templates/user/settings.html:26
+#: templates/visits/annotate_visit.html:52
 msgid "Save"
 msgstr "Сохранить"
 
-#: templates/events/complete_event.html:40 templates/events/details.html:157
+#: templates/events/complete_event.html:40 templates/events/details.html:159
 msgid "Visitors"
 msgstr "Посетитель"
 
@@ -600,11 +618,11 @@ msgstr "начальная дата"
 msgid "Inventory"
 msgstr "Инвентарь"
 
-#: templates/events/details.html:208 templates/navbar.html:106
+#: templates/events/details.html:212 templates/navbar.html:106
 msgid "Applications"
 msgstr "Заявки"
 
-#: templates/events/details.html:234 templates/navbar.html:86
+#: templates/events/details.html:238 templates/navbar.html:86
 msgid "Proposals"
 msgstr "Предложения"
 
@@ -676,7 +694,7 @@ msgstr "Результаты поиска"
 msgid "results were found"
 msgstr "результатов найдено"
 
-#: templates/events/search.html:54
+#: templates/events/search.html:55
 msgid "People"
 msgstr "Людей"
 
@@ -741,11 +759,11 @@ msgstr "Вы не зашли в систему"
 msgid "Courts"
 msgstr "Площадки"
 
-#: templates/user/settings.html:12
+#: templates/user/details_form.html:12 templates/user/settings.html:12
 msgid "User settings"
 msgstr "Настройки пользователя"
 
-#: templates/user/settings.html:21
+#: templates/user/details_form.html:21 templates/user/settings.html:21
 msgid "Localization"
 msgstr "Переводы"
 
@@ -861,15 +879,15 @@ msgstr ""
 #: venv/lib/python3.4/site-packages/django/db/models/fields/__init__.py:104
 #, python-format
 msgid "Value %(value)r is not a valid choice."
-msgstr ""
+msgstr "Значение %(value)r не может быть выбрано."
 
 #: venv/lib/python3.4/site-packages/django/db/models/fields/__init__.py:105
 msgid "This field cannot be null."
-msgstr ""
+msgstr "Поле не может быть нулевым"
 
 #: venv/lib/python3.4/site-packages/django/db/models/fields/__init__.py:106
 msgid "This field cannot be blank."
-msgstr ""
+msgstr "Поле не может быть пустым"
 
 #: venv/lib/python3.4/site-packages/django/db/models/fields/__init__.py:107
 #, python-format
@@ -892,18 +910,18 @@ msgstr ""
 #: venv/lib/python3.4/site-packages/django/db/models/fields/__init__.py:852
 #: venv/lib/python3.4/site-packages/django/db/models/fields/__init__.py:1582
 msgid "Integer"
-msgstr ""
+msgstr "Целочисленное"
 
 #: venv/lib/python3.4/site-packages/django/db/models/fields/__init__.py:856
 #: venv/lib/python3.4/site-packages/django/db/models/fields/__init__.py:1580
 #, python-format
 msgid "'%(value)s' value must be an integer."
-msgstr ""
+msgstr "'%(value)s' должно быть целочисленным."
 
 #: venv/lib/python3.4/site-packages/django/db/models/fields/__init__.py:931
 #, python-format
 msgid "'%(value)s' value must be either True or False."
-msgstr ""
+msgstr "'%(value)s' должно быть Да или нет."
 
 #: venv/lib/python3.4/site-packages/django/db/models/fields/__init__.py:933
 msgid "Boolean (Either True or False)"
@@ -1039,23 +1057,23 @@ msgstr ""
 
 #: venv/lib/python3.4/site-packages/django/db/models/fields/__init__.py:1907
 msgid "Time"
-msgstr ""
+msgstr "Время"
 
 #: venv/lib/python3.4/site-packages/django/db/models/fields/__init__.py:1989
 msgid "URL"
-msgstr ""
+msgstr "УРЛ"
 
 #: venv/lib/python3.4/site-packages/django/db/models/fields/__init__.py:2012
 msgid "Raw binary data"
-msgstr ""
+msgstr "Данные"
 
 #: venv/lib/python3.4/site-packages/django/db/models/fields/files.py:225
 msgid "File"
-msgstr ""
+msgstr "Файл"
 
 #: venv/lib/python3.4/site-packages/django/db/models/fields/files.py:375
 msgid "Image"
-msgstr ""
+msgstr "Картинка"
 
 #: venv/lib/python3.4/site-packages/django/db/models/fields/related.py:1603
 #, python-format
