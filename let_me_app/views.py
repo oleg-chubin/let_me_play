@@ -1009,7 +1009,8 @@ class CompleteEventView(TemplateView):
             status=models.EventStatuses.PENDING
         )
         formset = forms.CompleteEventVisitFormSet(
-            instance=event, data=kwargs.get('data')
+            instance=event, data=kwargs.get('data'),
+            queryset=models.Visit.objects.filter(status=VisitStatuses.PENDING)
         )
         for visit_form in formset.forms:
             visit_form.initial.setdefault('income', event.preliminary_price)

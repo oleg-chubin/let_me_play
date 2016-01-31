@@ -35,8 +35,8 @@
               {% endif %}
 
               {% if object.chat.subject_id %}
-                {% blocktrans with event_name=object.chat.subject.event.name %}
-                Event "{{ event_name}}" discussion
+                {% blocktrans with event_name=object.chat.subject.event.start_at %}
+                  Event "{{ event_name}}" discussion
                 {% endblocktrans %}
               {% else %}
                 {% trans "Group chat" %}
