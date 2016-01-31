@@ -236,7 +236,6 @@ class StaffProfile(models.Model):
 
 class Event(Followable):
     start_at = models.DateTimeField(_('date started'), db_index=True)
-    name = models.CharField(_("name"), max_length=128, default='')
     description = models.TextField(verbose_name=_("Description"), max_length=1024, default='')
     court = models.ForeignKey(Court)
     invoice = models.ForeignKey(Invoice, null=True, blank=True)
@@ -247,7 +246,10 @@ class Event(Followable):
     )
 
     def __str__(self):
-        return "{} ({})".format(self.name, self.start_at)
+        description = self.description
+        if len(description) > 20:
+            description = description[:16] + '...'
+        return "{} ({})".format(description, self.start_at)
 
 
 class StaffRole(models.Model):

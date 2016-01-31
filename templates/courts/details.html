@@ -38,7 +38,7 @@
           {% for event in object.event_set.all %}
             <li>
               {% followdropdown event "escort/follow_menu.html" %}
-                <a href="{% url "let_me_app:view_event" pk=event.id %}"> {{ event.name }} ({{ event.start_at }}) </a>
+                <a href="{% url "let_me_app:view_event" pk=event.id %}"> {{ event.start_at }} </a>
                 <span class="label label-info">
                   {{ event.status|as_status:EVENT_STATUSES.CHOICES }}
                 </span>
