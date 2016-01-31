@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load staticfiles let_me_escort leaflet_tags i18n %}
+{% load staticfiles let_me_escort leaflet_tags i18n avatar %}
 
 {% block extra_head %}
   {% leaflet_css %}
@@ -135,9 +135,11 @@
             <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
       </div>
       <div id="detail-8">
-        <ul>
+        <ul class="user-list">
           {% for staff in staff_list %}
             <li>
+
+              <img src="{{staff.staff.user|avatar_url}}" class="list-avatar img-responsive img-thumbnail">
               {{ staff }}
             </li>
           {% endfor %}
@@ -159,10 +161,12 @@
             <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
       </div>
       <div id="detail-5">
-        <ul>
+        <ul class="user-list">
           {% for visit in active_visits %}
             <li>
+              <img src="{{visit.user|avatar_url}}" class="list-avatar img-responsive img-thumbnail">
               {% if visit.status == VISIT_STATUSES.PENDING or visit.status == VISIT_STATUSES.COMPLETED %}
+
                 {% if is_event_staff %}
                   <a href="{% url 'let_me_app:annotate_visit' visit_id=visit.id %}">
                     {{ visit.user }}
@@ -210,11 +214,11 @@
             <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
         </div>
         <div id="detail-6">
-          <ul>
+          <ul class="user-list">
             {% for application in active_applications %}
               <li>
+                <img src="{{application.user|avatar_url}}" class="list-avatar img-responsive img-thumbnail">
                 {{ application.user.get_full_name }} ({{ application.comment|truncatewords_html:4 }})
-
                 {% if object.status == EVENT_STATUSES.PENDING %}
                     <div class="ui-group-buttons marginBottom10">
                       {% with application.user as applicant %}
@@ -236,10 +240,11 @@
             <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
         </div>
         <div id="detail-7">
-          <ul>
+          <ul class="user-list">
             {% for proposal in active_proposals %}
               {% if proposal.status == PROPOSAL_STATUSES.ACTIVE %}
                   <li>
+                      <img src="{{proposal.user|avatar_url}}" class="list-avatar img-responsive img-thumbnail">
                       {{ proposal.user.get_full_name }}
 
                         {% if object.status == EVENT_STATUSES.PENDING %}

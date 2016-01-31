@@ -241,7 +241,6 @@ class Event(Followable):
     court = models.ForeignKey(Court)
     invoice = models.ForeignKey(Invoice, null=True, blank=True)
     inventory_list = models.ForeignKey(InventoryList, null=True, blank=True)
-#     staff = models.ManyToManyField(StaffProfile, blank=True)
     preliminary_price = models.IntegerField(_("Preliminary price"))
     status = models.IntegerField(
         choices=EventStatuses.CHOICES, default=EventStatuses.PENDING

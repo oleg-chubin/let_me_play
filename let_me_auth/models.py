@@ -8,6 +8,19 @@ from django.utils import timezone
 from let_me_app.models import Followable
 from .managers import UserManager
 
+
+class Sex:
+    MALE = 1
+    FEMALE = 2
+    NOT_SPECIFIED = 3
+
+    CHOICES = (
+        (MALE, _("Male")),
+        (FEMALE, _("Female")),
+        (NOT_SPECIFIED, _("Not specified")),
+    )
+
+
 class Newcomer(models.Model):
     user = models.ForeignKey('User')
     code = models.CharField(_('first name'), max_length=40, db_index=True)
@@ -17,6 +30,9 @@ class User(AbstractBaseUser, Followable, PermissionsMixin):
     email = models.EmailField(_('email address'), unique=True)
     first_name = models.CharField(_('first name'), max_length=30, blank=True)
     last_name = models.CharField(_('last name'), max_length=30, blank=True)
+    cell_phone = models.CharField(_('cell phone'), max_length=16, blank=True)
+    sex = models.IntegerField(choices=Sex.CHOICES, default=Sex.NOT_SPECIFIED)
+    avatar = models.ImageField(_('image'), upload_to='avatars', blank=True)
     is_staff = models.BooleanField(_('staff status'), default=False,
         help_text=_('Designates whether the user can log into this admin '
                     'site.'))

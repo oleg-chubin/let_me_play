@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load let_me_chat i18n staticfiles %}
+{% load let_me_chat i18n staticfiles avatar %}
 
 {% block extra_head %}
 <link href="{% static "css/event.css" %}" rel="stylesheet">
@@ -54,8 +54,9 @@
                   {{ object.chat.last_update }}
                 </p>
                 <p>
-                  <strong><i class="glyphicon glyphicon-envelope"></i></strong>
-                  {{ recent_message.text }} ({{ recent_message.author }})
+                  <img src="{{recent_message.author|avatar_url}}" class="list-avatar img-responsive img-thumbnail">
+                  <strong>{{ recent_message.author }}:</strong>
+                  {{ recent_message.text }}
                 </p>
               {% endif %}
             {% endwith %}

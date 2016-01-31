@@ -22,6 +22,8 @@ from django.db import transaction
 from let_me_app.models import VisitStatuses
 from let_me_auth.models import User
 import itertools
+from django.db.models.aggregates import Count
+from django.db.models.query import Prefetch
 
 
 
@@ -608,6 +610,16 @@ class EventSearchView(ListView):
 
         queryset = queryset.select_related(
             'inventory_list', 'court', 'court__site', 'court__activity_type')
+
+        queryset = queryset.prefetch_related(
+            'visit_set',
+            Prefetch(
+                'visit_set',
+                queryset=models.Visit.objects.filter(
+                    status=VisitStatuses.PENDING).only('id'),
+                to_attr='people_count'
+            )
+        )
 
         form = forms.EventSearchForm(
             data=self.request.GET
