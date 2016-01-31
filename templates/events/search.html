@@ -43,7 +43,7 @@
     {% for object in object_list %}
         <article class="search-result row">
           <div class="col-xs-12 col-sm-12 col-md-3">
-            <a href="#" title="Lorem ipsum" class="thumbnail">
+            <a href="{% url "let_me_app:view_event" pk=object.id %}" class="thumbnail">
               <img src="{{ object.court.activity_type.image.url }}" alt="Lorem ipsum" />
             </a>
           </div>
@@ -57,7 +57,6 @@
             </ul>
           </div>
             <div class="col-xs-12 col-sm-12 col-md-7 excerpet">
-                <h3><a href="{% url "let_me_app:view_event" pk=object.id %}" title="">{{ object.name }} </a></h3>
                 <p>{{ object.description|linebreaksbr }}</p>
             </div>
             <span class="clearfix borda"></span>

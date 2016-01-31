@@ -34,9 +34,10 @@
             <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
       </div>
       <div id="detail-4">
-        <ul>
+        <ul class="court-list">
           {% for event in object.event_set.all %}
             <li>
+              <img src="{{object.activity_type.image.url}}" class="list-pic img-responsive img-thumbnail">
               {% followdropdown event "escort/follow_menu.html" %}
                 <a href="{% url "let_me_app:view_event" pk=event.id %}"> {{ event.start_at }} </a>
                 <span class="label label-info">
@@ -59,7 +60,7 @@
             <ul class="user-list">
               {% for group_user in object.admin_group.user_set.all %}
                 <li>
-                  <img src="{{group_user|avatar_url}}" class="list-avatar img-responsive img-thumbnail">
+                  <img src="{{group_user|avatar_url}}" class="list-pic img-responsive img-thumbnail">
                   {% followdropdown group_user "escort/follow_menu.html" %}
                     {{ group_user.get_full_name }}
                   {% endfollowdropdown %}

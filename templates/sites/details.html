@@ -34,9 +34,10 @@
             <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
       </div>
       <div id="detail-4">
-        <ul>
+        <ul class="court-list">
           {% for court in object.court_set.all %}
             <li>
+              <img src="{{court.activity_type.image.url}}" class="list-pic img-responsive img-thumbnail">
               {% followdropdown court "escort/follow_menu.html" %}
                 <a href="{% url "let_me_app:view_court" pk=court.id %}">
                   {{ court.description|truncatewords_html:4 }}
