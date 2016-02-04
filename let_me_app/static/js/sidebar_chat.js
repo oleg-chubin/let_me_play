@@ -1,7 +1,7 @@
 
 $(function() {
     var chat_container = $('.chat-container');
-    if (!chat_container) return;
+    if (!chat_container.length) return;
 
     var chat_controller = $('<div class="chat-controller"></div>');
     chat_controller.append('<span class=" glyphicon glyphicon-envelope controller-open"></span>');
