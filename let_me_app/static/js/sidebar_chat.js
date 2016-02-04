@@ -38,8 +38,9 @@ $(function() {
         }
         li_count = li_number;
 
-        pannel_footer.children().remove();
-        pannel_footer.append($(data).find('.panel-footer form'));
+        if (!pannel_footer.find('form input').length){
+            pannel_footer.append($(data).find('.panel-footer form'));
+        }
         pannel_body.animate({
             scrollTop: pannel_body[0].scrollHeight
         }, 500);
@@ -54,6 +55,8 @@ $(function() {
             $('.panel-footer form').serialize(),
             update_chat_pannel
         )
+
+        $('.panel-footer form input').val('');
         return false;
     });
 

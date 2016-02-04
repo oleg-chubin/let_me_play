@@ -197,6 +197,7 @@ SOCIAL_AUTH_EMAIL_FORM_HTML = 'email_signup.html'
 SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION = 'let_me_auth.mail.send_validation'
 SOCIAL_AUTH_EMAIL_VALIDATION_URL = '/email-sent/'
 EMAIL_SECRET_KEY = "some salt as secret"
+FIELDS_STORED_IN_SESSION = ['next',]
 SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_details',
     'social.pipeline.social_auth.social_uid',

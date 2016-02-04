@@ -18,9 +18,6 @@ def context(**extra):
 
 
 def login(request):
-    # context = RequestContext(request, {
-    #     'request': request, 'user': request.user})
-    # return render_to_response('login.html', context_instance=context)
     context = {'next_url': request.REQUEST.get('next', reverse('home'))}
     return render(
         request, 'registration/login.html',
