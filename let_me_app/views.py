@@ -416,7 +416,7 @@ class AddVisitInventoryView(DetailRelatedPostView):
     def save_on_success(self, visit, form):
         if not visit.inventory_list:
             inventory_list = models.InventoryList.objects.create(
-                name=visit.event.name)
+                name="inventory_list for %s" %visit.event.id)
             visit.inventory_list = inventory_list
             visit.save()
         inventory = form.save(commit=False)
