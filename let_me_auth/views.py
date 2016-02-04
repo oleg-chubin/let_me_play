@@ -17,14 +17,6 @@ def context(**extra):
     return dict(**extra)
 
 
-def login(request):
-    context = {'next_url': request.REQUEST.get('next', reverse('home'))}
-    return render(
-        request, 'registration/login.html',
-        context_instance = RequestContext(request, context)
-    )
-
-
 @login_required()
 def home(request):
     return redirect(reverse(settings.DEFAULT_VIEW_NAME))
