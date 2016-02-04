@@ -39,4 +39,5 @@ def recent_chat_message(chat_thread):
 def chat_messages(chat_thread):
     participants = chat_thread.chatparticipant_set.all()
     participants = {i.user_id: i.user for i in participants}
-    return get_chat_messages(chat_thread.text, participants)
+    distinct_messages = list(get_chat_messages(chat_thread.text, participants))
+    return reversed(distinct_messages)

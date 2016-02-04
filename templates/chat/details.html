@@ -34,25 +34,17 @@
     {% endfor %}
     </div>
     <div class="panel-body">
-       <form action="{% url "let_me_app:post_chat_message" pk=object.id %}" method="post">
-         {% csrf_token %}
-         <div class="input-group">
-           <input id="{{ message_form.message.html_name }}" name="{{ message_form.message.html_name }}" type="text" class="form-control input-sm" placeholder="Type your message here..." />
-           <span class="input-group-btn">
-             <button class="btn btn-warning btn-sm" id="btn-chat">Send</button>
-           </span>
-         </div>
-       </form>
        <ul class="chat">
           {% for chat_message in object|chat_messages %}
-            <li class="left clearfix">
               {% ifequal user chat_message.author %}
-                <span class="chat-img  pull-right">
-                  <img src="{{user|avatar_url}}" alt="{{user}}" class="img-circle" />
+                <li class="right clearfix">
+                <span class="chat-img pull-right">
+                  <img src="{{user|avatar_url}}" alt="{{user}}" class="img-circle avatar" />
                 </span>
               {% else %}
-                <span class="chat-img  pull-left">
-                  <img src="{{chat_message.author|avatar_url}}" alt="{{ chat_message.author }}" class="img-circle" />
+                <li class="left clearfix">
+                <span class="chat-img pull-left">
+                  <img src="{{chat_message.author|avatar_url}}" alt="{{ chat_message.author }}" class="img-circle avatar" />
                 </span>
               {% endifequal %}
               <div class="chat-body clearfix">
@@ -74,6 +66,17 @@
             </li>
          {% endfor %}
        </ul>
+    </div>
+    <div class="panel-footer">
+       <form action="{% url "let_me_app:post_chat_message" pk=object.id %}" method="post">
+         {% csrf_token %}
+         <div class="input-group">
+           <input id="{{ message_form.message.html_name }}" name="{{ message_form.message.html_name }}" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+           <span class="input-group-btn">
+             <button class="btn btn-warning btn-sm" id="btn-chat">Send</button>
+           </span>
+         </div>
+       </form>
     </div>
   </div>
 {% endblock %}

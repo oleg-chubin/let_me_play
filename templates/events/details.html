@@ -7,6 +7,8 @@
   <link href="{% static 'css/event.css' %}" rel="stylesheet">
   <link href="{% static 'css/group_buttons.css' %}" rel="stylesheet">
   <link href="{% static 'css/info_panel.css' %}" rel="stylesheet">
+  <link href="{% static 'css/sidebar_chat.css' %}" rel="stylesheet">
+  <link href="{% static "css/chat.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -314,4 +316,12 @@
   </script>
   <script src="{% static "js/expandable_listgroup.js" %}"></script>
   <script src="{% static "js/modal.js" %}"></script>
+  <script src="{% static "js/sidebar_chat.js" %}"></script>
+{% endblock %}
+
+{% block extra_content %}
+{% if chat %}
+<div class="chat-container animate" data-chaturl="{% url 'let_me_app:chat_details' pk=chat.id %}" data-postchaturl="{% url 'let_me_app:post_chat_message' pk=chat.id %}">
+</div>
+{% endif %}
 {% endblock %}
