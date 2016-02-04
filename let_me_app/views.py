@@ -191,6 +191,11 @@ class EventView(DetailView):
                 result['my_active_visit']
             )
 
+        chats = models.InternalMessage.objects.filter(
+            subject=event, chatparticipant__user=self.request.user)[:1]
+        if chats:
+            result['chat'] = chats[0]
+
         return result
 
 

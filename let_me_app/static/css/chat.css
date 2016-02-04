@@ -2,14 +2,28 @@
 {
     list-style: none;
     margin: 0;
-    padding: 0;
+    padding: 0px;
+}
+
+.chat .avatar {
+    width: 50px;
+}
+
+.chat-body
+{
+    margin: 10px;
+}
+
+.chat-img
+{
+    margin: 10px;
 }
 
 .chat li
 {
-    margin-top: 10px;
-    padding-top: 5px;
-    border-top: 1px dotted #B3A9A9;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted #B3A9A9;
 }
 
 .chat li.left .chat-body
@@ -29,18 +43,39 @@
     color: #777777;
 }
 
-.btn-label
+.panel .slidedown .glyphicon, .chat .glyphicon
 {
-    position: relative;
-    display: inline-block;
-    background: rgba(0,0,0,0);
-    border: none;
-    border-radius: 3px 0 0 3px;
-    color: #111111;
+    margin-right: 5px;
 }
 
-.btn-labeled {
-    padding-top: 0;
-    padding-bottom: 0;
+.pannel {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    color: #FFF;
 }
 
+.panel-body
+{
+    overflow-y: scroll;
+    height: 80%;
+}
+
+::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar
+{
+    width: 12px;
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #555;
+}
