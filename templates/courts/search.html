@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% load i18n staticfiles let_me_escort leaflet_tags %}
+
+{% block extra_head %}
+  {% leaflet_css %}
+  {% leaflet_js plugins="forms" %}
+  {% leaflet_css plugins="forms" %}
+  <link href="{% static "css/search_results.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block breadcrumbs %}
+  <ol class="breadcrumb">
+    <li><a href="{% url "home" %}">{% trans "Home" %}</a></li>
+    <li class="active">{% trans "Events" %}</li>
+  </ol>
+{% endblock %}
+
+{% block main %}
+  <div class="row">
+    <div class="col-md-8">
+      {% leaflet_map "event_map" callback="window.map_init_basic" %}
+    </div>
+    <div class="col-md-4">
+      <form method="get">
+      {% with form=search_form %}
+        {% include "form.html" %}
+      {% endwith %}
+      <button type="submit" class="btn btn-success pull-right"><span class="glyphicon glyphicon-search"></span> {% trans "Find" %}</button>
+      </form>
+    </div>
+  </div>
+  <ul>
+  <hgroup class="mb20">
+    <h1>{% trans "Search Results" %}</h1>
+    <h2 class="lead">
+      <strong class="text-danger">{{ object_list.count }}</strong> {% trans "results were found" %}
+    </h2>
+  </hgroup>
+
+  <section class="col-xs-12 col-sm-6 col-md-12">
+
+    {% for object in object_list %}
+        <article class="search-result row">
+          <div class="col-xs-12 col-sm-12 col-md-2">
+            <a href="{% url "let_me_app:view_court" pk=object.id %}" class="thumbnail">
+              <img src="{{ object.court.activity_type.image.url }}" alt="Lorem ipsum" />
+            </a>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-md-3">
+            <ul class="meta-search">
+              <li class="event_item" data-record_id="{{object.id}}" data-geo_point="[{{ object.court.site.geo_point.x|stringformat:"f" }}, {{ object.court.site.geo_point.y|stringformat:"f" }}]">
+                <ul>
+                    {% for event in object.events_active_applications %}
+                    <li>
+                        <i class="glyphicon glyphicon-tags"></i> {{ event.start_at}}
+                    <span> ({{event.apps_count}})</span>
+                    <li>
+                    {% endfor %}
+                <ul>
+              </li>
+            </ul>
+          </div>
+            <div class="col-xs-12 col-sm-12 col-md-7 excerpet">
+                <p>{{ object.description|linebreaksbr }}</p>
+            </div>
+            <span class="clearfix borda"></span>
+        </article>
+    {% endfor %}
+  </section>
+
+  </ul>
+{% endblock %}
+
+{% block extra_scripts %}
+{{ search_form.media }}
+<script src="{% static "js/event_search.js" %}"></script>
+{% endblock %}

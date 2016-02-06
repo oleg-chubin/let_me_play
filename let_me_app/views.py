@@ -19,7 +19,7 @@ from extra_views.generic import GenericInlineFormSet
 
 from let_me_app import persistence, forms, models
 from django.db import transaction
-from let_me_app.models import VisitStatuses
+from let_me_app.models import VisitStatuses, ApplicationStatuses
 from let_me_auth.models import User
 import itertools
 from django.db.models.aggregates import Count
@@ -235,15 +235,15 @@ class UserProposalsListView(ListView):
         return result
 
 
-class UserManagedEventListView(ListView):
-    model = models.Event
-    template_name = "events/user_managed_events.html"
+class UserManagedCourtsListView(ListView):
+    model = models.Court
+    template_name = "courts/user_managed_courts.html"
 
     def get_queryset(self, **kwargs):
-        result = super(UserManagedEventListView, self).get_queryset(**kwargs)
+        result = super(UserManagedCourtsListView, self).get_queryset(**kwargs)
         return result.filter(
-            court__admin_group__user=self.request.user,
-            start_at__gte=timezone.now()).order_by('-start_at')
+            admin_group__user=self.request.user).order_by('site__name')
+
 
 class EventActionMixin(object):
     def get_success_url(self, **kwargs):
@@ -674,6 +674,43 @@ class RemoveFromAdminGroup(CourtActionMixin, BaseView):
 
     def process_object(self, obj):
         obj.admin_group.user_set.remove(self.kwargs['user'])
+
+
+class CourtSearchView(ListView):
+    template_name = 'courts/search.html'
+    model = models.Court
+
+    def get_queryset(self):
+        queryset = super(CourtSearchView, self).get_queryset()
+        queryset = queryset.order_by('site__name')
+
+        form = forms.EventSearchForm(
+            data=self.request.GET
+        )
+        if form.is_valid():
+            if form.cleaned_data['geo_point'] and form.cleaned_data['radius']:
+                site_queryset = models.Site.objects.filter(
+                    geo_point__distance_lt=(form.cleaned_data['geo_point'],
+                                            D(m=form.cleaned_data['radius']))
+                )
+                queryset = queryset.filter(site__in=site_queryset)
+            if form.cleaned_data['activity_type']:
+                queryset = queryset.filter(
+                    activity_type__in=form.cleaned_data['activity_type'])
+        queryset = queryset.prefetch_related(
+            Prefetch(
+                'event_set',
+                queryset=models.Event.objects.annotate(
+                    apps_count=Count('application__id')).filter(
+                    application__status=ApplicationStatuses.ACTIVE),
+                to_attr='events_active_applications')
+        )
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        result = super(CourtSearchView, self).get_context_data(**kwargs)
+        result['search_form'] = forms.CourtSearchForm(data=self.request.GET)
+        return result
 
 
 class AddUserToAdminGroupView(BaseView):
