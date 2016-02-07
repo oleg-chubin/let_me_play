@@ -4,6 +4,7 @@ Created on Jun 21, 2015
 @author: oleg
 '''
 from . import models
+from django.utils import timezone
 
 
 def save_event_and_related_things(event, user, visitors=tuple()):
@@ -56,3 +57,26 @@ def clone_inventory_list(inventory_list):
 
     return cloned_list
 
+
+def get_user_visit_applications_and_proposals(user):
+    applications = models.Application.objects.filter(
+        user=user, status=models.ApplicationStatuses.ACTIVE)
+    applications = applications.order_by('-event__start_at')
+    applications.select_related('event__court')
+
+    proposals = models.Proposal.objects.filter(
+        user=user, status=models.ProposalStatuses.ACTIVE)
+    proposals = proposals.order_by('-event__start_at')
+    proposals.select_related('event__court')
+
+    visits = models.Visit.objects.filter(
+        user=user,
+        status__in=[models.VisitStatuses.PENDING,models.VisitStatuses.COMPLETED]
+    )
+    visits = visits.order_by('-event__start_at')
+    visits.select_related('event__court')
+    now = timezone.now()
+    return sorted(
+        list(applications) + list(proposals) + list(visits),
+        key=lambda x: (now - x.event.start_at, x.__class__.__name__),
+    )
