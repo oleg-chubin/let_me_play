@@ -22,7 +22,6 @@
                 </a>
                 <ul class="dropdown-menu" role="menu">
                   <li><a href="{% url "let_me_app:user_events" %}">{% trans "My events" %}</a></li>
-                  <li><a href="{% url "let_me_app:user_managed_events" %}">{% trans "Events managed" %}</a></li>
                   <li><a href="{% url "let_me_app:search_events" %}">{% trans "Search Events" %}</a></li>
                   {% if user and not user.is_anonymous %}
                   <li>
@@ -31,6 +30,16 @@
                     </a>
                   </li>
                   {% endif %}
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    {% trans "Courts" %}
+                  <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="{% url "let_me_app:user_managed_courts" %}">{% trans "Courts managed" %}</a></li>
+                  <li><a href="{% url "let_me_app:search_courts" %}">{% trans "Search Courts" %}</a></li>
                 </ul>
             </li>
           </ul>
@@ -102,7 +111,7 @@
                       </a>
                     </li>
                     <li>
-                      <a href="{% url "let_me_app:user_managed_events" %}">
+                      <a href="{% url "let_me_app:user_managed_courts" %}">
                         {% trans "Applications" %}
                       {% if applications_count %}
                         <span class="badge badge-info">

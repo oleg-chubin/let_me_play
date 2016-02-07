@@ -34,6 +34,11 @@ class GroupFactory(factory.django.DjangoModelFactory):
         model = Group
 
 
+class ActivityTypeFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.ActivityType
+
+
 class CourtFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.Court
@@ -41,13 +46,14 @@ class CourtFactory(factory.django.DjangoModelFactory):
     site = factory.SubFactory(SiteFactory)
     description = factory.Sequence(lambda n: 'description_{0}'.format(n))
     admin_group = factory.SubFactory(GroupFactory)
+    activity_type = factory.SubFactory(ActivityTypeFactory)
 
 class EventFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.Event
 
+    preliminary_price = factory.Sequence(lambda n: n * 10)
     start_at = factory.Sequence(lambda n: timezone.now() + timedelta(days=n))
-    name = factory.Sequence(lambda n: 'event_{0}'.format(n))
     description = factory.Sequence(lambda n: 'description_{0}'.format(n))
     court = factory.SubFactory(CourtFactory)
 

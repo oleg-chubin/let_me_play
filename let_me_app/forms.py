@@ -96,6 +96,17 @@ class CourtForm(forms.ModelForm):
         }
 
 
+class CourtSearchForm(forms.Form):
+    geo_point = geo_forms.PointField(
+        required=False, widget=floppyforms_widgets.HiddenInput())
+    radius = forms.IntegerField(
+        label=_("radius"), required=False, widget=floppyforms_widgets.NumberInput())
+    activity_type = forms.ModelMultipleChoiceField(
+        models.ActivityType.objects.all(), label=_("activity type"),
+        required=False, widget=floppyforms_widgets.SelectMultiple()
+    )
+
+
 class EventSearchForm(forms.Form):
     start_date = forms.DateTimeField(
         label=_("start date"), required=False,
