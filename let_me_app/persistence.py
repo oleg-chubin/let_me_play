@@ -72,7 +72,7 @@ def get_user_visit_applications_and_proposals(user):
     visits = models.Visit.objects.filter(
         user=user,
         status__in=[models.VisitStatuses.PENDING,models.VisitStatuses.COMPLETED]
-    )
+    ).select_related('event__court')
     visits = visits.order_by('-event__start_at')
     visits.select_related('event__court')
     now = timezone.now()
