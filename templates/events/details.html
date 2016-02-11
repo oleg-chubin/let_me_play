@@ -44,7 +44,7 @@
   <div class="panel-heading">
     <h3 class="panel-title">
       {% followdropdown object "escort/follow_menu.html" %}
-        {{object.court.activity_type.title}} {{object.start_at}}
+        {{SITE_DOMAIN}}{{object.court.activity_type.title}} {{object.start_at}}
       {% endfollowdropdown %}
       {% if is_admin %}
         <div class="pull-right action-buttons">

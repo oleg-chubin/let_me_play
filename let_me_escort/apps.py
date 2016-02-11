@@ -8,6 +8,7 @@ from django.apps import AppConfig
 from django.db.models import get_models, get_app, signals
 from django.db.models.fields.related import RelatedField
 from django.dispatch import receiver
+from let_me_escort import persistence
 
 
 SIGNALS = []

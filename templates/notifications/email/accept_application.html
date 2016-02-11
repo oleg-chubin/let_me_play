@@ -1,0 +1,9 @@
+{% extends "notifications/email/base.html" %}
+
+{% block subject %}
+Application accepted
+{% endblock %}
+
+{% block content %}
+Your application for the <a href="{{SITE_DOMAIN}}{% url "let_me_app:view_event" pk=event.id %}">{{event}}</a> was accepted by {{user}}.
+{% endblock %}

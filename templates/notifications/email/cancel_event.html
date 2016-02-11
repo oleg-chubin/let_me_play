@@ -1,0 +1,9 @@
+{% extends "notifications/email/base.html" %}
+
+{% block subject %}
+Event cancelled
+{% endblock %}
+
+{% block content %}
+    Event <a href="{{SITE_DOMAIN}}{% url "let_me_app:view_event" pk=event.id %}">{{event}}</a> was cancelled.
+{% endblock %}

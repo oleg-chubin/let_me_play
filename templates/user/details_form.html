@@ -18,7 +18,8 @@
         {% csrf_token %}
         {% with form as form %}
           {% if form_name != 'site' %}
-            <legend>{% trans "Localization" %} </legend>
+            <legend>{% trans "Profile" %} </legend>
+            <label> {{ object.email }}</label>
             {% include "form.html" %}
           {% endif %}
         {% endwith %}

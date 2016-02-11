@@ -1,0 +1,11 @@
+{% extends "notifications/email/base.html" %}
+
+{% block subject %}
+New chat message
+{% endblock %}
+
+{% block content %}
+    Your have new <a href="{{SITE_DOMAIN}}{% url "let_me_app:chat_details" pk=event.id %}">chat</a> message.
+{% endblock %}
+
+
