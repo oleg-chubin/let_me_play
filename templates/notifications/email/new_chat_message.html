@@ -1,11 +1,14 @@
 {% extends "notifications/email/base.html" %}
+{% load i18n %}
 
 {% block subject %}
-New chat message
+{% trans "New chat message" %}
 {% endblock %}
 
 {% block content %}
-    Your have new <a href="{{SITE_DOMAIN}}{% url "let_me_app:chat_details" pk=event.id %}">chat</a> message.
+  {% blocktrans %}
+    Your have new <a href="{{chat_url}}">chat</a> message.
+  {% endblocktrans %}
 {% endblock %}
 
 

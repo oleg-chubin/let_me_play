@@ -31,6 +31,7 @@ class User(AbstractBaseUser, Followable, PermissionsMixin):
     first_name = models.CharField(_('first name'), max_length=30, blank=True)
     last_name = models.CharField(_('last name'), max_length=30, blank=True)
     cell_phone = models.CharField(_('cell phone'), max_length=16, blank=True)
+    cell_phone_is_valid = models.BooleanField(default=False)
     sex = models.IntegerField(choices=Sex.CHOICES, default=Sex.NOT_SPECIFIED)
     avatar = models.ImageField(_('image'), upload_to='avatars', blank=True)
     is_staff = models.BooleanField(_('staff status'), default=False,
@@ -71,3 +72,10 @@ class User(AbstractBaseUser, Followable, PermissionsMixin):
 
     def __str__(self):
         return self.get_full_name()
+
+
+class NotificationSettings(models.Model):
+    sms_notifications = models.BooleanField(_("Use sms for notifications"))
+    email_notifications = models.BooleanField(_("Use email for notifications"))
+    lang = models.CharField(_('cell phone'), max_length=18)
+    user = models.OneToOneField(User, primary_key=True)

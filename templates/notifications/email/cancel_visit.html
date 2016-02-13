@@ -1,9 +1,14 @@
 {% extends "notifications/email/base.html" %}
+{% load i18n %}
 
 {% block subject %}
+{% blocktrans %}
 Visit was cancelled
+{% endblocktrans %}
 {% endblock %}
 
 {% block content %}
-    User {{user}} cancelled his visit for the event <a href="{{SITE_DOMAIN}}{% url "let_me_app:view_event" pk=event.id %}">{{event}}</a>.
+  {% blocktrans %}
+    User {{user}} cancelled his visit for the event <a href="{{event_url}}">{{event}}</a>.
+  {% endblocktrans %}
 {% endblock %}

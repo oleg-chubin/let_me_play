@@ -1,9 +1,14 @@
 {% extends "notifications/email/base.html" %}
+{% load i18n %}
 
 {% block subject %}
-Proposal cancelled
+{% blocktrans %}
+  Proposal cancelled
+{% endblocktrans %}
 {% endblock %}
 
 {% block content %}
-    Proposal of the event <a href="{{SITE_DOMAIN}}{% url "let_me_app:view_event" pk=event.id %}">{{event}}</a> was cancelled.
+  {% blocktrans %}
+    Proposal of the event <a href="{{event_url}}">{{event}}</a> was cancelled.
+  {% endblocktrans %}
 {% endblock %}

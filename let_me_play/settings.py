@@ -141,6 +141,12 @@ DATABASES = {
     }
 }
 
+ROCKET_SMS_CONFIG = {
+    'host': 'https://api.rocketsms.by',
+    'username': '',
+    'password': ''
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 

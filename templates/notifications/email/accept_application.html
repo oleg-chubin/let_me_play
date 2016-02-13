@@ -1,9 +1,10 @@
 {% extends "notifications/email/base.html" %}
+{% load i18n %}
 
 {% block subject %}
-Application accepted
+{% blocktrans %} Application accepted{% endblocktrans %}.
 {% endblock %}
 
 {% block content %}
-Your application for the <a href="{{SITE_DOMAIN}}{% url "let_me_app:view_event" pk=event.id %}">{{event}}</a> was accepted by {{user}}.
+{% blocktrans %}Your application for the <a href="{{event_url}}">{{event}}</a> was accepted by {{user}}{% endblocktrans %}.
 {% endblock %}

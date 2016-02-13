@@ -1,11 +1,16 @@
 {% extends "notifications/email/base.html" %}
+{% load i18n %}
 
 {% block subject %}
+{% blocktrans %}
 Application created
+{% endblocktrans %}
 {% endblock %}
 
 {% block content %}
     {% for user in users %}
-      User {{user}} has applied for the event <a href="{{SITE_DOMAIN}}{% url "let_me_app:view_event" pk=event.id %}">{{event}}</a>.
+      {% blocktrans %}
+      User {{user}} has applied for the event <a href="{{event_url}}">{{event}}</a>.
+      {% endblocktrans %}
     {% endfor %}
 {% endblock %}

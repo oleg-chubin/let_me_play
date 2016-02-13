@@ -1,10 +1,15 @@
 {% extends "notifications/email/base.html" %}
+{% load i18n %}
 
 {% block subject %}
+{% blocktrans %}
 Visit created
+{% endblocktrans %}
 {% endblock %}
 
 {% block content %}
-    You have been add as a visitor the event <a href="{{SITE_DOMAIN}}{% url "let_me_app:view_event" pk=event.id %}">{{event}}</a>.
+  {% blocktrans %}
+    You have been add as a visitor the event <a href="{{event_url}}">{{event}}</a>.
+  {% endblocktrans %}
 {% endblock %}
 

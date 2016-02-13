@@ -1,12 +1,17 @@
 {% extends "notifications/email/base.html" %}
+{% load i18n %}
 
 {% block subject %}
+{% blocktrans %}
 Proposal declined
+{% endblocktrans %}
 {% endblock %}
 
 {% block content %}
     {% for user in users %}
-      Your proposal of the event <a href="{{SITE_DOMAIN}}{% url "let_me_app:view_event" pk=event.id %}">{{event}}</a> has been declined by user {{user}}.
+      {% blocktrans %}
+      Your proposal of the event <a href="{{event_url}}">{{event}}</a> has been declined by user {{user}}.
+      {% endblocktrans %}
     {% endfor %}
 {% endblock %}
 

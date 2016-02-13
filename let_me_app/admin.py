@@ -6,6 +6,7 @@ from let_me_app.models import (InternalMessage, Peeper, PrivateComment,
     Event, Equipment, Inventory, Proposal, Application, Receipt, Visit,
     ChatParticipant, GalleryImage, ActivityType, StaffRole, EventStaff,
     StaffProfile, IndexParametr, CoachRecommendation, VisitIndex)
+from let_me_auth.models import NotificationSettings
 from let_me_app import admin_forms
 
 
@@ -13,7 +14,7 @@ model_list = (InternalMessage, Peeper, PrivateComment, GalleryImage,
     Changelog, Court, Occasion, BookingPolicy, Invoice, ChatParticipant,
     Event, Equipment, Inventory, Proposal, Application, Receipt, Visit, Site,
     ActivityType, StaffRole, EventStaff, StaffProfile, IndexParametr,
-    CoachRecommendation, VisitIndex
+    CoachRecommendation, VisitIndex, NotificationSettings
 )
 
 for model in model_list:

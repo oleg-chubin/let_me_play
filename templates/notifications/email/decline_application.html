@@ -1,10 +1,15 @@
 {% extends "notifications/email/base.html" %}
+{% load i18n %}
 
 {% block subject %}
+{% blocktrans %}
 Application declined
+{% endblocktrans %}
 {% endblock %}
 
 {% block content %}
-    Your application for the event <a href="{{SITE_DOMAIN}}{% url "let_me_app:view_event" pk=event.id %}">{{event}}</a> has been declined.
+  {% blocktrans %}
+    Your application for the event <a href="{{event_url}}">{{event}}</a> has been declined.
+  {% endblocktrans %}
 {% endblock %}
 
