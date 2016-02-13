@@ -1,0 +1,13 @@
+{% extends "notifications/email/base.html" %}
+
+{% block subject %}
+{% blocktrans %}Proposal accepted{% endblocktrans %}.
+{% endblock %}
+
+{% block content %}
+    {% for user in users %}
+      {% blocktrans %}
+      Your proposal for the event <a href="{{event_url}}">{{event}}</a>  was accepted by {{user}}.
+      {% endblocktrans %}
+    {% endfor %}
+{% endblock %}

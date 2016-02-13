@@ -7,6 +7,7 @@ from let_me_app import models
 from django.db.models import F
 from django.utils import timezone
 from functools import wraps
+from django.conf import settings
 
 
 def oject_statuses(request):
@@ -51,3 +52,6 @@ def user_events(request):
         'user_active_visits': visits
     }
 
+
+def site_host(request):
+    return {'SITE_DOMAIN': settings.SITE_DOMAIN}

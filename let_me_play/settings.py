@@ -40,7 +40,9 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',)
+    'django.contrib.staticfiles',
+    'kombu.transport.django',
+    'djcelery',)
 
 if DEBUG:
     INSTALLED_APPS += ('debug_toolbar', 'template_timings_panel')
@@ -92,6 +94,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
     'let_me_app.context_processors.user_events',
     'let_me_app.context_processors.oject_statuses',
+    'let_me_app.context_processors.site_host',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -136,6 +139,12 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+}
+
+ROCKET_SMS_CONFIG = {
+    'host': 'https://api.rocketsms.by',
+    'username': '',
+    'password': ''
 }
 
 # Internationalization
@@ -275,6 +284,13 @@ LEAFLET_CONFIG = {
     'MIN_ZOOM': 3,
     'MAX_ZOOM': 18,
 }
+
+
+CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
+BROKER_URL = 'django://'
+
+
+SITE_DOMAIN = ""
 
 try:
     from .local_settings import *

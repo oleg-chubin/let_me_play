@@ -8,7 +8,113 @@ from . import factories, models
 from django.utils import timezone
 from _datetime import timedelta
 
-# Create your tests here.
+from django.test.utils import override_settings
+from let_me_auth import models as auth_models
+from unittest.mock import patch
+from django.core.urlresolvers import reverse
+
+
+class NotificationTasksTest(TestCase):
+    domain = 'http://localhost'
+    fake_body = 'zdfsdffsfsd'
+    domain_mail = "some@ma.il"
+
+    def setUp(self):
+        self.event = factories.EventFactory()
+        self.user = factories.UserFactory()
+        self.admin_user = self.event.court.admin_group.user_set.all()[0]
+
+    @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
+                       CELERY_ALWAYS_EAGER=True,
+                       BROKER_BACKEND='memory',
+                       SITE_DOMAIN=domain,
+                       EMAIL_FROM = domain_mail)
+    @patch('let_me_app.tasks.render_to_string')
+    @patch('let_me_app.tasks.send_mail')
+    def test_create_proposal_email(self, fake_send_mail, fake_render):
+        fake_render.return_value = self.fake_body
+        self.client.login(
+            email=self.admin_user.email,
+            password=self.admin_user.first_name
+        )
+        url = reverse('let_me_app:create_proposal', kwargs={'pk': self.event.id})
+        auth_models.NotificationSettings.objects.create(
+            sms_notifications=False,
+            email_notifications=True,
+            lang='ru',
+            user=self.user
+        )
+        response = self.client.post(url, {'users': [self.user.id]})
+        self.assertEqual(response.status_code, 302)
+        fake_render.assert_called_with(
+            'notifications/email/create_proposal.html',
+            {
+               'event': self.event,
+               'event_url': '%s/let/me/view/event/%s/' % (self.domain, self.event.id)
+            }
+        )
+        fake_send_mail.assert_called_with(
+            'create_proposal',
+            self.fake_body,
+            self.domain_mail,
+            [self.user.email],
+            html_message=self.fake_body
+        )
+
+    @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
+                       CELERY_ALWAYS_EAGER=True,
+                       BROKER_BACKEND='memory')
+    @patch('let_me_app.tasks.render_to_string')
+    @patch('let_me_app.tasks.send_sms')
+    def test_create_proposal_sms(self, fake_send_sms, fake_render):
+        fake_render.return_value = self.fake_body
+        self.client.login(
+            email=self.admin_user.email,
+            password=self.admin_user.first_name
+        )
+        url = reverse('let_me_app:create_proposal', kwargs={'pk': self.event.id})
+        auth_models.NotificationSettings.objects.create(
+            sms_notifications=True,
+            email_notifications=False,
+            lang='ru',
+            user=self.user
+        )
+        response = self.client.post(url, {'users': [self.user.id]})
+        self.assertEqual(response.status_code, 302)
+        fake_render.assert_called_with(
+            'notifications/sms/create_proposal.html',
+            {'event': self.event}
+        )
+        fake_send_sms.assert_called_with(
+            self.user.cell_phone, self.fake_body,
+        )
+
+    @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
+                       CELERY_ALWAYS_EAGER=True,
+                       BROKER_BACKEND='memory')
+    @patch('let_me_app.tasks.send_sms')
+    @patch('let_me_app.tasks.send_mail')
+    def test_internal_chat(self, fake_send_mail, fake_send_sms):
+        chat = models.InternalMessage.objects.create(subject=self.event)
+        for u in [self.user, self.admin_user]:
+            models.ChatParticipant.objects.create(user=u, chat=chat)
+
+        self.client.login(
+            email=self.admin_user.email,
+            password=self.admin_user.first_name
+        )
+        url = reverse('let_me_app:post_chat_message', kwargs={'pk': chat.id})
+        auth_models.NotificationSettings.objects.create(
+            sms_notifications=True,
+            email_notifications=True,
+            lang='ru',
+            user=self.user
+        )
+        response = self.client.post(url, {'message': "message"})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(
+            fake_send_mail.call_args[0][3], [self.user.email]
+        )
 
 
 class EventUserActionTestCase(TestCase):

@@ -25,6 +25,7 @@ from let_me_auth.models import User
 import itertools
 from django.db.models.aggregates import Count
 from django.db.models.query import Prefetch
+from let_me_app.tasks import send_notification
 
 
 
@@ -102,6 +103,13 @@ class PostChatMessage(BaseUpdateView):
 
         self.object.text = message.toxml() + models.CF('text')
         self.object.save()
+
+        notification_context = {
+            'reason': "new_chat_message",
+            'initiator_id': self.request.user.id,
+            'message_id': self.object.id
+        }
+        send_notification.delay(notification_context)
 
         return http.HttpResponseRedirect(
             reverse('let_me_app:chat_details', kwargs={'pk': self.object.id})
@@ -269,6 +277,8 @@ class EventActionMixin(object):
         for obj in objects:
             self.process_object(obj)
 
+        self.send_notification(objects)
+
         return http.HttpResponseRedirect(self.get_success_url(**kwargs))
 
 
@@ -279,6 +289,14 @@ class CancelApplicationView(EventActionMixin, BaseView):
             user=request.user,
             status=models.ApplicationStatuses.ACTIVE
         )
+
+    def send_notification(self, objects):
+        notification_context = {
+            'reason': "cancel_application",
+            'initiator_id': self.request.user.id,
+            'object_ids': [i.id for i in objects]
+        }
+        send_notification.delay(notification_context)
 
     def process_object(self, application):
         application.status = models.ApplicationStatuses.CANCELED
@@ -302,6 +320,13 @@ class CreateApplicationView(BaseView):
             status=models.ApplicationStatuses.ACTIVE,
             comment=comment
         )
+
+        notification_context = {
+            'reason': "create_application",
+            'initiator_id': self.request.user.id,
+            'object_ids': [application.id]
+        }
+        send_notification.delay(notification_context)
 
         return http.HttpResponseRedirect(
             reverse('let_me_app:view_event', kwargs={'pk': kwargs['event']})
@@ -350,12 +375,21 @@ class CreateProposalView(DetailRelatedPostView):
 
     def save_on_success(self, event, form):
         comment = form.cleaned_data['comment']
+        proposals = []
         for user in form.cleaned_data['users']:
-            models.Proposal.objects.get_or_create(
-                event=event, user=user,
-                status=models.ApplicationStatuses.ACTIVE,
-                defaults={'comment':comment}
-            )
+            proposal, _ = models.Proposal.objects.get_or_create(
+                    event=event, user=user,
+                    status=models.ApplicationStatuses.ACTIVE,
+                    defaults={'comment':comment}
+                )
+            proposals.append(proposal)
+
+        notification_context = {
+            'reason': "create_proposal",
+            'initiator_id': self.request.user.id,
+            'object_ids': [i.id for i in proposals]
+        }
+        send_notification.delay(notification_context)
 
 
 class AddEventInventoryView(DetailRelatedPostView):
@@ -431,8 +465,16 @@ class CreateVisitView(DetailRelatedPostView):
             id=self.request.user.id).exists()
 
     def save_on_success(self, event, form):
+        visits = []
         for user in form.cleaned_data['users']:
-            persistence.create_event_visit(event, user, None)
+            visits.append(persistence.create_event_visit(event, user, None))
+
+        notification_context = {
+            'reason': "create_visit",
+            'initiator_id': self.request.user.id,
+            'object_ids': [i.id for i in visits]
+        }
+        send_notification.delay(notification_context)
 
 
 class DeclineProposalEventView(EventActionMixin, BaseView):
@@ -447,6 +489,14 @@ class DeclineProposalEventView(EventActionMixin, BaseView):
         proposal.status = models.ProposalStatuses.DECLINED
         proposal.save()
 
+    def send_notification(self, objects):
+        notification_context = {
+            'reason': "decline_proposal",
+            'initiator_id': self.request.user.id,
+            'object_ids': [i.id for i in objects]
+        }
+        send_notification.delay(notification_context)
+
 
 class AcceptProposalView(EventActionMixin, BaseView):
     def get_queryset(self, request, *args, **kwargs):
@@ -460,6 +510,14 @@ class AcceptProposalView(EventActionMixin, BaseView):
         proposal.status = models.ProposalStatuses.ACCEPTED
         proposal.save()
         persistence.create_event_visit(proposal.event, proposal.user, None)
+
+    def send_notification(self, objects):
+        notification_context = {
+            'reason': "accept_proposal",
+            'initiator_id': self.request.user.id,
+            'object_ids': [i.id for i in objects]
+        }
+        send_notification.delay(notification_context)
 
 
 class DeclineApplicationEventView(EventActionMixin, BaseView):
@@ -477,6 +535,14 @@ class DeclineApplicationEventView(EventActionMixin, BaseView):
     def process_object(self, application):
         application.status = models.ApplicationStatuses.DECLINED
         application.save()
+
+    def send_notification(self, objects):
+        notification_context = {
+            'reason': "decline_application",
+            'initiator_id': self.request.user.id,
+            'object_ids': [i.id for i in objects]
+        }
+        send_notification.delay(notification_context)
 
 
 class AcceptApplicationView(EventActionMixin, BaseView):
@@ -501,6 +567,14 @@ class AcceptApplicationView(EventActionMixin, BaseView):
             application.event, application.user, inventory_list
         )
 
+    def send_notification(self, objects):
+        notification_context = {
+            'reason': "accept_application",
+            'initiator_id': self.request.user.id,
+            'object_ids': [i.id for i in objects]
+        }
+        send_notification.delay(notification_context)
+
 
 class CancelVisitView(EventActionMixin, BaseView):
     def get_queryset(self, request, *args, **kwargs):
@@ -514,6 +588,14 @@ class CancelVisitView(EventActionMixin, BaseView):
         application.status = models.VisitStatuses.CANCELED
         application.save()
 
+    def send_notification(self, objects):
+        notification_context = {
+            'reason': "cancel_visit",
+            'initiator_id': self.request.user.id,
+            'object_ids': [i.id for i in objects]
+        }
+        send_notification.delay(notification_context)
+
 
 class DismissVisitorEventView(EventActionMixin, BaseView):
     def get_queryset(self, request, *args, **kwargs):
@@ -526,6 +608,14 @@ class DismissVisitorEventView(EventActionMixin, BaseView):
     def process_object(self, visit):
         visit.status = models.VisitStatuses.DECLINED
         visit.save()
+
+    def send_notification(self, objects):
+        notification_context = {
+            'reason': "decline_visit",
+            'initiator_id': self.request.user.id,
+            'object_ids': [i.id for i in objects]
+        }
+        send_notification.delay(notification_context)
 
 
 class CancelInventoryEventView(EventActionMixin, BaseView):
@@ -554,6 +644,14 @@ class CancelProposalEventView(EventActionMixin, BaseView):
         proposal.status = models.ProposalStatuses.CANCELED
         proposal.save()
 
+    def send_notification(self, objects):
+        notification_context = {
+            'reason': "cancel_proposal",
+            'initiator_id': self.request.user.id,
+            'object_ids': [i.id for i in objects]
+        }
+        send_notification.delay(notification_context)
+
 
 class CancelEventView(EventActionMixin, BaseView):
     def check_permissions(self, request, *args, **kwargs):
@@ -568,6 +666,14 @@ class CancelEventView(EventActionMixin, BaseView):
     def process_object(self, event):
         event.status = models.EventStatuses.CANCELED
         event.save()
+
+    def send_notification(self, objects):
+        notification_context = {
+            'reason': "cancel_event",
+            'initiator_id': self.request.user.id,
+            'object_ids': [i.id for i in objects]
+        }
+        send_notification.delay(notification_context)
 
 
 class CourtDetailView(DetailView):
@@ -812,6 +918,13 @@ class CreateEventView(TemplateView):
             if isinstance(form, django_forms.ModelForm):
                 form.save_m2m()
 
+        notification_context = {
+            'reason': "create_event",
+            'initiator_id': self.request.user.id,
+            'object_id': instances['event']
+        }
+        send_notification.delay(notification_context)
+
         return http.HttpResponseRedirect(
             reverse(
                 'let_me_app:view_event', kwargs={'pk': instances['event'].id}
@@ -1030,6 +1143,13 @@ class CloneEventView(TemplateView):
         )
 
         view_forms['event'].save_m2m()
+
+        notification_context = {
+            'reason': "create_event",
+            'initiator_id': self.request.user.id,
+            'object_id': event
+        }
+        send_notification.delay(notification_context)
 
         return http.HttpResponseRedirect(
             reverse('let_me_app:view_event', kwargs={'pk': event.id})

@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>let me play</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style type="text/css">
+    /* RESETS AND OVERRIDES */
+    .ReadMsgBody {width: 100%;}
+    .ExternalClass {width: 100%;}
+    .appleBody a {color: #e94e1c; }
+    .appleFooter a {color: #e94e1c; }
+    .appleCopy a {color: #8f8f91; }
+
+    /* MOBILE STYLES */
+    @media screen and (max-width: 720px) {
+
+      table[class="wrapper"]{
+        width: 100% !important;
+      }
+
+      td[class="logo"]{
+        text-align: left;
+        padding: 20px 0 20px 0 !important;
+      }
+
+      td[class="logo"] img{
+        margin: 0 auto!important;
+      }
+
+      div[class="desktop-hide"]{
+        display: block !important;
+        width: auto !important;
+        overflow: visible !important;
+        height: auto !important;
+        max-height: none !important;
+      }
+
+      td[class="desktop-hide"]{
+        display: block !important;
+      }
+
+      img[class="desktop-hide"]{
+        display: block !important;
+      }
+
+      td[class="mobile-hide"]{
+        display: none;
+      }
+
+      img[class="mobile-hide"]{
+        display: none !important;
+      }
+
+      img[class="img-max"]{
+        max-width: 100%;
+        height: auto;
+      }
+
+      table[class="responsive-table"]{
+        width: 100%!important;
+      }
+
+      td[class="section-padding"]{
+        padding: 0 5px 0 5px !important;
+      }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 0;">
+  <!-- short message preview for mobile -->
+  <!--
+    <div style="line-height: 0; font-size: 0; display: none; color: #202020;">DimaTheKilla, Your team Padvodka was created!</div>
+  -->
+
+  <!-- ONE COLUMN HERO -->
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td align="center" style="padding: 0 5px 0 5px;" class="section-padding">
+        <table border="0" cellpadding="0" cellspacing="0" width="700" class="responsive-table" style="margin: 0 auto;">
+          <tr>
+            <td>
+              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td style="padding: 31px 5.71% 40px 5.71%;">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <!-- Mail title -->
+                      <tr>
+                        <td style="font-size: 24px; line-height:36px; font-family: 'Roboto Condensed', Helvetica, Arial, sans-serif; font-weight: bold; color: darkblue; padding: 0 0 23px;">
+                          {% block subject %} {% endblock %}
+                        </td>
+                      </tr>
+                      <!-- Mail Content -->
+                       {% block content %} {% endblock %}
+                      <!-- Mail credentials -->
+                      <!--<tr>-->
+                        <!--<td style="font-size: 14px; line-height: 18px; font-family: Helvetica, Arial, sans-serif; color: #eaeaef;" class="appleBody">-->
+                          <!--For more info please visit <a class="original-only" href="http://wargaming.net" style="color: #e94e1c; -webkit-text-size-adjust: none">Wargaming.net </a>-->
+                        <!--</td>-->
+                      <!--</tr>-->
+                      <!-- Mail logo -->
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+{% extends "notifications/email/base.html" %}
+{% load i18n %}
+
+{% block subject %}
+{% blocktrans %}Application cancelled{% endblocktrans %}
+{% endblock %}
+
+{% block content %}
+    {% for user in users %}
+      {% blocktrans %}
+      Application for the event <a href="{{event_url}}">{{event}}</a> was cancelled by {{user}}.
+      {% endblocktrans %}
+    {% endfor %}
+{% endblock %}

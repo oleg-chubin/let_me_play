@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-31 11:44+0000\n"
+"POT-Creation-Date: 2016-02-13 16:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,41 +28,41 @@ msgstr "начните набирать для поиска пользовате
 msgid "Please type to find equipment"
 msgstr "начните набирать для поиска оборудования"
 
-#: let_me_app/forms.py:101
-msgid "start date"
-msgstr "начальная дата"
-
-#: let_me_app/forms.py:104
-msgid "end date"
-msgstr "конечная дата"
-
-#: let_me_app/forms.py:108
+#: let_me_app/forms.py:103 let_me_app/forms.py:119
 msgid "radius"
 msgstr "радиус"
 
-#: let_me_app/forms.py:110
+#: let_me_app/forms.py:105 let_me_app/forms.py:121
 msgid "activity type"
 msgstr "тип активности"
 
-#: let_me_app/forms.py:162
+#: let_me_app/forms.py:112
+msgid "start date"
+msgstr "начальная дата"
+
+#: let_me_app/forms.py:115
+msgid "end date"
+msgstr "конечная дата"
+
+#: let_me_app/forms.py:174
 #: venv/lib/python3.4/site-packages/django/forms/formsets.py:371
 msgid "Delete"
 msgstr "Удалить"
 
-#: let_me_app/forms.py:173
+#: let_me_app/forms.py:185
 msgid "Income"
 msgstr "Платеж"
 
-#: let_me_app/forms.py:175
+#: let_me_app/forms.py:187
 msgid "Visit was payed"
 msgstr "Посещение оплачено"
 
-#: let_me_app/forms.py:204 let_me_app/forms.py:221 let_me_app/models.py:360
+#: let_me_app/forms.py:216 let_me_app/forms.py:233 let_me_app/models.py:362
 #: templates/events/panels/my_visit.html:56
 msgid "Value"
 msgstr "Значение"
 
-#: let_me_app/forms.py:206
+#: let_me_app/forms.py:218
 msgid "Parametr"
 msgstr "Параметр"
 
@@ -111,7 +111,7 @@ msgstr "Пропущенно"
 msgid "Outdated"
 msgstr "Не актуально"
 
-#: let_me_app/models.py:96 let_me_app/models.py:161 let_me_auth/models.py:35
+#: let_me_app/models.py:96 let_me_app/models.py:161 let_me_auth/models.py:36
 msgid "image"
 msgstr "Изображение"
 
@@ -135,14 +135,18 @@ msgstr "техт"
 msgid "Geo point"
 msgstr "Гео точка"
 
-#: let_me_app/models.py:150 let_me_app/models.py:223 let_me_app/models.py:239
-#: let_me_app/models.py:254 let_me_app/models.py:273 let_me_app/models.py:341
+#: let_me_app/models.py:150 let_me_app/models.py:223 let_me_app/models.py:256
+#: let_me_app/models.py:275 let_me_app/models.py:343
+#: venv/lib/python3.4/site-packages/djcelery/admin.py:81
+#: venv/lib/python3.4/site-packages/djcelery/models.py:211
+#: venv/lib/python3.4/site-packages/djcelery/models.py:339
+#: venv/lib/python3.4/site-packages/kombu/transport/django/models.py:12
 msgid "name"
 msgstr "Имя"
 
-#: let_me_app/models.py:151 let_me_app/models.py:172 let_me_app/models.py:240
-#: let_me_app/models.py:350 templates/details_blocks/court.html:15
-#: templates/details_blocks/site.html:17 templates/events/details.html:91
+#: let_me_app/models.py:151 let_me_app/models.py:172 let_me_app/models.py:239
+#: let_me_app/models.py:352 templates/details_blocks/court.html:15
+#: templates/details_blocks/site.html:17 templates/events/details.html:89
 msgid "Description"
 msgstr "описание"
 
@@ -175,38 +179,39 @@ msgid "estimated price"
 msgstr "приблизительная стоимость"
 
 #: let_me_app/models.py:231
+#: venv/lib/python3.4/site-packages/djcelery/models.py:255
 msgid "description"
 msgstr "описание"
 
-#: let_me_app/models.py:244 templates/events/details.html:87
+#: let_me_app/models.py:243 templates/events/details.html:85
 msgid "Preliminary price"
 msgstr "Приблизительная стоимость"
 
-#: let_me_app/models.py:261
+#: let_me_app/models.py:263
 msgid "event"
 msgstr "Событие"
 
-#: let_me_app/models.py:262
+#: let_me_app/models.py:264
 msgid "staff"
 msgstr "Персонал"
 
-#: let_me_app/models.py:263
+#: let_me_app/models.py:265
 msgid "role"
 msgstr "Роль"
 
-#: let_me_app/models.py:265
+#: let_me_app/models.py:267
 msgid "invoice"
 msgstr "Платежка"
 
-#: let_me_app/models.py:281
+#: let_me_app/models.py:283
 msgid "amount"
 msgstr "количество"
 
-#: let_me_app/models.py:289 let_me_app/models.py:302
+#: let_me_app/models.py:291 let_me_app/models.py:304
 msgid "comment"
 msgstr "Комментарий"
 
-#: let_me_app/models.py:342
+#: let_me_app/models.py:344
 msgid "units"
 msgstr "единицы измерения"
 
@@ -238,35 +243,43 @@ msgstr "Фамилия"
 msgid "cell phone"
 msgstr "мобильный телефон"
 
-#: let_me_auth/models.py:36
+#: let_me_auth/models.py:37
 msgid "staff status"
 msgstr "часть команды"
 
-#: let_me_auth/models.py:37
+#: let_me_auth/models.py:38
 msgid "Designates whether the user can log into this admin site."
 msgstr "можно ли в админку"
 
-#: let_me_auth/models.py:39
+#: let_me_auth/models.py:40
 msgid "active"
 msgstr "активный"
 
-#: let_me_auth/models.py:40
+#: let_me_auth/models.py:41
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
 msgstr ""
 
-#: let_me_auth/models.py:42
+#: let_me_auth/models.py:43
 msgid "date joined"
 msgstr "дата присоединения"
 
-#: let_me_auth/models.py:49
+#: let_me_auth/models.py:50
 msgid "user"
 msgstr "пользователь"
 
-#: let_me_auth/models.py:50
+#: let_me_auth/models.py:51
 msgid "users"
 msgstr "пользователи"
+
+#: let_me_auth/models.py:78
+msgid "Use sms for notifications"
+msgstr "Использовать СМС уведомления"
+
+#: let_me_auth/models.py:79 let_me_auth/models.py:80
+msgid "Use email for notifications"
+msgstr "Использовать email уведомления"
 
 #: let_me_play/forms.py:21
 msgid "language"
@@ -275,22 +288,25 @@ msgstr "язык"
 #: templates/charts/recommendations.html:14
 #: templates/charts/visit_indexes.html:14 templates/chat/details.html:13
 #: templates/chat/list.html:12 templates/courts/details.html:12
+#: templates/courts/search.html:14
+#: templates/courts/user_managed_courts.html:12
 #: templates/dashboard/list.html:13 templates/events/clone_event.html:13
 #: templates/events/complete_event.html:13
 #: templates/events/create_for_court.html:13
 #: templates/events/create_for_site.html:13
 #: templates/events/create_new.html:13 templates/events/create_staff.html:13
-#: templates/events/details.html:14 templates/events/search.html:14
+#: templates/events/details.html:16 templates/events/search.html:14
 #: templates/events/user_events.html:11
-#: templates/events/user_managed_events.html:12
 #: templates/events/user_proposals.html:11 templates/sites/details.html:14
 #: templates/user/details_form.html:11 templates/user/settings.html:11
 #: templates/visits/annotate_visit.html:13
+#: venv/djcelery/templates/admin/djcelery/change_list.html:7
+#: venv/djcelery/templates/djcelery/confirm_rate_limit.html:6
 msgid "Home"
 msgstr "Главная"
 
 #: templates/charts/recommendations.html:15
-#: templates/charts/recommendations.html:23 templates/navbar.html:67
+#: templates/charts/recommendations.html:23 templates/navbar.html:76
 msgid "Visit recommendations"
 msgstr "Рекомендации"
 
@@ -328,7 +344,7 @@ msgstr "Чаты"
 #, python-format
 msgid ""
 "\n"
-"                Event \"%(event_name)s\" discussion\n"
+"                  Event \"%(event_name)s\" discussion\n"
 "                "
 msgstr ""
 "\n"
@@ -344,8 +360,8 @@ msgid "More..."
 msgstr "Детальнее..."
 
 #: templates/courts/buttons/create_event.html:4
-#: templates/events/modals/create_visit.html:15 templates/navbar.html:30
-#: templates/navbar.html.py:40 templates/sites/details.html:55
+#: templates/events/modals/create_visit.html:15 templates/navbar.html:29
+#: templates/navbar.html.py:49 templates/sites/details.html:56
 msgid "Create event"
 msgstr "Создать событие"
 
@@ -356,7 +372,7 @@ msgstr "Создать событие"
 #: templates/events/create_for_court.html:27
 #: templates/events/create_for_site.html:14
 #: templates/events/create_for_site.html:26
-#: templates/events/create_staff.html:14 templates/events/details.html:15
+#: templates/events/create_staff.html:14 templates/events/details.html:17
 #: templates/sites/details.html:15 templates/visits/annotate_visit.html:14
 msgid "Site"
 msgstr "Точка"
@@ -368,17 +384,17 @@ msgstr "Точка"
 #: templates/events/complete_event.html:15
 #: templates/events/create_for_court.html:15
 #: templates/events/create_for_court.html:37
-#: templates/events/create_staff.html:15 templates/events/details.html:16
+#: templates/events/create_staff.html:15 templates/events/details.html:18
 #: templates/visits/annotate_visit.html:15
 msgid "Court"
 msgstr "Площадка"
 
-#: templates/courts/details.html:32 templates/events/search.html:15
-#: templates/navbar.html:20
+#: templates/courts/details.html:32 templates/courts/search.html:15
+#: templates/events/search.html:15 templates/navbar.html:20
 msgid "Events"
 msgstr "События"
 
-#: templates/courts/details.html:54
+#: templates/courts/details.html:55
 msgid "Admin group"
 msgstr "Админ группа"
 
@@ -389,6 +405,22 @@ msgstr "Добавить пользователя в админ группу"
 #: templates/courts/modals/add_to_admin_group.html:22
 msgid "Add User"
 msgstr "Добавить пользователя"
+
+#: templates/courts/search.html:29 templates/events/search.html:29
+msgid "Find"
+msgstr "Найти"
+
+#: templates/courts/search.html:35 templates/events/search.html:35
+msgid "Search Results"
+msgstr "Результаты поиска"
+
+#: templates/courts/search.html:37 templates/events/search.html:37
+msgid "results were found"
+msgstr "результатов найдено"
+
+#: templates/courts/user_managed_courts.html:13
+msgid "Managed events"
+msgstr "Управляемые события"
 
 #: templates/dashboard/list.html:14
 msgid "Dashboard"
@@ -460,7 +492,7 @@ msgstr "Площадка была обновлен"
 #: templates/events/create_for_court.html:41
 #: templates/events/create_for_site.html:15
 #: templates/events/create_staff.html:16 templates/events/create_staff.html:26
-#: templates/events/details.html:17 templates/events/details.html.py:73
+#: templates/events/details.html:19 templates/events/details.html.py:75
 #: templates/visits/annotate_visit.html:16
 #: templates/visits/annotate_visit.html:24
 msgid "Event"
@@ -520,7 +552,7 @@ msgstr "посещения события"
 msgid "Type"
 msgstr "Тип"
 
-#: templates/details_blocks/site.html:13 templates/events/details.html:79
+#: templates/details_blocks/site.html:13
 #: templates/events/panels/my_visit.html:55
 msgid "Name"
 msgstr "Имя"
@@ -586,12 +618,12 @@ msgstr "Отклонить предложение"
 #: templates/events/create_for_court.html:50
 #: templates/events/create_for_site.html:44
 #: templates/events/create_new.html:27 templates/events/create_staff.html:44
-#: templates/user/details_form.html:26 templates/user/settings.html:26
+#: templates/user/details_form.html:27 templates/user/settings.html:26
 #: templates/visits/annotate_visit.html:52
 msgid "Save"
 msgstr "Сохранить"
 
-#: templates/events/complete_event.html:40 templates/events/details.html:159
+#: templates/events/complete_event.html:40 templates/events/details.html:157
 msgid "Visitors"
 msgstr "Посетитель"
 
@@ -604,25 +636,25 @@ msgstr "детали"
 msgid "Create new event"
 msgstr "Создать событие"
 
-#: templates/events/create_staff.html:39 templates/events/details.html:133
+#: templates/events/create_staff.html:39 templates/events/details.html:131
 msgid "Staff"
 msgstr "Персонал"
 
-#: templates/events/details.html:83
+#: templates/events/details.html:81
 msgid "Start at"
 msgstr "начальная дата"
 
-#: templates/events/details.html:98
+#: templates/events/details.html:96
 #: templates/events/panels/my_application.html:11
 #: templates/events/panels/my_visit.html:15
 msgid "Inventory"
 msgstr "Инвентарь"
 
-#: templates/events/details.html:212 templates/navbar.html:106
+#: templates/events/details.html:210 templates/navbar.html:115
 msgid "Applications"
 msgstr "Заявки"
 
-#: templates/events/details.html:238 templates/navbar.html:86
+#: templates/events/details.html:236 templates/navbar.html:95
 msgid "Proposals"
 msgstr "Предложения"
 
@@ -682,18 +714,6 @@ msgstr "Показатели"
 msgid "Units"
 msgstr "Единицы измерения"
 
-#: templates/events/search.html:29
-msgid "Find"
-msgstr "Найти"
-
-#: templates/events/search.html:35
-msgid "Search Results"
-msgstr "Результаты поиска"
-
-#: templates/events/search.html:37
-msgid "results were found"
-msgstr "результатов найдено"
-
 #: templates/events/search.html:55
 msgid "People"
 msgstr "Людей"
@@ -702,74 +722,388 @@ msgstr "Людей"
 msgid "My events"
 msgstr "Мои события"
 
-#: templates/events/user_events.html:53
-#: templates/events/user_proposals.html:53
-msgid "Inactive"
-msgstr "Неактивный"
-
-#: templates/events/user_managed_events.html:13
-msgid "Managed events"
-msgstr "Управляемые события"
-
 #: templates/events/user_proposals.html:12
 msgid "My proposals"
 msgstr "Мое Предложения"
 
-#: templates/navbar.html:25
-msgid "Events managed"
-msgstr "Подопечные события"
+#: templates/events/user_proposals.html:53
+msgid "Inactive"
+msgstr "Неактивный"
 
-#: templates/navbar.html:26
+#: templates/navbar.html:25
 msgid "Search Events"
 msgstr "Искать события"
 
-#: templates/navbar.html:57
+#: templates/navbar.html:37 templates/sites/details.html:32
+msgid "Courts"
+msgstr "Площадки"
+
+#: templates/navbar.html:41
+msgid "Courts managed"
+msgstr "Подопечные площадки"
+
+#: templates/navbar.html:42
+msgid "Search Courts"
+msgstr "Поиск площадок"
+
+#: templates/navbar.html:66
 msgid "Settings"
 msgstr "Настройки"
 
-#: templates/navbar.html:59
+#: templates/navbar.html:68 templates/user/details_form.html:21
 msgid "Profile"
 msgstr "Профиль"
 
-#: templates/navbar.html:62 templates/visits/annotate_visit.html:38
+#: templates/navbar.html:71 templates/visits/annotate_visit.html:38
 msgid "Visit indexes"
 msgstr "Показатели Посещений"
 
-#: templates/navbar.html:72
+#: templates/navbar.html:81
 msgid "User stats"
 msgstr "Статистика пользователя"
 
-#: templates/navbar.html:76
+#: templates/navbar.html:85
 msgid "Messages"
 msgstr "Сообщения"
 
-#: templates/navbar.html:96
+#: templates/navbar.html:105
 msgid "Visits"
 msgstr "Посещения"
 
-#: templates/navbar.html:115
+#: templates/navbar.html:124
 msgid "Logout"
 msgstr "Выйти"
 
-#: templates/navbar.html:121
+#: templates/navbar.html:130
 msgid "You are not logged in. "
 msgstr "Вы не зашли в систему"
 
-#: templates/sites/details.html:32
-msgid "Courts"
-msgstr "Площадки"
+#: templates/notifications/email/accept_application.html:5
+msgid " Application accepted"
+msgstr "Заявкa принята"
+
+#: templates/notifications/email/accept_application.html:9
+#, python-format
+msgid ""
+"Your application for the <a href=\"%(event_url)s\">%(event)s</a> was "
+"accepted by %(user)s"
+msgstr ""
+"Ваша заявка на событие  <a href=\"%(event_url)s\">%(event)s</a>была принята "
+"пользователем %(user)s"
+
+#: templates/notifications/email/accept_proposal.html:4
+msgid "Proposal accepted"
+msgstr "Предложениe принято"
+
+#: templates/notifications/email/accept_proposal.html:9
+#, python-format
+msgid ""
+"\n"
+"      Your proposal for the event <a href=\"%(event_url)s\">%(event)s</a>  "
+"was accepted by %(user)s.\n"
+"      "
+msgstr ""
+"\n"
+"Ваше предложение события <a href=\"%(event_url)s\">%(event)s</a>  было "
+"принято пользователем  %(user)s.\n"
+"      "
+
+#: templates/notifications/email/cancel_application.html:5
+msgid "Application cancelled"
+msgstr "Заявкa отменена"
+
+#: templates/notifications/email/cancel_application.html:10
+#, python-format
+msgid ""
+"\n"
+"      Application for the event <a href=\"%(event_url)s\">%(event)s</a> was "
+"cancelled by %(user)s.\n"
+"      "
+msgstr ""
+"\n"
+"      Заявка на событие <a href=\"%(event_url)s\">%(event)s</a>отклонена "
+"пользователем %(user)s.\n"
+"      "
+
+#: templates/notifications/email/cancel_event.html:5
+msgid "Event cancelled"
+msgstr "Событие отменено"
+
+#: templates/notifications/email/cancel_event.html:9
+#, python-format
+msgid ""
+"\n"
+"    Event <a href=\"%(event_url)s\">%(event)s</a> was cancelled.\n"
+"  "
+msgstr ""
+"\n"
+"   Событие <a href=\"%(event_url)s\">%(event)s</a> было отменено.\n"
+"  "
+
+#: templates/notifications/email/cancel_proposal.html:5
+msgid ""
+"\n"
+"  Proposal cancelled\n"
+msgstr ""
+"\n"
+"  Событие отменено\n"
+
+#: templates/notifications/email/cancel_proposal.html:11
+#, python-format
+msgid ""
+"\n"
+"    Proposal of the event <a href=\"%(event_url)s\">%(event)s</a> was "
+"cancelled.\n"
+"  "
+msgstr ""
+"\n"
+"    Предложение события <a href=\"%(event_url)s\">%(event)s</a> отменено.\n"
+"  "
+
+#: templates/notifications/email/cancel_visit.html:5
+msgid ""
+"\n"
+"Visit was cancelled\n"
+msgstr ""
+"\n"
+"Посещение отменено\n"
+
+#: templates/notifications/email/cancel_visit.html:11
+msgid ""
+"\n"
+"    User %(user)s cancelled his visit for the event <a href=\"%(event_url)s"
+"\">%(event)s</a>.\n"
+"  "
+msgstr ""
+"\n"
+"    пользователь %(user)s отменил свое посещенеие событий <a "
+"href='%(event_url)s'>%(event)s</a>.\n"
+"  "
+
+#: templates/notifications/email/create_application.html:5
+msgid ""
+"\n"
+"Application created\n"
+msgstr ""
+"\n"
+"Заявкa создана\n"
+
+#: templates/notifications/email/create_application.html:12
+#, python-format
+msgid ""
+"\n"
+"      User %(user)s has applied for the event <a href=\"%(event_url)s\">"
+"%(event)s</a>.\n"
+"      "
+msgstr ""
+"\n"
+"      Пользователь %(user)s попросился на событие <a href=\"%(event_url)s\">"
+"%(event)s</a>.\n"
+"      "
+
+#: templates/notifications/email/create_event.html:5
+msgid ""
+"\n"
+"Event created\n"
+msgstr ""
+"\n"
+"Событие создано\n"
+
+#: templates/notifications/email/create_event.html:11
+#, python-format
+msgid ""
+"\n"
+"    Event <a href=\"%(event_url)s\">%(event)s</a> was created for the court "
+"%(court)s.\n"
+"    "
+msgstr ""
+"\n"
+"    Было создано событие <a href=\"%(event_url)s\">%(event)s</a> для "
+"площадки %(court)s.\n"
+"    "
+
+#: templates/notifications/email/create_proposal.html:5
+msgid ""
+"\n"
+"Proposal created\n"
+msgstr ""
+"\n"
+"Поступило предложение\n"
+
+#: templates/notifications/email/create_proposal.html:11
+#, python-format
+msgid ""
+"\n"
+"    You have been proposed to visit event <a href=\"%(event_url)s\">"
+"%(event)s</a>.\n"
+"    "
+msgstr ""
+"\n"
+"    Поступило предложение посетить событие <a href=\"%(event_url)s\">"
+"%(event)s</a>.\n"
+"    "
+
+#: templates/notifications/email/create_visit.html:5
+msgid ""
+"\n"
+"Visit created\n"
+msgstr ""
+"\n"
+"Запланировано посещение\n"
+
+#: templates/notifications/email/create_visit.html:11
+#, python-format
+msgid ""
+"\n"
+"    You have been add as a visitor the event <a href=\"%(event_url)s\">"
+"%(event)s</a>.\n"
+"  "
+msgstr ""
+"\n"
+"    На ваше посещение события <a href=\"%(event_url)s\">%(event)s</a>. кто-"
+"то сильно расчитывает\n"
+"  "
+
+#: templates/notifications/email/decline_application.html:5
+msgid ""
+"\n"
+"Application declined\n"
+msgstr ""
+"\n"
+"Заявкa отклонена\n"
+
+#: templates/notifications/email/decline_application.html:11
+#, python-format
+msgid ""
+"\n"
+"    Your application for the event <a href=\"%(event_url)s\">%(event)s</a> "
+"has been declined.\n"
+"  "
+msgstr ""
+"\n"
+"    Ваша заявко на событие <a href=\"%(event_url)s\">%(event)s</a>  не "
+"получило согласия а получило отказ.\n"
+"  "
+
+#: templates/notifications/email/decline_proposal.html:5
+msgid ""
+"\n"
+"Proposal declined\n"
+msgstr ""
+"\n"
+"Предложениe отклонено\n"
+
+#: templates/notifications/email/decline_proposal.html:12
+#, python-format
+msgid ""
+"\n"
+"      Your proposal of the event <a href=\"%(event_url)s\">%(event)s</a> has "
+"been declined by user %(user)s.\n"
+"      "
+msgstr ""
+"\n"
+"      Ваше предложение события <a href=\"%(event_url)s\">%(event)s</a> было "
+"отвергнуто пользователем %(user)s.\n"
+"      "
+
+#: templates/notifications/email/decline_visit.html:5
+msgid ""
+"\n"
+"Visit declined\n"
+msgstr ""
+"\n"
+"Посещение отклонено\n"
+
+#: templates/notifications/email/decline_visit.html:11
+msgid ""
+"\n"
+"    Your visit for the event <a href=\"%(event_url)s\">%(event)s</a> has "
+"been declined.\n"
+"  "
+msgstr ""
+"\n"
+"    Предсоящие посещение события <a href=\"%(event_url)s\">%(event)s</a> не "
+"случится.\n"
+"  "
+
+#: templates/notifications/email/new_chat_message.html:5
+msgid "New chat message"
+msgstr "Новое сообщение"
+
+#: templates/notifications/email/new_chat_message.html:9
+#, python-format
+msgid ""
+"\n"
+"    Your have new <a href=\"%(chat_url)s\">chat</a> message.\n"
+"  "
+msgstr ""
+"\n"
+"    Вы давно не заглядывали в <a href=\"%(chat_url)s\">переписку</a>, а там "
+"что-то новое.\n"
+"  "
+
+#: templates/notifications/sms/accept_application.html:2
+#, python-format
+msgid ""
+"Application for the event at %(event.start_at)s was accepted by %(user)s."
+msgstr ""
+"Заявка на посещение (%(event.start_at)s) принята пользователем %(user)s."
+
+#: templates/notifications/sms/cancel_event.html:1
+#, python-format
+msgid "Event at %(event.start_at)s was cancelled."
+msgstr "Событие (%(event.start_at)s) не состоится"
+
+#: templates/notifications/sms/cancel_visit.html:1
+#, python-format
+msgid "User %(user)s cancelled his visit for the event at %(event.start_at)s."
+msgstr "Пользователь %(user)s не прийдет на событие (%(event.start_at)s)."
+
+#: templates/notifications/sms/create_event.html:1
+#, python-format
+msgid "There is new event (%(court.activity_type)s) at %(event.start_at)s."
+msgstr "Появилось событие (%(court.activity_type)s) %(event.start_at)s."
+
+#: templates/notifications/sms/create_proposal.html:1
+#, python-format
+msgid "You have been proposed to visit event at %(event.start_at)s."
+msgstr "Вас приглашают на событие %(event.start_at)s."
+
+#: templates/notifications/sms/create_visit.html:1
+#, python-format
+msgid "You have been add as a visitor for the event at %(event.start_at)s."
+msgstr "Вас жаждут видеть на событии (%(event.start_at)s)."
+
+#: templates/notifications/sms/decline_application.html:1
+#, python-format
+msgid "Your application for the event at %(event.start_at)s has been declined."
+msgstr "Ваша заявка на событие (%(event.start_at)s) отклонена."
+
+#: templates/notifications/sms/decline_visit.html:1
+#, python-format
+msgid "Your visit for the event at %(event.start_at)s has been declined."
+msgstr "Посещение события (%(event.start_at)s) не состоится."
 
 #: templates/user/details_form.html:12 templates/user/settings.html:12
 msgid "User settings"
 msgstr "Настройки пользователя"
 
-#: templates/user/details_form.html:21 templates/user/settings.html:21
+#: templates/user/settings.html:21
 msgid "Localization"
 msgstr "Переводы"
 
 #: templates/visits/annotate_visit.html:47
 msgid "Recommendations"
 msgstr "Рекомендации"
+
+#: venv/djcelery/templates/djcelery/confirm_rate_limit.html:9
+#: venv/lib/python3.4/site-packages/djcelery/admin.py:174
+msgid "Rate limit selected tasks"
+msgstr ""
+
+#: venv/djcelery/templates/djcelery/confirm_rate_limit.html:22
+msgid "Rate limit"
+msgstr "Рейт лимит"
 
 #: venv/lib/python3.4/site-packages/django/contrib/sitemaps/apps.py:8
 msgid "Site Maps"
@@ -1816,6 +2150,370 @@ msgstr ""
 msgid "Index of %(directory)s"
 msgstr ""
 
+#: venv/lib/python3.4/site-packages/djcelery/admin.py:53
+#: venv/lib/python3.4/site-packages/djcelery/admin.py:60
+#: venv/lib/python3.4/site-packages/djcelery/models.py:34
+#: venv/lib/python3.4/site-packages/djcelery/models.py:335
+msgid "state"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/admin.py:67
+#: venv/lib/python3.4/site-packages/djcelery/models.py:344
+msgid "ETA"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/admin.py:74
+msgid "when"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/admin.py:115
+msgid "Task detail"
+msgstr "детали"
+
+#: venv/lib/python3.4/site-packages/djcelery/admin.py:116
+msgid "Tasks"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/admin.py:131
+#: venv/lib/python3.4/site-packages/djcelery/models.py:337
+msgid "UUID"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/admin.py:155
+msgid "Revoke selected tasks"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/admin.py:161
+msgid "Terminate selected tasks"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/admin.py:167
+msgid "Kill selected tasks"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/admin.py:187
+msgid "Rate limit selection"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/admin.py:212
+msgid "Node detail"
+msgstr "детали"
+
+#: venv/lib/python3.4/site-packages/djcelery/admin.py:213
+msgid "Worker Nodes"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/admin.py:220
+msgid "Shutdown selected worker nodes"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/admin.py:224
+msgid "Enable event mode for selected nodes."
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/admin.py:229
+msgid "Disable event mode for selected nodes."
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/admin.py:281
+msgid "Task (registered)"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/admin.py:283
+msgid "Task (custom)"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/admin.py:296
+msgid "Need name of task"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/admin.py:307
+#, python-format
+msgid "Unable to parse JSON: %s"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/humanize.py:10
+#, python-brace-format
+msgid "{num} year ago"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/humanize.py:10
+#, python-brace-format
+msgid "{num} years ago"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/humanize.py:14
+#, python-brace-format
+msgid "{num} month ago"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/humanize.py:14
+#, python-brace-format
+msgid "{num} months ago"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/humanize.py:18
+#, python-brace-format
+msgid "{num} week ago"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/humanize.py:18
+#, python-brace-format
+msgid "{num} weeks ago"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/humanize.py:22
+#, python-brace-format
+msgid "{num} day ago"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/humanize.py:22
+#, python-brace-format
+msgid "{num} days ago"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/humanize.py:56
+#: venv/lib/python3.4/site-packages/djcelery/humanize.py:71
+msgid "just now"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/humanize.py:62
+#, python-brace-format
+msgid "{minutes} minute ago"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/humanize.py:63
+#, python-brace-format
+msgid "{minutes} minutes ago"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/humanize.py:68
+#, python-brace-format
+msgid "{seconds} second ago"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/humanize.py:69
+#, python-brace-format
+msgid "{seconds} seconds ago"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/humanize.py:74
+#, python-brace-format
+msgid "{hours} hour ago"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/humanize.py:74
+#, python-brace-format
+msgid "{hours} hours ago"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/humanize.py:78
+#, python-brace-format
+msgid "yesterday at {time}"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:32
+msgid "task id"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:38
+msgid "done at"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:39
+#: venv/lib/python3.4/site-packages/djcelery/models.py:347
+msgid "traceback"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:50
+msgid "task state"
+msgstr "часть команды"
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:51
+msgid "task states"
+msgstr "часть команды"
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:69
+msgid "group id"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:71
+msgid "created at"
+msgstr "был создан"
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:78
+msgid "saved group result"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:79
+msgid "saved group results"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:91
+msgid "Days"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:92
+msgid "Hours"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:93
+msgid "Minutes"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:94
+msgid "Seconds"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:95
+msgid "Microseconds"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:100
+msgid "every"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:102
+msgid "period"
+msgstr "период (часы)"
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:106
+#: venv/lib/python3.4/site-packages/djcelery/models.py:217
+msgid "interval"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:107
+msgid "intervals"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:127
+#, python-brace-format
+msgid "every {0.period_singular}"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:128
+#, python-brace-format
+msgid "every {0.every:d} {0.period}"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:137
+msgid "minute"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:138
+msgid "hour"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:140
+msgid "day of week"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:143
+msgid "day of month"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:146
+msgid "month of year"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:150
+#: venv/lib/python3.4/site-packages/djcelery/models.py:220
+msgid "crontab"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:151
+msgid "crontabs"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:212
+msgid "Useful description"
+msgstr "описание"
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:214
+msgid "task name"
+msgstr "имя задачи"
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:221
+msgid "Use one of interval/crontab"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:224
+#: venv/lib/python3.4/site-packages/djcelery/models.py:342
+msgid "Arguments"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:225
+msgid "JSON encoded positional arguments"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:228
+#: venv/lib/python3.4/site-packages/djcelery/models.py:343
+msgid "Keyword arguments"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:229
+msgid "JSON encoded keyword arguments"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:232
+#: venv/lib/python3.4/site-packages/kombu/transport/django/models.py:20
+msgid "queue"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:233
+msgid "Queue defined in CELERY_QUEUES"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:236
+msgid "exchange"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:239
+msgid "routing key"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:242
+#: venv/lib/python3.4/site-packages/djcelery/models.py:345
+msgid "expires"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:245
+msgid "enabled"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:261
+msgid "periodic task"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:262
+msgid "periodic tasks"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:301
+msgid "hostname"
+msgstr "Фамилия хоста"
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:302
+#: venv/lib/python3.4/site-packages/djcelery/models.py:349
+msgid "execution time"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:350
+msgid "in seconds if task succeeded"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:352
+msgid "number of retries"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:362
+msgid "task"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:363
+msgid "tasks"
+msgstr ""
+
 #: venv/lib/python3.4/site-packages/floppyforms/templates/floppyforms/clearable_input.html:1
 msgid "Currently:"
 msgstr ""
@@ -1972,12 +2670,40 @@ msgstr ""
 msgid "%s: error: %s\n"
 msgstr ""
 
+#: venv/lib/python3.4/site-packages/kombu/transport/django/models.py:21
+msgid "queues"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/kombu/transport/django/models.py:28
+msgid "payload"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/kombu/transport/django/models.py:37
+msgid "message"
+msgstr "сообщение"
+
+#: venv/lib/python3.4/site-packages/kombu/transport/django/models.py:38
+msgid "messages"
+msgstr "Сообщения"
+
+#: venv/lib/python3.4/site-packages/kombu/transport/qpid.py:1265
+#, python-format
+msgid "Attempting to connect to qpid with SASL mechanism %s"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/kombu/transport/qpid.py:1270
+#, python-format
+msgid "Connected to qpid with SASL mechanism %s"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/kombu/transport/qpid.py:1288
+#, python-format
+msgid "Unable to connect to qpid with SASL mechanism %s"
+msgstr ""
+
 #: venv/lib/python3.4/site-packages/sorl/thumbnail/admin/compat.py:61
 msgid "Clear image"
 msgstr ""
-
-#~ msgid "New message in "
-#~ msgstr "Новое сообщение в "
 
 #~ msgid "Extend admin group"
 #~ msgstr "Добавить в админ группу"
