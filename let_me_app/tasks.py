@@ -13,6 +13,7 @@ from django.core.urlresolvers import reverse
 from contextlib import contextmanager
 from django.utils import translation
 from functools import wraps
+from let_me_auth.pipeline import ABSENT_MAIL_HOST
 logger = logging.getLogger(__name__)
 
 
@@ -101,6 +102,9 @@ class MailNotificator:
 
     @skip_absent_templates
     def _render_and_send_mail(self, mail_list, context, reason):
+        mail_list = [
+            i for i in mail_list if i.split('@')[-1] != ABSENT_MAIL_HOST
+        ]
         if not mail_list:
             return
 
