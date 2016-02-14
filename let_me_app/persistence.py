@@ -5,14 +5,48 @@ Created on Jun 21, 2015
 '''
 from . import models
 from django.utils import timezone
+from let_me_app.tasks import send_notification
 
 
-def save_event_and_related_things(event, user, visitors=tuple()):
+def save_event_and_related_things(event, user, visitors=(), invitees=()):
     event.save()
     models.InternalMessage.objects.create(subject=event)
 
+    visits = []
     for visitor in visitors:
-        create_event_visit(event, visitor, None)
+        visits.append(create_event_visit(event, visitor, None))
+
+    proposals = []
+    for visitor in invitees:
+        proposal, _ = models.Proposal.objects.get_or_create(
+            event=event, user=visitor,
+            status=models.ProposalStatuses.ACTIVE,
+        )
+        proposals.append(proposal)
+
+    notification_context = {
+        'reason': "create_event",
+        'initiator_id': user.id,
+        'object_id': event
+    }
+    send_notification.delay(notification_context)
+
+    if proposals:
+        notification_context = {
+            'reason': "create_proposal",
+            'initiator_id': user.id,
+            'object_ids': [i.id for i in proposals]
+        }
+        send_notification.delay(notification_context)
+
+    if visits:
+        notification_context = {
+            'reason': "create_visit",
+            'initiator_id': user.id,
+            'object_ids': [i.id for i in visits]
+        }
+        send_notification.delay(notification_context)
+
     return event
 
 

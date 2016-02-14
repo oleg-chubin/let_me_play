@@ -116,6 +116,83 @@ class NotificationTasksTest(TestCase):
             fake_send_mail.call_args[0][3], [self.user.email]
         )
 
+    @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
+                       CELERY_ALWAYS_EAGER=True,
+                       BROKER_BACKEND='memory')
+    @patch('let_me_app.tasks.send_sms')
+    @patch('let_me_app.tasks.send_mail')
+    def test_event_created(self, fake_send_mail, fake_send_sms):
+        self.client.login(
+            email=self.admin_user.email,
+            password=self.admin_user.first_name
+        )
+        url = reverse('let_me_app:clone_event', kwargs={'event': self.event.id})
+        for user in [self.user, self.admin_user]:
+            auth_models.NotificationSettings.objects.create(
+                sms_notifications=True,
+                email_notifications=True,
+                lang='ru',
+                user=user
+            )
+        post_data = {
+            'eventvisitors-users': self.admin_user.id,
+            'eventproposals-users': self.user.id,
+            'event-description': 'test event',
+            'event-preliminary_price': 23242,
+            'event-start_at': '2016-02-16 17:51',
+        }
+        response = self.client.post(url, post_data)
+        self.assertEqual(response.status_code, 302)
+
+        mail_notifications = {
+            i[0][0]: i[0][-1] for i in fake_send_mail.call_args_list}
+        expected_mail_notifications = {
+            'create_visit': [self.admin_user.email],
+            'create_proposal': [self.user.email]
+        }
+        self.assertEqual(mail_notifications, expected_mail_notifications)
+
+
+    @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
+                       CELERY_ALWAYS_EAGER=True,
+                       BROKER_BACKEND='memory',
+                       SITE_DOMAIN=domain,
+                       EMAIL_FROM = domain_mail)
+    @patch('let_me_app.tasks.render_to_string')
+    @patch('let_me_app.tasks.send_mail')
+    def test_email_no_mail_for_me(self, fake_send_mail, fake_render):
+        fake_render.return_value = self.fake_body
+        self.client.login(
+            email=self.admin_user.email,
+            password=self.admin_user.first_name
+        )
+
+        user = factories.UserFactory(email='id123213.vk-oauth2@no.mail.for.me')
+        url = reverse('let_me_app:create_proposal', kwargs={'pk': self.event.id})
+        for u in [self.user, user]:
+            auth_models.NotificationSettings.objects.create(
+                sms_notifications=False,
+                email_notifications=True,
+                lang='ru',
+                user=u
+            )
+        response = self.client.post(url, {'users': [user.id, self.user.id]})
+        self.assertEqual(response.status_code, 302)
+        fake_render.assert_called_with(
+            'notifications/email/create_proposal.html',
+            {
+               'event': self.event,
+               'event_url': '%s/let/me/view/event/%s/' % (self.domain, self.event.id)
+            }
+        )
+        fake_send_mail.assert_called_with(
+            'create_proposal',
+            self.fake_body,
+            self.domain_mail,
+            [self.user.email],
+            html_message=self.fake_body
+        )
+
 
 class EventUserActionTestCase(TestCase):
     def setUp(self):

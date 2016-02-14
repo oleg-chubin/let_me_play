@@ -190,7 +190,6 @@ class UserDetailsForm(forms.ModelForm):
         and a file name and that returns the final path and name for the
         file.
         """
-        import ipdb; ipdb.set_trace()
         try:
             upload_file = files[UPLOAD_IMG_ID]
         except MultiValueDictKeyError:

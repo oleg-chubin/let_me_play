@@ -12,6 +12,8 @@ from django.template.base import TemplateDoesNotExist
 from django.core.urlresolvers import reverse
 from contextlib import contextmanager
 from django.utils import translation
+from functools import wraps
+from let_me_auth.pipeline import ABSENT_MAIL_HOST
 logger = logging.getLogger(__name__)
 
 
@@ -31,6 +33,18 @@ def render_language(lang):
         translation.activate(cur_language)
 
 
+def skip_absent_templates(func):
+    @wraps(func)
+    def wrapped(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except TemplateDoesNotExist as e:
+            logger.info(
+                "template does not exist and skipped %s", e
+            )
+    return wrapped
+
+
 class MailNotificator:
     def _send_mail(self, mail_list, subject, body):
         send_mail(
@@ -47,9 +61,6 @@ class MailNotificator:
             )
             return
 
-        mail_template = "notifications/email/{}.html".format(reason)
-        sms_template = "notifications/sms/{}.html".format(reason)
-
         try:
             preprocessor = getattr(self, reason)
         except AttributeError:
@@ -60,59 +71,70 @@ class MailNotificator:
         mail_info = preprocessor(notification_context)
 
         for user_list, context in mail_info:
-            if not user_list:
+            self._notify_user_list(user_list, context, reason)
+
+    def _split_sms_and_mail_notifications(self, user_list):
+        mail_list = []
+        phone_list = []
+        notify_settings = auth_models.NotificationSettings.objects.filter(
+            user_id__in=[i.id for i in user_list]
+        )
+        notify_settings = {i.user_id: i for i in notify_settings}
+        for user in user_list:
+            if user.id not in notify_settings:
                 continue
+            if notify_settings[user.id].email_notifications:
+                mail_list.append(user.email)
+            if (notify_settings[user.id].sms_notifications
+                    and user.cell_phone_is_valid):
+                phone_list.append(user.cell_phone)
+        return mail_list, phone_list
 
-            mail_list = []
-            phone_list = []
-            notify_settings = auth_models.NotificationSettings.objects.filter(
-                user_id__in=[i.id for i in user_list]
-            )
-            notify_settings = {i.user_id: i for i in notify_settings}
-            for user in user_list:
-                if user.id not in notify_settings:
-                    continue
-                if notify_settings[user.id].email_notifications:
-                    mail_list.append(user.email)
-                if (notify_settings[user.id].sms_notifications
-                        and user.cell_phone_is_valid):
-                    phone_list.append(user.cell_phone)
+    @skip_absent_templates
+    def _render_and_send_sms(self, phone_list, context, reason):
+        if not phone_list:
+            return
 
-            # TODO: rework me to render notifications according to their NotificationSettings
-            language = 'ru'
-            with render_language(language):
-                if phone_list:
-                    try:
-                        sms_text = render_to_string(sms_template, context)
-                    except TemplateDoesNotExist as e:
-                        logger.info(
-                            "%s template does not exist and skipped %s",
-                            sms_template, e
-                        )
-                    else:
-                        for phone_number in phone_list:
-                            send_sms(phone_number, sms_text)
+        sms_template = "notifications/sms/{}.html".format(reason)
+        sms_text = render_to_string(sms_template, context)
+        for phone_number in phone_list:
+            send_sms(phone_number, sms_text)
 
-                if mail_list:
-                    if 'event' in context:
-                        context['event_url'] = "".join([
-                            settings.SITE_DOMAIN,
-                            reverse(
-                                "let_me_app:view_event",
-                                kwargs={'pk': context['event'].id})
-                        ])
-                    try:
-                        mail_body = render_to_string(mail_template, context)
-                    except TemplateDoesNotExist as e:
-                        logger.info(
-                            "%s template does not exist and skipped %s",
-                            sms_template, e
-                        )
-                    else:
-                        send_mail(
-                            reason, mail_body, settings.EMAIL_FROM, mail_list,
-                            html_message=mail_body
-                        )
+    @skip_absent_templates
+    def _render_and_send_mail(self, mail_list, context, reason):
+        mail_list = [
+            i for i in mail_list if i.split('@')[-1] != ABSENT_MAIL_HOST
+        ]
+        if not mail_list:
+            return
+
+        mail_template = "notifications/email/{}.html".format(reason)
+
+        if 'event' in context:
+            context['event_url'] = "".join([
+                settings.SITE_DOMAIN,
+                reverse(
+                    "let_me_app:view_event",
+                    kwargs={'pk': context['event'].id})
+            ])
+        mail_body = render_to_string(mail_template, context)
+        send_mail(
+            reason, mail_body, settings.EMAIL_FROM, mail_list,
+            html_message=mail_body
+        )
+
+    def _notify_user_list(self, user_list, context, reason):
+        if not user_list:
+            return
+
+        mail_list, phone_list = self._split_sms_and_mail_notifications(user_list)
+
+        # TODO: rework me to render notifications according to their NotificationSettings
+        language = 'ru'
+        with render_language(language):
+            self._render_and_send_sms(phone_list, context, reason)
+            self._render_and_send_mail(mail_list, context, reason)
+
 
     def new_chat_message(self,  notification_context):
         participants = models.ChatParticipant.objects.filter(

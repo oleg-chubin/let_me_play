@@ -843,8 +843,11 @@ class CreateEventView(TemplateView):
     template_name = 'events/create_new.html'
 
     def get_visitors_form(self, data, files, **kwargs):
+        suffix = kwargs.get('suffix', '')
         return forms.EventVisitForm(
-            data=data, prefix='event', initial={'users': [self.request.user]}
+            data=data,
+            prefix='event' + suffix,
+            initial={'users': kwargs.get('users', [])}
         )
 
     def get_forms(self, data, files, **kwargs):
@@ -858,7 +861,10 @@ class CreateEventView(TemplateView):
                 data_forms[entity] = form_class(**kw)
         data_forms['event'] = forms.EventForm(
             data=data, files=files, prefix='event')
-        data_forms['visitors'] = self.get_visitors_form(data, files, **kwargs)
+        data_forms['visitors'] = self.get_visitors_form(
+            data, files, suffix="visitors", uesrs=[self.request.user], **kwargs)
+        data_forms['proposals'] = self.get_visitors_form(
+            data, files, suffix="proposals", **kwargs)
         return data_forms
 
     def get_instances(self, view_forms, **kwargs):
@@ -910,20 +916,16 @@ class CreateEventView(TemplateView):
         instances['court'].admin_group.user_set.add(request.user)
         instances['event'].court = instances['court']
 
+        visitors = view_forms['visitors'].cleaned_data['users']
+        invitees = view_forms['proposals'].cleaned_data['users']
         persistence.save_event_and_related_things(
-            instances['event'], request.user, visitors=view_forms['visitors'].cleaned_data['users']
+            instances['event'], request.user,
+            visitors=visitors, invitees=invitees
         )
 
         for form in view_forms.values():
             if isinstance(form, django_forms.ModelForm):
                 form.save_m2m()
-
-        notification_context = {
-            'reason': "create_event",
-            'initiator_id': self.request.user.id,
-            'object_id': instances['event']
-        }
-        send_notification.delay(notification_context)
 
         return http.HttpResponseRedirect(
             reverse(
@@ -1104,6 +1106,14 @@ class CloneEventView(TemplateView):
         return (court.admin_group.user_set.filter(id=request.user.id).exists()
             or self.request.user.is_staff)
 
+    def get_visitors_form(self, data, files, **kwargs):
+        suffix = kwargs.get('suffix', '')
+        return forms.EventVisitForm(
+            data=data,
+            prefix='event' + suffix,
+            initial={'users': kwargs.get('users', [])}
+        )
+
     def get_forms(self, data, files, **kwargs):
         data_forms = OrderedDict()
         data_forms['event'] = forms.EventForm(
@@ -1111,6 +1121,19 @@ class CloneEventView(TemplateView):
         data_forms['visitors'] = forms.EventVisitForm(
             data=data, prefix='event',
             initial={'users': User.objects.filter(visit__event=kwargs['event'])}
+        )
+
+        data_forms['visitors'] = self.get_visitors_form(
+            data=data, files=files, prefix='event', suffix="visitors",
+            users=[self.request.user]
+        )
+        visits = models.Visit.objects.filter(
+            event=kwargs['event'],
+            status__in=[VisitStatuses.COMPLETED, VisitStatuses.PENDING] )
+        visits = visits.exclude(user=self.request.user).values('user_id')
+        data_forms['proposals'] = self.get_visitors_form(
+            data=data, files=files, prefix='event', suffix="proposals",
+            users=User.objects.filter(id__in=visits)
         )
         return data_forms
 
@@ -1139,7 +1162,8 @@ class CloneEventView(TemplateView):
         persistence.save_event_and_related_things(
             event,
             request.user,
-            visitors=view_forms['visitors'].cleaned_data['users']
+            visitors=view_forms['visitors'].cleaned_data['users'],
+            invitees=view_forms['proposals'].cleaned_data['users']
         )
 
         view_forms['event'].save_m2m()
