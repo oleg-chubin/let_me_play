@@ -80,7 +80,8 @@ class User(AbstractBaseUser, Followable, PermissionsMixin):
 @receiver(signals.pre_save, sender=User)
 def change_handler(sender, **kwargs):
     instance = kwargs['instance']
-    if User.objects.get(pk=instance.id).cell_phone != instance.cell_phone:
+    if (instance.id  and 
+            User.objects.get(pk=instance.id).cell_phone != instance.cell_phone):
         instance.cell_phone_is_valid = False
 
 
