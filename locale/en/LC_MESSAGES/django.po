@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-13 16:32+0000\n"
+"POT-Creation-Date: 2016-02-16 08:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,7 +109,7 @@ msgstr ""
 msgid "Outdated"
 msgstr ""
 
-#: let_me_app/models.py:96 let_me_app/models.py:161 let_me_auth/models.py:36
+#: let_me_app/models.py:96 let_me_app/models.py:161 let_me_auth/models.py:39
 msgid "image"
 msgstr ""
 
@@ -213,74 +213,87 @@ msgstr ""
 msgid "units"
 msgstr ""
 
-#: let_me_auth/models.py:18
+#: let_me_auth/forms.py:100
+msgid "Phone number should have international format without + sign"
+msgstr ""
+
+#: let_me_auth/models.py:21
 msgid "Male"
 msgstr ""
 
-#: let_me_auth/models.py:19
+#: let_me_auth/models.py:22
 msgid "Female"
 msgstr ""
 
-#: let_me_auth/models.py:20
+#: let_me_auth/models.py:23
 msgid "Not specified"
 msgstr ""
 
-#: let_me_auth/models.py:26 let_me_auth/models.py:31
+#: let_me_auth/models.py:29 let_me_auth/models.py:34
 msgid "first name"
 msgstr ""
 
-#: let_me_auth/models.py:30
+#: let_me_auth/models.py:33
 msgid "email address"
 msgstr ""
 
-#: let_me_auth/models.py:32
+#: let_me_auth/models.py:35
 msgid "last name"
 msgstr ""
 
-#: let_me_auth/models.py:33
+#: let_me_auth/models.py:36
 msgid "cell phone"
 msgstr ""
 
-#: let_me_auth/models.py:37
+#: let_me_auth/models.py:40
 msgid "staff status"
 msgstr ""
 
-#: let_me_auth/models.py:38
+#: let_me_auth/models.py:41
 msgid "Designates whether the user can log into this admin site."
 msgstr ""
 
-#: let_me_auth/models.py:40
+#: let_me_auth/models.py:43
 msgid "active"
 msgstr ""
 
-#: let_me_auth/models.py:41
+#: let_me_auth/models.py:44
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
 msgstr ""
 
-#: let_me_auth/models.py:43
+#: let_me_auth/models.py:46
 msgid "date joined"
 msgstr ""
 
-#: let_me_auth/models.py:50
+#: let_me_auth/models.py:53
 msgid "user"
 msgstr ""
 
-#: let_me_auth/models.py:51
+#: let_me_auth/models.py:54
 msgid "users"
 msgstr ""
 
-#: let_me_auth/models.py:78
+#: let_me_auth/models.py:88
 msgid "Use sms for notifications"
 msgstr ""
 
-#: let_me_auth/models.py:79 let_me_auth/models.py:80
+#: let_me_auth/models.py:89
 msgid "Use email for notifications"
 msgstr ""
 
-#: let_me_play/forms.py:21
+#: let_me_auth/models.py:90 let_me_play/forms.py:21
 msgid "language"
+msgstr ""
+
+#: let_me_auth/models.py:96
+msgid "confirmation code"
+msgstr ""
+
+#: let_me_auth/views.py:121
+#, python-format
+msgid "Confirmation code is %(phone)s."
 msgstr ""
 
 #: templates/charts/recommendations.html:14
@@ -296,8 +309,8 @@ msgstr ""
 #: templates/events/details.html:16 templates/events/search.html:14
 #: templates/events/user_events.html:11
 #: templates/events/user_proposals.html:11 templates/sites/details.html:14
-#: templates/user/details_form.html:11 templates/user/settings.html:11
-#: templates/visits/annotate_visit.html:13
+#: templates/user/details_form.html:11 templates/user/profile_details.html:11
+#: templates/user/settings.html:11 templates/visits/annotate_visit.html:13
 #: venv/djcelery/templates/admin/djcelery/change_list.html:7
 #: venv/djcelery/templates/djcelery/confirm_rate_limit.html:6
 msgid "Home"
@@ -784,11 +797,11 @@ msgid ""
 "accepted by %(user)s"
 msgstr ""
 
-#: templates/notifications/email/accept_proposal.html:4
+#: templates/notifications/email/accept_proposal.html:5
 msgid "Proposal accepted"
 msgstr ""
 
-#: templates/notifications/email/accept_proposal.html:9
+#: templates/notifications/email/accept_proposal.html:10
 #, python-format
 msgid ""
 "\n"
@@ -1012,6 +1025,51 @@ msgstr ""
 
 #: templates/user/details_form.html:12 templates/user/settings.html:12
 msgid "User settings"
+msgstr ""
+
+#: templates/user/modals/confirm_phone_number.html:12
+#: templates/user/modals/confirm_phone_number.html:17
+msgid "Confirm phone number"
+msgstr ""
+
+#: templates/user/modals/confirm_phone_number.html:14
+msgid "Confirmation code"
+msgstr ""
+
+#: templates/user/profile_details.html:12
+msgid "User profile"
+msgstr ""
+
+#: templates/user/profile_details.html:24
+msgid "Email"
+msgstr ""
+
+#: templates/user/profile_details.html:27
+msgid "First name"
+msgstr ""
+
+#: templates/user/profile_details.html:28
+msgid "Last name"
+msgstr ""
+
+#: templates/user/profile_details.html:30
+msgid "Cell phone"
+msgstr ""
+
+#: templates/user/profile_details.html:35
+msgid "Phone number was confirmed."
+msgstr ""
+
+#: templates/user/profile_details.html:39
+msgid "Phone number was not confirmed. Please click me to confirm via sms"
+msgstr ""
+
+#: templates/user/profile_details.html:45
+msgid "Sex"
+msgstr ""
+
+#: templates/user/profile_details.html:49
+msgid "Update profile"
 msgstr ""
 
 #: templates/user/settings.html:21

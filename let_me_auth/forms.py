@@ -23,6 +23,7 @@ from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.image import  Image as pil_image
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from six import BytesIO
+from django.core.validators import RegexValidator
 
 UPLOAD_IMG_ID="new-img-file"
 
@@ -83,11 +84,22 @@ class JcropWidget(floppyforms_widgets.FileInput):
         return attrs
 
 
+class CustomPhoneNumberInput(floppyforms_widgets.PhoneNumberInput):
+    template_name = 'floppyforms/phone_number_input.html'
+
+
 class UserDetailsForm(forms.ModelForm):
     x1 = forms.DecimalField(widget=forms.HiddenInput(), required=False)
     y1 = forms.DecimalField(widget=forms.HiddenInput(), required=False)
     x2 = forms.DecimalField(widget=forms.HiddenInput(), required=False)
     y2 = forms.DecimalField(widget=forms.HiddenInput(), required=False)
+    cell_phone = forms.CharField(
+        validators=[
+            RegexValidator(
+                regex="375\\d{9}$",
+                message=_("Phone number should have international "
+                          "format without + sign"))],
+        widget=CustomPhoneNumberInput())
 
     class Meta:
         avatar_height = 100

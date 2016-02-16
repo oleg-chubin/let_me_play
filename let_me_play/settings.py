@@ -94,6 +94,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
     'let_me_app.context_processors.user_events',
     'let_me_app.context_processors.oject_statuses',
+    'let_me_auth.context_processors.user_sex',
     'let_me_app.context_processors.site_host',
 )
 
