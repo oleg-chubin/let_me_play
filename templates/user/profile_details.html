@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load staticfiles let_me_escort i18n %}
+{% load staticfiles let_me_escort i18n avatar %}
 
 {% block extra_head %}
   <link href="{% static "css/profile_details.css" %}" rel="stylesheet">
@@ -15,7 +15,7 @@
 
 {% block main %}
   <div class="row">
-    <div class="col-md-2 col-lg-2 " align="center"> <img alt="User Pic" src="{{object.avatar.url}}" class="img-circle img-responsive"> </div>
+    <div class="col-md-2 col-lg-2 " align="center"> <img alt="User Pic" src="{{object|avatar_url}}.avatar.url}}" class="img-circle img-responsive"> </div>
 
     <div class=" col-md-10 col-lg-10 ">
       <table class="table table-user-information">
