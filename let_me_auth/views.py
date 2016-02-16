@@ -116,7 +116,6 @@ class CreateConfirmationCodeView(TemplateView):
             [str(i) for i in random.sample(range(1, 10), 5)])
         confirmation.save()
         sms_sender = RocketLauncher(**settings.ROCKET_SMS_CONFIG)
-        import ipdb; ipdb.set_trace()
         sms_text = _(
             "Confirmation code is %(phone)s.") % {'phone': confirmation.code}
         sms_sender.send_sms(request.user.cell_phone, sms_text)
