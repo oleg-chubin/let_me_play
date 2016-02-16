@@ -7,6 +7,9 @@ from django.utils import timezone
 
 from let_me_app.models import Followable
 from .managers import UserManager
+from django.db.models.signals import pre_save
+from django.db.models import signals
+from django.dispatch.dispatcher import receiver
 
 
 class Sex:
@@ -74,8 +77,20 @@ class User(AbstractBaseUser, Followable, PermissionsMixin):
         return self.get_full_name()
 
 
+@receiver(signals.pre_save, sender=User)
+def change_handler(sender, **kwargs):
+    instance = kwargs['instance']
+    if User.objects.get(pk=instance.id).cell_phone != instance.cell_phone:
+        instance.cell_phone_is_valid = False
+
+
 class NotificationSettings(models.Model):
     sms_notifications = models.BooleanField(_("Use sms for notifications"))
     email_notifications = models.BooleanField(_("Use email for notifications"))
-    lang = models.CharField(_('cell phone'), max_length=18)
+    lang = models.CharField(_('language'), max_length=18)
     user = models.OneToOneField(User, primary_key=True)
+
+
+class ConfirmationCodes(models.Model):
+    user = models.OneToOneField(User, primary_key=True)
+    code = models.CharField(_('confirmation code'), max_length=8)

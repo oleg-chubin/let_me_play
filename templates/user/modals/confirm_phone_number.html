@@ -9,11 +9,10 @@
 </form>
 {% endblock %}
 
-{% block modal_title %}{% trans "Apply for event" %}{% endblock %}
+{% block modal_title %}{% trans "Confirm phone number" %}{% endblock %}
 {% block modal_body %}
-<textarea class="form-control" type="textarea" id="comment" name="comment" placeholder="{% trans 'Message' %}" maxlength="140" rows="7">
-</textarea>
+<input class="form-control" type="text" id="code" name="code" placeholder="{% trans 'Confirmation code' %}" />
 {% endblock %}
 {% block modal_footer %}
-    <button type="submit" class="btn btn-primary">{% trans "Apply for event" %}</button>
+    <button type="submit" class="btn btn-primary">{% trans "Confirm phone number" %}</button>
 {% endblock %}

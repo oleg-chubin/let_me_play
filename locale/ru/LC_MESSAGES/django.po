@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-13 16:32+0000\n"
+"POT-Creation-Date: 2016-02-16 08:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -111,7 +111,7 @@ msgstr "Пропущенно"
 msgid "Outdated"
 msgstr "Не актуально"
 
-#: let_me_app/models.py:96 let_me_app/models.py:161 let_me_auth/models.py:36
+#: let_me_app/models.py:96 let_me_app/models.py:161 let_me_auth/models.py:39
 msgid "image"
 msgstr "Изображение"
 
@@ -215,75 +215,88 @@ msgstr "Комментарий"
 msgid "units"
 msgstr "единицы измерения"
 
-#: let_me_auth/models.py:18
+#: let_me_auth/forms.py:100
+msgid "Phone number should have international format without + sign"
+msgstr "Телефон должен быть в международном формате без знака +"
+
+#: let_me_auth/models.py:21
 msgid "Male"
 msgstr "Мужской"
 
-#: let_me_auth/models.py:19
+#: let_me_auth/models.py:22
 msgid "Female"
 msgstr "Женский"
 
-#: let_me_auth/models.py:20
+#: let_me_auth/models.py:23
 msgid "Not specified"
 msgstr "Не определено"
 
-#: let_me_auth/models.py:26 let_me_auth/models.py:31
+#: let_me_auth/models.py:29 let_me_auth/models.py:34
 msgid "first name"
 msgstr "Имя"
 
-#: let_me_auth/models.py:30
+#: let_me_auth/models.py:33
 msgid "email address"
 msgstr "емэил"
 
-#: let_me_auth/models.py:32
+#: let_me_auth/models.py:35
 msgid "last name"
 msgstr "Фамилия"
 
-#: let_me_auth/models.py:33
+#: let_me_auth/models.py:36
 msgid "cell phone"
 msgstr "мобильный телефон"
 
-#: let_me_auth/models.py:37
+#: let_me_auth/models.py:40
 msgid "staff status"
 msgstr "часть команды"
 
-#: let_me_auth/models.py:38
+#: let_me_auth/models.py:41
 msgid "Designates whether the user can log into this admin site."
 msgstr "можно ли в админку"
 
-#: let_me_auth/models.py:40
+#: let_me_auth/models.py:43
 msgid "active"
 msgstr "активный"
 
-#: let_me_auth/models.py:41
+#: let_me_auth/models.py:44
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
 msgstr ""
 
-#: let_me_auth/models.py:43
+#: let_me_auth/models.py:46
 msgid "date joined"
 msgstr "дата присоединения"
 
-#: let_me_auth/models.py:50
+#: let_me_auth/models.py:53
 msgid "user"
 msgstr "пользователь"
 
-#: let_me_auth/models.py:51
+#: let_me_auth/models.py:54
 msgid "users"
 msgstr "пользователи"
 
-#: let_me_auth/models.py:78
+#: let_me_auth/models.py:88
 msgid "Use sms for notifications"
 msgstr "Использовать СМС уведомления"
 
-#: let_me_auth/models.py:79 let_me_auth/models.py:80
+#: let_me_auth/models.py:89
 msgid "Use email for notifications"
 msgstr "Использовать email уведомления"
 
-#: let_me_play/forms.py:21
+#: let_me_auth/models.py:90 let_me_play/forms.py:21
 msgid "language"
 msgstr "язык"
+
+#: let_me_auth/models.py:96
+msgid "confirmation code"
+msgstr "код подтверждения"
+
+#: let_me_auth/views.py:121
+#, python-format
+msgid "Confirmation code is %(phone)s."
+msgstr "Ваш код подтверждение %(phone)s."
 
 #: templates/charts/recommendations.html:14
 #: templates/charts/visit_indexes.html:14 templates/chat/details.html:13
@@ -298,8 +311,8 @@ msgstr "язык"
 #: templates/events/details.html:16 templates/events/search.html:14
 #: templates/events/user_events.html:11
 #: templates/events/user_proposals.html:11 templates/sites/details.html:14
-#: templates/user/details_form.html:11 templates/user/settings.html:11
-#: templates/visits/annotate_visit.html:13
+#: templates/user/details_form.html:11 templates/user/profile_details.html:11
+#: templates/user/settings.html:11 templates/visits/annotate_visit.html:13
 #: venv/djcelery/templates/admin/djcelery/change_list.html:7
 #: venv/djcelery/templates/djcelery/confirm_rate_limit.html:6
 msgid "Home"
@@ -791,11 +804,11 @@ msgstr ""
 "Ваша заявка на событие  <a href=\"%(event_url)s\">%(event)s</a>была принята "
 "пользователем %(user)s"
 
-#: templates/notifications/email/accept_proposal.html:4
+#: templates/notifications/email/accept_proposal.html:5
 msgid "Proposal accepted"
 msgstr "Предложениe принято"
 
-#: templates/notifications/email/accept_proposal.html:9
+#: templates/notifications/email/accept_proposal.html:10
 #, python-format
 msgid ""
 "\n"
@@ -869,6 +882,7 @@ msgstr ""
 "Посещение отменено\n"
 
 #: templates/notifications/email/cancel_visit.html:11
+#, python-format
 msgid ""
 "\n"
 "    User %(user)s cancelled his visit for the event <a href=\"%(event_url)s"
@@ -1015,6 +1029,7 @@ msgstr ""
 "Посещение отклонено\n"
 
 #: templates/notifications/email/decline_visit.html:11
+#, python-format
 msgid ""
 "\n"
 "    Your visit for the event <a href=\"%(event_url)s\">%(event)s</a> has "
@@ -1087,6 +1102,51 @@ msgstr "Посещение события (%(event.start_at)s) не состои
 #: templates/user/details_form.html:12 templates/user/settings.html:12
 msgid "User settings"
 msgstr "Настройки пользователя"
+
+#: templates/user/modals/confirm_phone_number.html:12
+#: templates/user/modals/confirm_phone_number.html:17
+msgid "Confirm phone number"
+msgstr "Подтвердите номер телефона"
+
+#: templates/user/modals/confirm_phone_number.html:14
+msgid "Confirmation code"
+msgstr "Код подтверждения"
+
+#: templates/user/profile_details.html:12
+msgid "User profile"
+msgstr "Профиль пользователя"
+
+#: templates/user/profile_details.html:24
+msgid "Email"
+msgstr "Мэйл"
+
+#: templates/user/profile_details.html:27
+msgid "First name"
+msgstr "Имя"
+
+#: templates/user/profile_details.html:28
+msgid "Last name"
+msgstr "Фамилия"
+
+#: templates/user/profile_details.html:30
+msgid "Cell phone"
+msgstr "мобильный телефон"
+
+#: templates/user/profile_details.html:35
+msgid "Phone number was confirmed."
+msgstr "Номер телефона подтвержден."
+
+#: templates/user/profile_details.html:39
+msgid "Phone number was not confirmed. Please click me to confirm via sms"
+msgstr "Номер телефона не подтвержден, нажмите, чтоб подтвердить через смс."
+
+#: templates/user/profile_details.html:45
+msgid "Sex"
+msgstr "Пол"
+
+#: templates/user/profile_details.html:49
+msgid "Update profile"
+msgstr "Обновить профиль"
 
 #: templates/user/settings.html:21
 msgid "Localization"
@@ -2494,6 +2554,26 @@ msgid "hostname"
 msgstr "Фамилия хоста"
 
 #: venv/lib/python3.4/site-packages/djcelery/models.py:302
+msgid "last heartbeat"
+msgstr "последние признаки жизни"
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:309
+#: venv/lib/python3.4/site-packages/djcelery/models.py:354
+msgid "worker"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:310
+msgid "workers"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:341
+msgid "event received at"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/djcelery/models.py:346
+msgid "result"
+msgstr "Результаты поиска"
+
 #: venv/lib/python3.4/site-packages/djcelery/models.py:349
 msgid "execution time"
 msgstr ""
