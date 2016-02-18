@@ -72,17 +72,20 @@ class GroupAdminForm(forms.Form):
 class SiteAdminForm(forms.ModelForm):
     class Meta:
         model = models.Site
-        widgets = {'geo_point': LeafletWidget()}
+        fields = ('name', 'description', 'geo_point', 'geo_line', 'address')
+        widgets = {'geo_point': LeafletWidget(), 'geo_line': LeafletWidget()}
 
 
 class SiteForm(forms.ModelForm):
     class Meta:
         model = models.Site
+        fields = ('name', 'description', 'geo_point', 'geo_line', 'address')
         widgets = {
             'geo_point': LeafletWidget(),
             'description': floppyforms_widgets.Textarea(),
             'name': floppyforms_widgets.TextInput(),
-            'address': floppyforms_widgets.Textarea()
+            'address': floppyforms_widgets.Textarea(),
+            'geo_line': LeafletWidget()
         }
 
 
@@ -154,6 +157,7 @@ class EventVisitForm(forms.Form):
 class EventStaffForm(forms.ModelForm):
     class Meta:
         model = models.EventStaff
+        fields = ('staff', 'event', 'invoice', 'role')
         widgets = {
             'staff': BootstrapChoiceWidget('StaffProfileAutocomplete'),
             'event': floppyforms_widgets.HiddenInput(),
@@ -219,6 +223,7 @@ class VisitIndexForm(forms.ModelForm):
         required=False, widget=floppyforms_widgets.Select)
 
     class Meta:
+        fields = ('value', 'parametr')
         model = models.VisitIndex
 
 

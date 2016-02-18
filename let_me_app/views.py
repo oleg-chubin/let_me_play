@@ -156,9 +156,9 @@ class EventView(DetailView):
     def get_context_data(self, **kwargs):
         result = super(EventView, self).get_context_data(**kwargs)
         event = result['object']
-        is_admin = event.court.admin_group.user_set.filter(
-            email=self.request.user.email).exists()
-        result['is_admin'] = is_admin
+        admin_user_ids = event.court.admin_group.user_set.values_list('id', flat=True)
+        result['is_admin'] = self.request.user.id in admin_user_ids
+        result['admin_user_ids'] = admin_user_ids
         result['proposal_form'] = forms.EventProposalForm()
         result['visit_form'] = forms.EventVisitForm()
         result['inventory_form'] = forms.InventoryForm()
@@ -170,6 +170,7 @@ class EventView(DetailView):
         result['is_event_staff'] = self.request.user.id in [i.staff_id for i in result['staff_list']]
 
         result['active_visits'] = event.visit_set.select_related('user').order_by('id')
+        result['active_visits_id'] = [i.user_id for i in result['active_visits']]
         result['active_proposals'] = event.proposal_set.all().select_related('user').order_by('id')
         result['user_inventory'] = self._get_user_inventory(
             event, result['active_visits'])
@@ -736,6 +737,10 @@ class EventSearchView(ListView):
                     geo_point__distance_lt=(form.cleaned_data['geo_point'],
                                             D(m=form.cleaned_data['radius']))
                 )
+                site_queryset = site_queryset | models.Site.objects.filter(
+                    geo_line__distance_lt=(form.cleaned_data['geo_point'],
+                                            D(m=form.cleaned_data['radius']))
+                )
                 queryset = queryset.filter(court__site__in=site_queryset)
             if form.cleaned_data['activity_type']:
                 queryset = queryset.filter(
@@ -792,6 +797,10 @@ class CourtSearchView(ListView):
             if form.cleaned_data['geo_point'] and form.cleaned_data['radius']:
                 site_queryset = models.Site.objects.filter(
                     geo_point__distance_lt=(form.cleaned_data['geo_point'],
+                                            D(m=form.cleaned_data['radius']))
+                )
+                site_queryset = site_queryset | models.Site.objects.filter(
+                    geo_line__distance_lt=(form.cleaned_data['geo_point'],
                                             D(m=form.cleaned_data['radius']))
                 )
                 queryset = queryset.filter(site__in=site_queryset)

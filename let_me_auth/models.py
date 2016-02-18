@@ -80,14 +80,16 @@ class User(AbstractBaseUser, Followable, PermissionsMixin):
 @receiver(signals.pre_save, sender=User)
 def change_handler(sender, **kwargs):
     instance = kwargs['instance']
-    if (instance.id  and 
+    if (instance.id  and
             User.objects.get(pk=instance.id).cell_phone != instance.cell_phone):
         instance.cell_phone_is_valid = False
 
 
 class NotificationSettings(models.Model):
-    sms_notifications = models.BooleanField(_("Use sms for notifications"))
-    email_notifications = models.BooleanField(_("Use email for notifications"))
+    sms_notifications = models.BooleanField(
+        _("Use sms for notifications"), default=False)
+    email_notifications = models.BooleanField(
+        _("Use email for notifications"), default=False)
     lang = models.CharField(_('language'), max_length=18)
     user = models.OneToOneField(User, primary_key=True)
 

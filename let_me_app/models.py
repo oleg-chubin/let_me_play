@@ -146,10 +146,11 @@ class Changelog(models.Model):
 
 class Site(Followable):
     geo_point = gismodels.PointField(verbose_name=_('Geo point'), null=True, blank=True)
-
+    geo_line = gismodels.LineStringField(
+        verbose_name=_('Geo line'), null=True, blank=True)
+    address = models.TextField(verbose_name=_("Address"))
     name = models.CharField(verbose_name=_('name'), max_length=128)
     description = models.TextField(verbose_name=_("Description"))
-    address = models.TextField(verbose_name=_("Address"))
 
     objects = gismodels.GeoManager()
 
@@ -166,7 +167,7 @@ class ActivityType(models.Model):
 
 
 class Court(Followable):
-    site = models.ForeignKey(Site)
+    site = models.ForeignKey(Site, related_name='court_set')
     activity_type = models.ForeignKey(ActivityType)
     admin_group = models.ForeignKey(Group, blank=True, null=True)
     description = models.TextField(_("Description"))

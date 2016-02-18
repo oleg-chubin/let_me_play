@@ -51,7 +51,11 @@
             <ul class="meta-search">
               <li><i class="glyphicon glyphicon-calendar"></i> <span>{{ object.start_at|date }}</span></li>
               <li><i class="glyphicon glyphicon-time"></i> <span>{{ object.start_at|time }}</span></li>
+              {% if object.court.site.geo_point %}
               <li class="event_item" data-record_id="{{object.id}}" data-geo_point="[{{ object.court.site.geo_point.x|stringformat:"f" }}, {{ object.court.site.geo_point.y|stringformat:"f" }}]">
+              {% else %}
+              <li class="event_item" data-record_id="{{object.id}}" data-geo_line="[{% for x, y in object.court.site.geo_line %} [{{ x|stringformat:"f" }}, {{ y|stringformat:"f" }}] {% if not forloop.last %}, {% endif %} {% endfor %}]">
+              {% endif %}
                 <i class="glyphicon glyphicon-tags"></i> <span>{{object.people_count|length}} {% trans "People" %}</span>
               </li>
             </ul>

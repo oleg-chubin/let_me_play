@@ -44,12 +44,12 @@
   <div class="panel-heading">
     <h3 class="panel-title">
       {% followdropdown object "escort/follow_menu.html" %}
-        {{SITE_DOMAIN}}{{object.court.activity_type.title}} {{object.start_at}}
+        <img src="{{object.court.activity_type.image.url}}" class="img-rounded"/>{{object.start_at}}
       {% endfollowdropdown %}
       {% if is_admin %}
         <div class="pull-right action-buttons">
           <div class="btn-group pull-right">
-              <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+              <button type="button" class="btn btn-lg dropdown-toggle" data-toggle="dropdown">
                   <span class="glyphicon glyphicon-cog" style="margin-right: 0px;"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
@@ -139,6 +139,15 @@
 
               <img src="{{staff.staff.user|avatar_url}}" class="list-pic img-responsive img-thumbnail">
               {{ staff }}
+
+                {% if staff.staff.user.id in admin_user_ids and request.user.id in active_visits_id and staff.staff.user.cell_phone %}
+                    ( <span class="glyphicon glyphicon-phone-alt"></span>
+                    +{{ staff.staff.user.cell_phone }}
+                    {% if staff.staff.user.cell_phone_is_valid %}
+                      <span class="glyphicon glyphicon-ok-sign" style="color: green;"></span>
+                    {% endif%}
+                    )
+                {% endif %}
             </li>
           {% endfor %}
         </ul>
@@ -171,6 +180,14 @@
                   </a>
                 {% else %}
                   {{ visit.user }}
+                {% endif %}
+                {% if visit.user.id in admin_user_ids and request.user.id in active_visits_id and visit.user.cell_phone %}
+                    ( <span class="glyphicon glyphicon-phone-alt"></span>
+                        +{{ visit.user.cell_phone }}
+                        {% if visit.user.cell_phone_is_valid %}
+                          <span class="glyphicon glyphicon-ok-sign" style="color: green;"></span>
+                        {% endif%}
+                    )
                 {% endif %}
 
                 {% with visit.user as visitor %}
@@ -302,18 +319,7 @@
 {% block extra_scripts %}
   {% include "autocomplete_light/static.html" %}
   {% leaflet_js %}
-  <script type="text/javascript">
-      {% with longitude=object.court.site.geo_point.0|stringformat:"f" latitude=object.court.site.geo_point.1|stringformat:"f" %}
-          function map_init_basic (map, options) {
-              L.marker([{{ latitude }}, {{ longitude }}]).addTo(map);
-              map.panTo(new L.LatLng({{ latitude }}, {{ longitude }}));
-
-                $('#mapModal.modal').on('shown.bs.modal', function () {
-                        map.invalidateSize();
-                } );
-          }
-      {% endwith %}
-  </script>
+  <script src="{% static "js/detail_map.js" %}"></script>
   <script src="{% static "js/expandable_listgroup.js" %}"></script>
   <script src="{% static "js/modal.js" %}"></script>
   <script src="{% static "js/sidebar_chat.js" %}"></script>

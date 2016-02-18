@@ -49,7 +49,12 @@
           </div>
           <div class="col-xs-12 col-sm-12 col-md-3">
             <ul class="meta-search">
-              <li class="event_item" data-record_id="{{object.id}}" data-geo_point="[{{ object.court.site.geo_point.x|stringformat:"f" }}, {{ object.court.site.geo_point.y|stringformat:"f" }}]">
+              {% if object.court.site.geo_point %}
+              <li class="event_item" data-record_id="{{object.id}}" data-geo_point="[{{ object.site.geo_point.x|stringformat:"f" }}, {{ object.site.geo_point.y|stringformat:"f" }}]">
+              {% else %}
+              <li class="event_item" data-record_id="{{object.id}}" data-geo_line="[{% for x, y in object.site.geo_line %} [{{ x|stringformat:"f" }}, {{ y|stringformat:"f" }}] {% if not forloop.last %}, {% endif %} {% endfor %}]">
+              {% endif %}
+
                 <ul>
                     {% for event in object.events_active_applications %}
                     <li>
