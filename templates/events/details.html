@@ -139,6 +139,15 @@
 
               <img src="{{staff.staff.user|avatar_url}}" class="list-pic img-responsive img-thumbnail">
               {{ staff }}
+
+                {% if staff.staff.user.id in admin_user_ids and request.user.id in active_visits_id and staff.staff.user.cell_phone %}
+                    ( <span class="glyphicon glyphicon-phone-alt"></span>
+                    +{{ staff.staff.user.cell_phone }}
+                    {% if staff.staff.user.cell_phone_is_valid %}
+                      <span class="glyphicon glyphicon-ok-sign" style="color: green;"></span>
+                    {% endif%}
+                    )
+                {% endif %}
             </li>
           {% endfor %}
         </ul>
@@ -171,6 +180,14 @@
                   </a>
                 {% else %}
                   {{ visit.user }}
+                {% endif %}
+                {% if visit.user.id in admin_user_ids and request.user.id in active_visits_id and visit.user.cell_phone %}
+                    ( <span class="glyphicon glyphicon-phone-alt"></span>
+                        +{{ visit.user.cell_phone }}
+                        {% if visit.user.cell_phone_is_valid %}
+                          <span class="glyphicon glyphicon-ok-sign" style="color: green;"></span>
+                        {% endif%}
+                    )
                 {% endif %}
 
                 {% with visit.user as visitor %}
