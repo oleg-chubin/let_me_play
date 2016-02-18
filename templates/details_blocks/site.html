@@ -24,27 +24,48 @@
           </address>
         </p>
         <p>
+        {% if site.geo_point %}
           <strong>{% trans "Map" %}</strong>
           <a href="#" class="btn btn-link" data-toggle="modal" data-target="#mapModal">{% trans "Show" %}</a>
 
           <div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="mapModal" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">{% trans "Map" %}</h4>
-              </div>
-              <div class="modal-body">
-                {% leaflet_map "yourmap" callback="window.map_init_basic" %}
-                {% comment %}
-                  {% with images=object.galleryimage_set.all %}
-                    {% include "images/gallery.html" %}
-                  {% endwith %}
-                {% endcomment %}
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title" id="myModalLabel">{% trans "Map" %}</h4>
+                </div>
+                <div class="modal-body" data-geopoint="[{{ site.geo_point.1|stringformat:'f' }}, {{ site.geo_point.0|stringformat:'f' }}]">
+                  {% leaflet_map "yourmap" callback="window.map_init_basic" %}
+                  {% comment %}
+                    {% with images=object.galleryimage_set.all %}
+                      {% include "images/gallery.html" %}
+                    {% endwith %}
+                  {% endcomment %}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        {% endif %}
+
+        {% if site.geo_line %}
+          <strong>{% trans "Route map" %}</strong>
+          <a href="#" class="btn btn-link" data-toggle="modal" data-target="#mapRouteModal">{% trans "Show" %}</a>
+
+          <div class="modal fade" id="mapRouteModal" tabindex="-1" role="dialog" aria-labelledby="mapRouteModal" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title" id="myModalLabel">{% trans "Map" %}</h4>
+                </div>
+                <div class="modal-body" data-geoline="[{% for y, x in site.geo_line %} [{{ x|stringformat:'f' }}, {{ y|stringformat:'f' }}] {% if not forloop.last %}, {% endif %} {% endfor %}]">
+                  {% leaflet_map "mymap" callback="window.route_map_init_basic" %}
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
         </p>
       </div>
     </li>

@@ -18,3 +18,7 @@
     background-color:#34ca78;
     border-color: #34ca78;
 }
+
+.panel-title img{
+    max-height: 50px;
+}

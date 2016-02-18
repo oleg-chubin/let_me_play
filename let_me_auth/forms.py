@@ -20,7 +20,7 @@ from django.forms.formsets import DELETION_FIELD_NAME
 from django.conf import settings
 from django.utils.safestring import mark_safe
 from django.utils.datastructures import MultiValueDictKeyError
-from django.utils.image import  Image as pil_image
+from PIL import  Image as pil_image
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from six import BytesIO
 from django.core.validators import RegexValidator

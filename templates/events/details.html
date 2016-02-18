@@ -44,12 +44,12 @@
   <div class="panel-heading">
     <h3 class="panel-title">
       {% followdropdown object "escort/follow_menu.html" %}
-        {{SITE_DOMAIN}}{{object.court.activity_type.title}} {{object.start_at}}
+        <img src="{{object.court.activity_type.image.url}}" class="img-rounded"/>{{object.start_at}}
       {% endfollowdropdown %}
       {% if is_admin %}
         <div class="pull-right action-buttons">
           <div class="btn-group pull-right">
-              <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+              <button type="button" class="btn btn-lg dropdown-toggle" data-toggle="dropdown">
                   <span class="glyphicon glyphicon-cog" style="margin-right: 0px;"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
@@ -302,18 +302,7 @@
 {% block extra_scripts %}
   {% include "autocomplete_light/static.html" %}
   {% leaflet_js %}
-  <script type="text/javascript">
-      {% with longitude=object.court.site.geo_point.0|stringformat:"f" latitude=object.court.site.geo_point.1|stringformat:"f" %}
-          function map_init_basic (map, options) {
-              L.marker([{{ latitude }}, {{ longitude }}]).addTo(map);
-              map.panTo(new L.LatLng({{ latitude }}, {{ longitude }}));
-
-                $('#mapModal.modal').on('shown.bs.modal', function () {
-                        map.invalidateSize();
-                } );
-          }
-      {% endwith %}
-  </script>
+  <script src="{% static "js/detail_map.js" %}"></script>
   <script src="{% static "js/expandable_listgroup.js" %}"></script>
   <script src="{% static "js/modal.js" %}"></script>
   <script src="{% static "js/sidebar_chat.js" %}"></script>

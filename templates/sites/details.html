@@ -65,16 +65,5 @@
 {% block extra_scripts %}
   {% include "autocomplete_light/static.html" %}
   {% leaflet_js %}
-  <script type="text/javascript">
-      {% with longitude=object.geo_point.0|stringformat:"f" latitude=object.geo_point.1|stringformat:"f" %}
-          function map_init_basic (map, options) {
-              L.marker([{{ latitude }}, {{ longitude }}]).addTo(map);
-              map.panTo(new L.LatLng({{ latitude }}, {{ longitude }}));
-
-              $('#mapModal.modal').on('shown.bs.modal', function () {
-                    map.invalidateSize();
-              } );
-          }
-      {% endwith %}
-  </script>
+  <script src="{% static "js/detail_map.js" %}"></script>
 {% endblock %}

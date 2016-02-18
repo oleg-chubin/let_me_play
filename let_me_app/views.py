@@ -736,6 +736,10 @@ class EventSearchView(ListView):
                     geo_point__distance_lt=(form.cleaned_data['geo_point'],
                                             D(m=form.cleaned_data['radius']))
                 )
+                site_queryset = site_queryset | models.Site.objects.filter(
+                    geo_line__distance_lt=(form.cleaned_data['geo_point'],
+                                            D(m=form.cleaned_data['radius']))
+                )
                 queryset = queryset.filter(court__site__in=site_queryset)
             if form.cleaned_data['activity_type']:
                 queryset = queryset.filter(
@@ -792,6 +796,10 @@ class CourtSearchView(ListView):
             if form.cleaned_data['geo_point'] and form.cleaned_data['radius']:
                 site_queryset = models.Site.objects.filter(
                     geo_point__distance_lt=(form.cleaned_data['geo_point'],
+                                            D(m=form.cleaned_data['radius']))
+                )
+                site_queryset = site_queryset | models.Site.objects.filter(
+                    geo_line__distance_lt=(form.cleaned_data['geo_point'],
                                             D(m=form.cleaned_data['radius']))
                 )
                 queryset = queryset.filter(site__in=site_queryset)
