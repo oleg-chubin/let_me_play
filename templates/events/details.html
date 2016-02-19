@@ -240,7 +240,7 @@
                         {% include "events/buttons/accept_application.html" %}
                       {% endwith %}
                       <div class="or"></div>
-                      {% include "events/buttons/decline_application.html" %}
+                      {% include "events/buttons/decline_application.html" with object=application %}
                     </div>
                 {% endif %}
               </li>

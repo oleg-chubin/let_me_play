@@ -527,9 +527,10 @@ class DeclineApplicationEventView(EventActionMixin, BaseView):
             court__event=kwargs['event'], user=request.user).exists()
 
     def get_queryset(self, request, *args, **kwargs):
+        import ipdb; ipdb.set_trace()
         return models.Application.objects.filter(
             event_id=kwargs['event'],
-            user=request.user,
+            id=kwargs['application'],
             status=models.ApplicationStatuses.ACTIVE
         )
 
