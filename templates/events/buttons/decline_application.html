@@ -1,6 +1,8 @@
-<form method="post" action="{% url 'let_me_app:decline_application' event=object.id %}">
+{% load i18n %}
+
+<form method="post" action="{% url 'let_me_app:decline_application' application=object.id event=object.event_id %}">
 {% csrf_token %}
-<button type="submit" class="btn btn-link">
+<button type="submit" class="btn btn-link" data-confirmation="{% trans 'Are You sure?'%}">
    <span class="glyphicon glyphicon-remove"></span>
 </button>
 </form>
