@@ -32,7 +32,6 @@
 {% endblock %}
 
 {% block extra_scripts %}
-    {% include "autocomplete_light/static.html" %}
     {% for form in forms.values %}
         {{ form.media }}
     {% endfor %}

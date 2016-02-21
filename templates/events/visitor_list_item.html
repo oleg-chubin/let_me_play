@@ -1,0 +1,56 @@
+{% load i18n  avatar let_me_escort %}
+  <img src="{{visit.user|avatar_url}}" class="list-pic img-responsive img-thumbnail">
+  {% if visit.status == VISIT_STATUSES.PENDING or visit.status == VISIT_STATUSES.COMPLETED %}
+
+    {% if is_event_staff %}
+      <a href="{% url 'let_me_app:annotate_visit' visit_id=visit.id %}">
+        {{ visit.user }}
+      </a>
+    {% else %}
+      {{ visit.user }}
+    {% endif %}
+    {% if visit.user.id in admin_user_ids and request.user.id in active_visits_id and visit.user.cell_phone %}
+        ( <span class="glyphicon glyphicon-phone-alt"></span>
+            +{{ visit.user.cell_phone }}
+            {% if visit.user.cell_phone_is_valid %}
+              <span class="glyphicon glyphicon-ok-sign" style="color: green;"></span>
+            {% endif%}
+        )
+    {% endif %}
+    {% for role in visit.visitrole_set.all %}
+    <span class="label label-info">
+      {{role}}
+        <div class="ui-group-buttons">
+          <form method="post" class="form-inline" action="{% url 'let_me_app:remove_role' role=role.id event=object.id %}">
+            {% csrf_token %}
+            <button class="btn-link" data-confirmation="{% trans 'Are You sure?'%}">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </form>
+        </div>
+    </span>
+    {% endfor %}
+
+    {% with visit.user as visitor %}
+      {% if is_admin %}
+        {% if object.status == EVENT_STATUSES.PENDING %}
+          <div class="ui-group-buttons">
+            {% url 'let_me_app:update_role' event=object.id visit=visit.id as form_url %}
+            {% include "events/buttons/update_visit.html" %}
+          </div>
+          <div class="ui-group-buttons">
+            {% include "events/buttons/dismiss_visit.html" %}
+          </div>
+        {% endif %}
+      {% endif %}
+    {% endwith %}
+  {% else %}
+
+    <del>
+      {{ visit.user }}
+    </del>
+    <span class="label label-info">
+      {{ visit.status|as_status:VISIT_STATUSES.CHOICES }}
+    </span>
+
+  {% endif %}

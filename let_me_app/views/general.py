@@ -9,6 +9,7 @@ from django.contrib.gis.measure import D
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.db.models import F
 from django.views.generic.base import View as BaseView, TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import BaseUpdateView
@@ -129,7 +130,7 @@ class EventView(DetailView):
         queryset = super(EventView, self).get_queryset()
         queryset = queryset.select_related(
             'inventory_list', 'court', 'court__site', 'court__activity_type')
-        queryset = queryset.prefetch_related('inventory_list__inventory_set')
+        queryset = queryset.prefetch_related('inventory_list__inventory_set__equipment')
         return queryset
 
     def _get_user_inventory(self, event, visits):
@@ -145,7 +146,7 @@ class EventView(DetailView):
 
     def _get_coach_recommendation(self, visit):
         recommendation = models.CoachRecommendation.objects.filter(visit=visit)
-        recommendation = recommendation.select_related('coach__user')[:1]
+        recommendation = recommendation.select_related('coach')[:1]
         if recommendation:
             return recommendation[0]
 
@@ -161,19 +162,30 @@ class EventView(DetailView):
         result['admin_user_ids'] = admin_user_ids
         result['proposal_form'] = forms.EventProposalForm()
         result['visit_form'] = forms.EventVisitForm()
+        result['visit_role_form'] = forms.EventVisitRoleForm()
         result['inventory_form'] = forms.InventoryForm()
         result['active_applications'] = event.application_set.filter(
             status=models.ApplicationStatuses.ACTIVE
         ).select_related('user').order_by('id')
 
-        result['staff_list'] = event.eventstaff_set.all()
-        result['is_event_staff'] = self.request.user.id in [i.staff_id for i in result['staff_list']]
+        default_role = event.court.activity_type.default_role_id
 
-        result['active_visits'] = event.visit_set.select_related('user').order_by('id')
-        result['active_visits_id'] = [i.user_id for i in result['active_visits']]
+        active_visits = event.visit_set.select_related('user')
+        active_visits = active_visits.prefetch_related('visitrole_set__role').order_by('id')
+
+        result['active_visits'] = []
+        result['staff_list'] = []
+        for visit in active_visits:
+            if any(j.role_id == default_role for j in visit.visitrole_set.all()):
+                result['active_visits'].append(visit)
+            else:
+                result['staff_list'].append(visit)
+
         result['active_proposals'] = event.proposal_set.all().select_related('user').order_by('id')
-        result['user_inventory'] = self._get_user_inventory(
-            event, result['active_visits'])
+        result['user_inventory'] = self._get_user_inventory(event, active_visits)
+
+        result['is_event_staff'] = any(
+            self.request.user.id == i.user_id for i in result['staff_list'])
 
         for prop in result['active_proposals']:
             if (prop.user == self.request.user
@@ -181,11 +193,17 @@ class EventView(DetailView):
                 result['my_active_proposal'] = prop
 
 
+        result['active_visits_id'] = [
+            i.user_id for i in result['active_visits']
+            if i.status in [models.VisitStatuses.PENDING, models.VisitStatuses.COMPLETED]
+        ]
+
         my_active_applications = [
             i for i in result['active_applications'] if i.user == self.request.user
         ]
         if my_active_applications:
             result['my_active_application'] = my_active_applications[0]
+
 
         my_active_visits = [
             i for i in result['active_visits']
@@ -527,7 +545,6 @@ class DeclineApplicationEventView(EventActionMixin, BaseView):
             court__event=kwargs['event'], user=request.user).exists()
 
     def get_queryset(self, request, *args, **kwargs):
-        import ipdb; ipdb.set_trace()
         return models.Application.objects.filter(
             event_id=kwargs['event'],
             id=kwargs['application'],
@@ -618,6 +635,41 @@ class DismissVisitorEventView(EventActionMixin, BaseView):
             'object_ids': [i.id for i in objects]
         }
         send_notification.delay(notification_context)
+
+
+class RemoveVisitRoleEventView(EventActionMixin, BaseView):
+    def check_permissions(self, request, *args, **kwargs):
+        return Group.objects.filter(
+            court__event=kwargs['event'], user=request.user).exists()
+
+    def get_queryset(self, request, *args, **kwargs):
+        return models.VisitRole.objects.filter(id=kwargs['role'])
+
+    def process_object(self, obj):
+        obj.delete()
+
+    def send_notification(self, objects):
+        pass
+
+
+class UpdateVisitRoleEventView(EventActionMixin, BaseView):
+    def check_permissions(self, request, *args, **kwargs):
+        return Group.objects.filter(
+            court__event=kwargs['event'], user=request.user).exists()
+
+    def get_queryset(self, request, *args, **kwargs):
+        return models.Visit.objects.filter(id=kwargs['visit'])
+
+    def process_object(self, obj):
+        form = forms.EventVisitRoleForm(
+            data=self.request.POST, files=self.request.FILES
+        )
+        if form.is_valid():
+            for role in form.cleaned_data['roles']:
+                models.VisitRole.objects.get_or_create(visit=obj, role=role)
+
+    def send_notification(self, objects):
+        pass
 
 
 class CancelInventoryEventView(EventActionMixin, BaseView):
@@ -724,7 +776,8 @@ class EventSearchView(ListView):
             Prefetch(
                 'visit_set',
                 queryset=models.Visit.objects.filter(
-                    status=VisitStatuses.PENDING).only('id'),
+                    status=VisitStatuses.PENDING,
+                    visitrole__role=F('event__court__activity_type__default_role')).only('id'),
                 to_attr='people_count'
             )
         )
@@ -972,7 +1025,10 @@ class CreateStaffView(TemplateView):
     def get_context_data(self, **kwargs):
         event = get_object_or_404(models.Event, pk=kwargs['pk'])
         formset = forms.EventStaffFormSet(
-                instance=event, data=kwargs.get('data'))
+                instance=event,
+                data=kwargs.get('data'),
+                queryset=models.Visit.objects.filter(
+                    id__in=models.VisitRole.objects.values_list('visit_id', flat=True)))
         result = {
             'event': event,
             'staff_formset': formset}

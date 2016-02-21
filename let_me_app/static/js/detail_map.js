@@ -1,7 +1,7 @@
 $(window).on('map:init', function (e) {
     var detail = e.originalEvent ? e.originalEvent.detail : e.detail;
     var map = detail.map;
-    var modal_div = $(map.getContainer()).closest('.modal-body');
+    var modal_div = $(map.getContainer()).closest('.inline-map');
     var coords = modal_div.data('geopoint');
     if (coords) {
         var latitude=coords[0], longitude = coords[1];

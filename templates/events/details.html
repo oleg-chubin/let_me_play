@@ -127,41 +127,7 @@
       </div>
     </li>
     <li class="list-group-item">
-      <div class="row toggle" id="dropdown-detail-5" data-toggle="detail-8">
-        <div class="col-xs-10"> <h4>{% trans "Staff" %}</h4> </div>
-        <div class="col-xs-2"><span class="glyphicon glyphicon-menu-down pull-right toggle-icon"></span>
-            <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
-      </div>
-      <div id="detail-8">
-        <ul class="user-list">
-          {% for staff in staff_list %}
-            <li>
 
-              <img src="{{staff.staff.user|avatar_url}}" class="list-pic img-responsive img-thumbnail">
-              {{ staff }}
-
-                {% if staff.staff.user.id in admin_user_ids and request.user.id in active_visits_id and staff.staff.user.cell_phone %}
-                    ( <span class="glyphicon glyphicon-phone-alt"></span>
-                    +{{ staff.staff.user.cell_phone }}
-                    {% if staff.staff.user.cell_phone_is_valid %}
-                      <span class="glyphicon glyphicon-ok-sign" style="color: green;"></span>
-                    {% endif%}
-                    )
-                {% endif %}
-            </li>
-          {% endfor %}
-        </ul>
-        {% if is_admin %}
-
-            {% if object.status == EVENT_STATUSES.PENDING %}
-              <div class="ui-group-buttons">
-                {% include "events/buttons/create_staff.html" %}
-              </div>
-            {% endif %}
-        {% endif %}
-      </div>
-    </li>
-    <li class="list-group-item">
       <div class="row toggle" id="dropdown-detail-5" data-toggle="detail-5">
         <div class="col-xs-10"> <h4>{% trans "Visitors" %}</h4> </div>
         <div class="col-xs-2"><span class="glyphicon glyphicon-menu-down pull-right toggle-icon"></span>
@@ -169,46 +135,19 @@
       </div>
       <div id="detail-5">
         <ul class="user-list">
+          {% for visit in staff_list %}
+            <li>
+             {% include "events/visitor_list_item.html" %}
+            </li>
+          {% endfor %}
+        </ul>
+        {% with active_visits_id|length as visit_count %}
+          {% blocktrans %}There are {{ visit_count }} visitors {% endblocktrans %}:
+        {% endwith %}
+        <ul class="user-list">
           {% for visit in active_visits %}
             <li>
-              <img src="{{visit.user|avatar_url}}" class="list-pic img-responsive img-thumbnail">
-              {% if visit.status == VISIT_STATUSES.PENDING or visit.status == VISIT_STATUSES.COMPLETED %}
-
-                {% if is_event_staff %}
-                  <a href="{% url 'let_me_app:annotate_visit' visit_id=visit.id %}">
-                    {{ visit.user }}
-                  </a>
-                {% else %}
-                  {{ visit.user }}
-                {% endif %}
-                {% if visit.user.id in admin_user_ids and request.user.id in active_visits_id and visit.user.cell_phone %}
-                    ( <span class="glyphicon glyphicon-phone-alt"></span>
-                        +{{ visit.user.cell_phone }}
-                        {% if visit.user.cell_phone_is_valid %}
-                          <span class="glyphicon glyphicon-ok-sign" style="color: green;"></span>
-                        {% endif%}
-                    )
-                {% endif %}
-
-                {% with visit.user as visitor %}
-                  {% if is_admin %}
-                    {% if object.status == EVENT_STATUSES.PENDING %}
-                      <div class="ui-group-buttons">
-                        {% include "events/buttons/dismiss_visit.html" %}
-                      </div>
-                    {% endif %}
-                  {% endif %}
-                {% endwith %}
-              {% else %}
-
-                <del>
-                  {{ visit.user }}
-                </del>
-                <span class="label label-info">
-                  {{ visit.status|as_status:VISIT_STATUSES.CHOICES }}
-                </span>
-
-              {% endif %}
+             {% include "events/visitor_list_item.html" %}
             </li>
           {% endfor %}
         </ul>
@@ -313,12 +252,15 @@
 {% include "events/modals/apply_for_event.html" %}
 {% include "events/modals/propose_event.html" %}
 {% include "events/modals/create_visit.html" %}
+{% include "events/modals/update_visit.html" %}
 
 {% endblock %}
 
 {% block extra_scripts %}
-  {% include "autocomplete_light/static.html" %}
   {% leaflet_js %}
+  {{visit_form.media}}
+  {{inventory_form.media}}
+  {{proposal_form.media}}
   <script src="{% static "js/detail_map.js" %}"></script>
   <script src="{% static "js/expandable_listgroup.js" %}"></script>
   <script src="{% static "js/modal.js" %}"></script>

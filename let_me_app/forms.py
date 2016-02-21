@@ -7,31 +7,28 @@ from django import forms
 from django.contrib.gis import forms as geo_forms
 from django.utils.translation import ugettext_lazy as _
 
-import autocomplete_light
+from dal import autocomplete
 from leaflet.forms.widgets import LeafletWidget
 from floppyforms import widgets as floppyforms_widgets
 
 from let_me_app import models
+from let_me_auth import models as auth_models
 from django.forms.models import BaseInlineFormSet
 from django.forms.formsets import DELETION_FIELD_NAME
 
 
-class BootstrapMultipleChoiceWidget(autocomplete_light.MultipleChoiceWidget):
-    def build_attrs(self, name=None):
-        attrs = super(BootstrapMultipleChoiceWidget, self).build_attrs(name=name)
-        attrs['class'] = attrs['class'] + ' form-control'
+class BootstrapMultipleChoiceWidget(autocomplete.ModelSelect2Multiple):
+    def build_attrs(self, *args, **kwargs):
+        attrs = super(BootstrapMultipleChoiceWidget, self).build_attrs(*args, **kwargs)
+        attrs['class'] = attrs.get('class', '') + ' form-control'
         return attrs
 
 
-class BootstrapChoiceWidget(autocomplete_light.ChoiceWidget):
+class BootstrapChoiceWidget(autocomplete.ModelSelect2):
     def build_attrs(self, *args, **kwargs):
         attrs = super(BootstrapChoiceWidget, self).build_attrs(*args, **kwargs)
-        attrs['class'] = attrs['class'] + ' form-control'
+        attrs['class'] = attrs.get('class', '') + ' form-control'
         return attrs
-
-
-class BootstrapModelMultipleChoiceField(autocomplete_light.ModelMultipleChoiceField):
-    widget=BootstrapMultipleChoiceWidget
 
 
 class TrashCheckboxInput(floppyforms_widgets.CheckboxInput):
@@ -51,7 +48,9 @@ class ChatMessageForm(forms.Form):
 
 
 class EventProposalForm(forms.Form):
-    users = BootstrapModelMultipleChoiceField('UserAutocomplete')
+    users = forms.ModelMultipleChoiceField(
+        queryset=auth_models.User.objects.all(),
+        widget=BootstrapMultipleChoiceWidget(url='user-autocomplete'))
     comment = forms.CharField(required=False)
 
 
@@ -60,13 +59,15 @@ class InventoryForm(forms.ModelForm):
         model = models.Inventory
         fields = ['equipment', 'amount']
         widgets = {
-            'equipment': BootstrapChoiceWidget('EquipmentAutocomplete'),
+            'equipment': BootstrapChoiceWidget(url='equipment-autocomplete'),
             'amount': floppyforms_widgets.NumberInput(),
         }
 
 
 class GroupAdminForm(forms.Form):
-    users = BootstrapModelMultipleChoiceField('UserAutocomplete')
+    users = forms.ModelMultipleChoiceField(
+        queryset=auth_models.User.objects.all(),
+        widget=BootstrapMultipleChoiceWidget(url='user-autocomplete'))
 
 
 class SiteAdminForm(forms.ModelForm):
@@ -151,18 +152,28 @@ class EventForm(forms.ModelForm):
 
 
 class EventVisitForm(forms.Form):
-    users = BootstrapModelMultipleChoiceField('UserAutocomplete')
+    users = forms.ModelMultipleChoiceField(
+        queryset=auth_models.User.objects.all(),
+        widget=BootstrapMultipleChoiceWidget(url='user-autocomplete'))
+
+
+class EventVisitRoleForm(forms.Form):
+    roles = forms.ModelMultipleChoiceField(
+        queryset=models.StaffRole.objects.all(),
+        widget=BootstrapMultipleChoiceWidget(url='staffrole-autocomplete'))
 
 
 class EventStaffForm(forms.ModelForm):
+    role = forms.ModelChoiceField(
+        queryset=models.StaffRole.objects.all(),
+        widget=BootstrapChoiceWidget(url='staffrole-autocomplete'))
+
     class Meta:
-        model = models.EventStaff
-        fields = ('staff', 'event', 'invoice', 'role')
+        model = models.Visit
+        fields = ('user', 'event', 'role')
         widgets = {
-            'staff': BootstrapChoiceWidget('StaffProfileAutocomplete'),
+            'user': BootstrapChoiceWidget(url='user-autocomplete'),
             'event': floppyforms_widgets.HiddenInput(),
-            'invoice': floppyforms_widgets.HiddenInput(),
-            'role': floppyforms_widgets.Select()
         }
 
     def __init__(self, *args, **kwargs):
@@ -179,7 +190,7 @@ class CustomInlineFormset(BaseInlineFormSet):
 
 
 EventStaffFormSet = forms.inlineformset_factory(
-    models.Event, models.EventStaff, formset=CustomInlineFormset,
+    models.Event, models.Visit, formset=CustomInlineFormset,
     form=EventStaffForm, extra=2
 )
 

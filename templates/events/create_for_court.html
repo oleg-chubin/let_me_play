@@ -19,8 +19,8 @@
 
 {% block main %}
 <div class="row-fluid">
-  <div class="col-md-6">
-    {% leaflet_map "yourmap" callback="window.map_init_basic" %}
+  <div class="col-md-6 inline-map" data-geopoint="[{{ court.site.geo_point.1|stringformat:'f' }}, {{ court.site.geo_point.0|stringformat:'f' }}]">
+    {% leaflet_map "yourmap" %}
   </div>
   <div class="col-md-6">
     <form method="post">
@@ -46,6 +46,9 @@
         {% with forms.visitors as form %}
             {% include "form.html" %}
         {% endwith %}
+        {% with forms.proposals as form %}
+            {% include "form.html" %}
+        {% endwith %}
       <div class="ui-group-buttons pull-right marginBottom10">
         <button type="submit" class="btn btn-success">{% trans "Save" %}</button>
         <div class="or"></div>
@@ -57,16 +60,8 @@
 {% endblock %}
 
 {% block extra_scripts %}
-  {% include "autocomplete_light/static.html" %}
+  <script src="{% static "js/detail_map.js" %}"></script>
   {% leaflet_js %}
-  <script type="text/javascript">
-      {% with longitude=court.site.geo_point.0|stringformat:"f" latitude=court.site.geo_point.1|stringformat:"f" %}
-          function map_init_basic (map, options) {
-              L.marker([{{ latitude }}, {{ longitude }}]).addTo(map);
-              map.panTo(new L.LatLng({{ latitude }}, {{ longitude }}));
-          }
-      {% endwith %}
-  </script>
   {% for form in forms.values %}
       {{ form.media }}
   {% endfor %}
