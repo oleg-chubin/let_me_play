@@ -9,7 +9,6 @@ from django import forms
 from django.contrib.gis import forms as geo_forms
 from django.utils.translation import ugettext_lazy as _
 
-import autocomplete_light
 from leaflet.forms.widgets import LeafletWidget
 from floppyforms import widgets as floppyforms_widgets
 
