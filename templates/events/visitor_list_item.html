@@ -20,6 +20,7 @@
     {% for role in visit.visitrole_set.all %}
     <span class="label label-info">
       {{role}}
+      {% if is_admin %}
         <div class="ui-group-buttons">
           <form method="post" class="form-inline" action="{% url 'let_me_app:remove_role' role=role.id event=object.id %}">
             {% csrf_token %}
@@ -28,6 +29,7 @@
             </button>
           </form>
         </div>
+      {% endif %}
     </span>
     {% endfor %}
 
