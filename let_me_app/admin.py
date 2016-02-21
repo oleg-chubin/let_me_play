@@ -7,14 +7,14 @@ from django.contrib import admin
 from let_me_app.models import (InternalMessage, Peeper, PrivateComment,
     Changelog, Site, Court, Occasion, BookingPolicy, Invoice, InventoryList,
     Event, Equipment, Inventory, Proposal, Application, Receipt, Visit,
-    ChatParticipant, GalleryImage, ActivityType, StaffRole, EventStaff,
-    StaffProfile, IndexParametr, CoachRecommendation, VisitIndex)
+    ChatParticipant, GalleryImage, ActivityType, StaffRole,
+    VisitRole, IndexParametr, CoachRecommendation, VisitIndex)
 
 
 model_list = (InternalMessage, Peeper, PrivateComment, GalleryImage,
     Changelog, Court, Occasion, BookingPolicy, Invoice, ChatParticipant,
     Event, Equipment, Inventory, Proposal, Application, Receipt, Visit,
-    ActivityType, StaffRole, EventStaff, StaffProfile, IndexParametr,
+    ActivityType, StaffRole, VisitRole, IndexParametr,
     CoachRecommendation, VisitIndex
 )
 

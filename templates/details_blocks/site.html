@@ -35,7 +35,7 @@
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                   <h4 class="modal-title" id="myModalLabel">{% trans "Map" %}</h4>
                 </div>
-                <div class="modal-body" data-geopoint="[{{ site.geo_point.1|stringformat:'f' }}, {{ site.geo_point.0|stringformat:'f' }}]">
+                <div class="modal-body inline-map" data-geopoint="[{{ site.geo_point.1|stringformat:'f' }}, {{ site.geo_point.0|stringformat:'f' }}]">
                   {% leaflet_map "yourmap" callback="window.map_init_basic" %}
                   {% comment %}
                     {% with images=object.galleryimage_set.all %}
@@ -59,7 +59,7 @@
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                   <h4 class="modal-title" id="myModalLabel">{% trans "Map" %}</h4>
                 </div>
-                <div class="modal-body" data-geoline="[{% for y, x in site.geo_line %} [{{ x|stringformat:'f' }}, {{ y|stringformat:'f' }}] {% if not forloop.last %}, {% endif %} {% endfor %}]">
+                <div class="modal-body inline-map" data-geoline="[{% for y, x in site.geo_line %} [{{ x|stringformat:'f' }}, {{ y|stringformat:'f' }}] {% if not forloop.last %}, {% endif %} {% endfor %}]">
                   {% leaflet_map "mymap" callback="window.route_map_init_basic" %}
                 </div>
               </div>

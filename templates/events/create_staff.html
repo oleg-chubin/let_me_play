@@ -19,8 +19,8 @@
 
 {% block main %}
 <div class="row-fluid">
-  <div class="col-md-6">
-    {% leaflet_map "yourmap" callback="window.map_init_basic" %}
+  <div class="col-md-6 inline-map" data-geopoint="[{{ event.court.site.geo_point.1|stringformat:'f' }}, {{ event.court.site.geo_point.0|stringformat:'f' }}]">
+    {% leaflet_map "yourmap" %}
   </div>
   <div class="col-md-6">
       <legend>{% trans "Event" %}</legend>
@@ -51,17 +51,7 @@
 {% endblock %}
 
 {% block extra_scripts %}
-  {% include "autocomplete_light/static.html" %}
+  <script src="{% static "js/detail_map.js" %}"></script>
   {% leaflet_js %}
-  <script type="text/javascript">
-      {% with longitude=event.court.site.geo_point.0|stringformat:"f" latitude=event.court.site.geo_point.1|stringformat:"f" %}
-          function map_init_basic (map, options) {
-              L.marker([{{ latitude }}, {{ longitude }}]).addTo(map);
-              map.panTo(new L.LatLng({{ latitude }}, {{ longitude }}));
-          }
-      {% endwith %}
-  </script>
-  {% for form in forms.values %}
-      {{ form.media }}
-  {% endfor %}
+  {{ staff_formset.forms.0.media }}
 {% endblock %}

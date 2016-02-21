@@ -69,6 +69,9 @@ def create_event_visit(event, user, inventory_list):
             models.ChatParticipant.objects.get_or_create(
                 user=user, chat=chat[0]
             )
+        role, created = models.VisitRole.objects.get_or_create(
+            visit=visit, role=event.court.activity_type.default_role
+        )
     return visit
 
 

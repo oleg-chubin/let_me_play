@@ -158,9 +158,17 @@ class Site(Followable):
         return self.name
 
 
+class StaffRole(models.Model):
+    name = models.CharField(_("name"), max_length=128, default='')
+
+    def __str__(self):
+        return self.name
+
+
 class ActivityType(models.Model):
     image = models.ImageField(_('image'))
     title = models.CharField(_('title'), max_length=128)
+    default_role = models.ForeignKey(StaffRole)
 
     def __str__(self):
         return self.title
@@ -227,14 +235,6 @@ class InventoryList(models.Model):
         return self.name
 
 
-class StaffProfile(models.Model):
-    user = models.OneToOneField(UserModel, primary_key=True)
-    description = models.TextField(_('description'))
-
-    def __str__(self):
-        return str(self.user)
-
-
 class Event(Followable):
     start_at = models.DateTimeField(_('date started'), db_index=True)
     description = models.TextField(verbose_name=_("Description"), max_length=1024, default='')
@@ -251,26 +251,6 @@ class Event(Followable):
         if len(description) > 20:
             description = description[:16] + '...'
         return "{} ({})".format(description, self.start_at)
-
-
-class StaffRole(models.Model):
-    name = models.CharField(_("name"), max_length=128, default='')
-
-    def __str__(self):
-        return self.name
-
-
-class EventStaff(models.Model):
-    event = models.ForeignKey(Event, verbose_name=_("event"))
-    staff = models.ForeignKey(StaffProfile, verbose_name=_("staff"))
-    role = models.ForeignKey(StaffRole, verbose_name=_("role"))
-    invoice = models.ForeignKey(
-        Invoice, null=True, blank=True, verbose_name=_("invoice")
-    )
-
-    def __str__(self):
-        return "{} ({})".format(self.staff, self.role)
-
 
 class Equipment(models.Model):
     name = models.CharField(_("name"), max_length=256)
@@ -340,6 +320,17 @@ class Visit(models.Model):
         )
 
 
+class VisitRole(models.Model):
+    visit = models.ForeignKey(Visit, verbose_name=_("Visit"))
+    role = models.ForeignKey(StaffRole, verbose_name=_("role"))
+    invoice = models.ForeignKey(
+        Invoice, null=True, blank=True, verbose_name=_("invoice")
+    )
+
+    def __str__(self):
+        return str(self.role)
+
+
 class IndexParametr(models.Model):
     name = models.CharField(_("name"), max_length=256)
     units = models.CharField(_("units"), max_length=16)
@@ -351,7 +342,7 @@ class IndexParametr(models.Model):
 class CoachRecommendation(models.Model):
     recommendation = models.TextField(
         verbose_name=_("Description"), max_length=1024, default='')
-    coach = models.ForeignKey(StaffProfile)
+    coach = models.ForeignKey(UserModel)
     visit = models.ForeignKey(Visit)
     status = models.IntegerField(choices=RecommendationStatuses.CHOICES,
                                  default=RecommendationStatuses.ACTIVE)

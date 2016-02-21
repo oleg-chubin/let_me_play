@@ -35,7 +35,9 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = (
     'django.contrib.admin',
-    'autocomplete_light',
+    'dal_select2',
+    'dal',
+#      'dal_queryset_sequence',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -69,6 +71,9 @@ if DEBUG:
         'debug_toolbar.panels.sql.SQLPanel',
         'template_timings_panel.panels.TemplateTimings.TemplateTimings',
     ]
+    DEBUG_TOOLBAR_CONFIG = {
+        'RESULTS_CACHE_SIZE': 100,
+    }
 else:
     TEMPLATE_LOADERS = (
         (
