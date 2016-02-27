@@ -15,6 +15,9 @@ from let_me_app import models
 from let_me_auth import models as auth_models
 from django.forms.models import BaseInlineFormSet
 from django.forms.formsets import DELETION_FIELD_NAME
+import slugify
+from let_me_auth.models import User
+from let_me_auth.pipeline import ABSENT_MAIL_HOST
 
 
 class BootstrapMultipleChoiceWidget(autocomplete.ModelSelect2Multiple):
@@ -43,6 +46,16 @@ class ReadonlySelect(floppyforms_widgets.Select):
     template_name = 'floppyforms/readonly.html'
 
 
+class CheckboxUserSelectMultiple(floppyforms_widgets.CheckboxSelectMultiple):
+    template_name = "floppyforms/checkbox_user_select.html"
+
+    class Media:
+        css = {
+            'all': ('css/imaged_checkboxes.css',)
+        }
+        js = ('js/imaged_checkboxes.js',)
+
+
 class ChatMessageForm(forms.Form):
     message = forms.CharField()
 
@@ -50,8 +63,14 @@ class ChatMessageForm(forms.Form):
 class EventProposalForm(forms.Form):
     users = forms.ModelMultipleChoiceField(
         queryset=auth_models.User.objects.all(),
+        required=False,
         widget=BootstrapMultipleChoiceWidget(url='user-autocomplete'))
-    comment = forms.CharField(required=False)
+    comment = forms.CharField(
+        required=False, widget=floppyforms_widgets.Textarea)
+    known_users = forms.ModelMultipleChoiceField(
+        queryset=auth_models.User.objects.all(),
+        required=False,
+        widget=CheckboxUserSelectMultiple)
 
 
 class InventoryForm(forms.ModelForm):
@@ -151,10 +170,37 @@ class EventForm(forms.ModelForm):
         js = ('js/moment.js', 'js/bootstrap-datetimepicker.js', 'js/forms.js')
 
 
+class UserCreateMultipleField(autocomplete.CreateModelMultipleField):
+    def create_value(self, value):
+        parts = value.split(' ', 1)
+        first_name = parts[0].strip()
+        email_parts = [slugify.slugify(first_name)]
+        defaults = {'first_name': first_name}
+        if len(parts) > 1:
+            last_name = parts[1].strip()
+            defaults['last_name'] = last_name
+            email_parts.append(slugify.slugify(last_name))
+        email = '@'.join(['.'.join(email_parts), ABSENT_MAIL_HOST])
+        user, _ = User.objects.get_or_create(email=email, defaults=defaults)
+        return user.id
+
+
 class EventVisitForm(forms.Form):
-    users = forms.ModelMultipleChoiceField(
+    users = UserCreateMultipleField(
         queryset=auth_models.User.objects.all(),
+        required=False,
         widget=BootstrapMultipleChoiceWidget(url='user-autocomplete'))
+
+
+class ExtendedEventVisitForm(forms.Form):
+    users = UserCreateMultipleField(
+        queryset=auth_models.User.objects.all(),
+        required=False,
+        widget=BootstrapMultipleChoiceWidget(url='user-autocomplete'))
+    known_users = forms.ModelMultipleChoiceField(
+        queryset=auth_models.User.objects.all(),
+        required=False,
+        widget=CheckboxUserSelectMultiple)
 
 
 class EventVisitRoleForm(forms.Form):
@@ -268,12 +314,7 @@ class CoachRecommendationForm(forms.ModelForm):
         }
 
 
-
 CoachRecommendationFormSet = forms.inlineformset_factory(
     models.Visit, models.CoachRecommendation, formset=CustomInlineFormset,
     form=CoachRecommendationForm, extra=1, max_num=1, can_delete=False
 )
-
-
-
-

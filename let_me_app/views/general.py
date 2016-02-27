@@ -29,6 +29,8 @@ from django.db.models.query import Prefetch
 from let_me_app.tasks import send_notification
 
 
+NUMBER_OF_KNOWN_VISITS = 10
+
 
 class OccasionInline(InlineFormSet):
     model = models.Occasion
@@ -154,14 +156,24 @@ class EventView(DetailView):
         indexes = models.VisitIndex.objects.filter(visit=visit)
         return indexes.values('parametr__name', 'parametr__units', 'value')
 
+    def get_visitors_form(self, prefix, court_id, exclude_ids):
+        form = forms.ExtendedEventVisitForm(prefix=prefix)
+        checkbox_field = form.fields['known_users']
+        queryset = User.objects.filter(visit__event__court_id=court_id)
+        queryset = queryset.exclude(id__in=exclude_ids)
+        queryset = queryset.annotate(visit_count=Count('id'))
+        queryset = queryset.order_by('-visit_count')[:NUMBER_OF_KNOWN_VISITS]
+        checkbox_field.choices = [
+            (checkbox_field.prepare_value(i), i) for i in queryset]
+        return form
+
     def get_context_data(self, **kwargs):
         result = super(EventView, self).get_context_data(**kwargs)
         event = result['object']
         admin_user_ids = event.court.admin_group.user_set.values_list('id', flat=True)
         result['is_admin'] = self.request.user.id in admin_user_ids
         result['admin_user_ids'] = admin_user_ids
-        result['proposal_form'] = forms.EventProposalForm()
-        result['visit_form'] = forms.EventVisitForm()
+
         result['visit_role_form'] = forms.EventVisitRoleForm()
         result['inventory_form'] = forms.InventoryForm()
         result['active_applications'] = event.application_set.filter(
@@ -197,6 +209,14 @@ class EventView(DetailView):
             i.user_id for i in result['active_visits']
             if i.status in [models.VisitStatuses.PENDING, models.VisitStatuses.COMPLETED]
         ]
+
+        result['proposal_form'] = self.get_visitors_form(
+            'proposal',
+            event.court_id,
+            result['active_visits_id'] + [i.user_id for i in result['active_proposals']]
+        )
+        result['visit_form'] = self.get_visitors_form(
+            'visit', event.court_id, result['active_visits_id'])
 
         my_active_applications = [
             i for i in result['active_applications'] if i.user == self.request.user
@@ -378,7 +398,6 @@ class DetailRelatedPostView(BaseView):
 
         if form.is_valid():
             self.save_on_success(obj, form)
-
         return http.HttpResponseRedirect(self.get_success_url(obj))
 
     def get_success_url(self, obj):
@@ -386,7 +405,7 @@ class DetailRelatedPostView(BaseView):
 
 class CreateProposalView(DetailRelatedPostView):
     def get_form(self):
-        return forms.EventProposalForm(data=self.request.POST)
+        return forms.EventProposalForm(data=self.request.POST, prefix='proposal')
 
     def action_is_allowed(self, event):
         return event.court.admin_group.user_set.filter(
@@ -395,7 +414,8 @@ class CreateProposalView(DetailRelatedPostView):
     def save_on_success(self, event, form):
         comment = form.cleaned_data['comment']
         proposals = []
-        for user in form.cleaned_data['users']:
+        user_set = set(form.cleaned_data['users']) | set(form.cleaned_data['known_users'])
+        for user in user_set:
             proposal, _ = models.Proposal.objects.get_or_create(
                     event=event, user=user,
                     status=models.ApplicationStatuses.ACTIVE,
@@ -477,7 +497,7 @@ class AddVisitInventoryView(DetailRelatedPostView):
 
 class CreateVisitView(DetailRelatedPostView):
     def get_form(self):
-        return forms.EventVisitForm(data=self.request.POST)
+        return forms.ExtendedEventVisitForm(data=self.request.POST, prefix='visit')
 
     def action_is_allowed(self, event):
         return event.court.admin_group.user_set.filter(
@@ -485,7 +505,9 @@ class CreateVisitView(DetailRelatedPostView):
 
     def save_on_success(self, event, form):
         visits = []
-        for user in form.cleaned_data['users']:
+
+        user_set = set(form.cleaned_data['users']) | set(form.cleaned_data['known_users'])
+        for user in user_set:
             visits.append(persistence.create_event_visit(event, user, None))
 
         notification_context = {
@@ -907,11 +929,12 @@ class CreateEventView(TemplateView):
 
     def get_visitors_form(self, data, files, **kwargs):
         suffix = kwargs.get('suffix', '')
-        return forms.EventVisitForm(
+        form = forms.EventVisitForm(
             data=data,
             prefix='event' + suffix,
             initial={'users': kwargs.get('users', [])}
         )
+        return form
 
     def get_forms(self, data, files, **kwargs):
         data_forms = OrderedDict()
@@ -1174,20 +1197,24 @@ class CloneEventView(TemplateView):
 
     def get_visitors_form(self, data, files, **kwargs):
         suffix = kwargs.get('suffix', '')
-        return forms.EventVisitForm(
+        form = forms.ExtendedEventVisitForm(
             data=data,
             prefix='event' + suffix,
             initial={'users': kwargs.get('users', [])}
         )
+        checkbox_field = form.fields['known_users']
+        queryset = User.objects.filter(
+            visit__event__court__event__id=self.kwargs['event'])
+        queryset = queryset.annotate(visit_count=Count('id'))
+        queryset = queryset.order_by('-visit_count')[:NUMBER_OF_KNOWN_VISITS]
+        checkbox_field.choices = [
+            (checkbox_field.prepare_value(i), i) for i in queryset]
+        return form
 
     def get_forms(self, data, files, **kwargs):
         data_forms = OrderedDict()
         data_forms['event'] = forms.EventForm(
             data=self.request.POST, files=self.request.FILES, prefix='event')
-        data_forms['visitors'] = forms.EventVisitForm(
-            data=data, prefix='event',
-            initial={'users': User.objects.filter(visit__event=kwargs['event'])}
-        )
 
         data_forms['visitors'] = self.get_visitors_form(
             data=data, files=files, prefix='event', suffix="visitors",
@@ -1225,11 +1252,13 @@ class CloneEventView(TemplateView):
             source_event.inventory_list
         )
 
+        visit_set = (set(view_forms['visitors'].cleaned_data['users'])
+                     | set(view_forms['visitors'].cleaned_data['known_users']))
+        proposal_set = (set(view_forms['proposals'].cleaned_data['users'])
+                        | set(view_forms['proposals'].cleaned_data['known_users']))
+
         persistence.save_event_and_related_things(
-            event,
-            request.user,
-            visitors=view_forms['visitors'].cleaned_data['users'],
-            invitees=view_forms['proposals'].cleaned_data['users']
+            event, request.user, visitors=visit_set, invitees=proposal_set
         )
 
         view_forms['event'].save_m2m()
