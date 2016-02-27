@@ -43,9 +43,11 @@
         {% with forms.event as form %}
             {% include "form.html" %}
         {% endwith %}
+    <legend>{% trans "Visitors" %} </legend>
         {% with forms.visitors as form %}
             {% include "form.html" %}
         {% endwith %}
+    <legend>{% trans "Proposals" %} </legend>
         {% with forms.proposals as form %}
             {% include "form.html" %}
         {% endwith %}

@@ -1002,8 +1002,9 @@ class CreateEventView(TemplateView):
         instances['court'].admin_group.user_set.add(request.user)
         instances['event'].court = instances['court']
 
-        visitors = view_forms['visitors'].cleaned_data['users']
-        invitees = view_forms['proposals'].cleaned_data['users']
+        visitors = self._get_visitors(view_forms)
+        invitees = self._get_proposals(view_forms)
+
         persistence.save_event_and_related_things(
             instances['event'], request.user,
             visitors=visitors, invitees=invitees
@@ -1019,6 +1020,12 @@ class CreateEventView(TemplateView):
             )
         )
 
+    def _get_visitors(self, view_forms):
+        return view_forms['visitors'].cleaned_data['users']
+
+    def _get_proposals(self, view_forms):
+        return view_forms['proposals'].cleaned_data['users']
+
 
 class CreateSiteEventView(CreateEventView):
     template_name = 'events/create_for_site.html'
@@ -1032,6 +1039,22 @@ class CreateSiteEventView(CreateEventView):
 class CreateCourtEventView(CreateEventView):
     template_name = 'events/create_for_court.html'
 
+    def get_visitors_form(self, data, files, **kwargs):
+        suffix = kwargs.get('suffix', '')
+        form = forms.ExtendedEventVisitForm(
+            data=data,
+            prefix='event' + suffix,
+            initial={'users': kwargs.get('users', [])}
+        )
+        checkbox_field = form.fields['known_users']
+        queryset = User.objects.filter(
+            visit__event__court__id=self.kwargs['court'])
+        queryset = queryset.annotate(visit_count=Count('id'))
+        queryset = queryset.order_by('-visit_count')[:NUMBER_OF_KNOWN_VISITS]
+        checkbox_field.choices = [
+            (checkbox_field.prepare_value(i), i) for i in queryset]
+        return form
+
     def check_permissions(self, request, court):
         return (court.admin_group.user_set.filter(id=request.user.id).exists()
             or self.request.user.is_staff)
@@ -1040,6 +1063,14 @@ class CreateCourtEventView(CreateEventView):
         context = super(CreateCourtEventView, self).get_context_data(**kwargs)
         context['court'] = get_object_or_404(models.Court, pk=kwargs['court'])
         return context
+
+    def _get_visitors(self, view_forms):
+        return (set(view_forms['visitors'].cleaned_data['users'])
+                | set(view_forms['visitors'].cleaned_data['known_users']))
+
+    def _get_proposals(self, view_forms):
+        return (set(view_forms['proposals'].cleaned_data['users'])
+                | set(view_forms['proposals'].cleaned_data['known_users']))
 
 
 class CreateStaffView(TemplateView):
