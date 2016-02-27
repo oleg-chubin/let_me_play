@@ -1,4 +1,5 @@
 from dal import autocomplete
+from slugify import slugify
 
 from let_me_auth.models import User
 from let_me_app.models import Equipment, StaffRole

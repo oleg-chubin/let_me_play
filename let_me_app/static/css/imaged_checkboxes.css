@@ -1,0 +1,9 @@
+.img-check.uncheck
+{
+    opacity:0.5;
+    color:#996;
+}
+
+form ul {
+    list-style-type: none;
+}
