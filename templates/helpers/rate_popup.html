@@ -1,0 +1,28 @@
+{% extends 'base_helper.html' %}
+
+{% load staticfiles let_me_escort i18n avatar %}
+
+{% block extra_head %}
+<link href="{% static "css/imaged_checkboxes.css" %}" rel="stylesheet">
+{% endblock %}
+
+
+{% block main %}
+<div class="content">
+  <form action="{{request.path}}" method="post">
+    {% csrf_token %}
+    {% include "form.html" %}
+    <button type="submit" class="btn btn-success">{% trans "Save" %}</button>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+    {{ form.media }}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            window.onFormWithRadioLoad($('form'));
+        });
+    </script>
+{% endblock %}
+

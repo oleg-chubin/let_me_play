@@ -9,6 +9,11 @@
     border-radius:0;
     margin-bottom:10px
 }
+
+.popover {
+    max-width: 300px;
+}
+
 .btn-blog:hover,
 .btn-blog:focus,
 .btn-blog:active,

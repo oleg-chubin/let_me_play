@@ -15,9 +15,17 @@ URL_MAP = {
   models.Court: "let_me_app:view_court",
 }
 
+
 @register.filter
 def as_status(value, status_choices):
-    return dict(status_choices)[value]
+    values = dict(status_choices)
+    try:
+        return dict(status_choices)[value]
+    except KeyError as e:
+        try:
+            return values[int(value)]
+        except:
+            raise e
 
 
 @register.filter

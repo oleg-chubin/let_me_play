@@ -1,13 +1,13 @@
 {% load avatar %}
 <ul>
   {% for group_name, choices in optgroups %}
-  {% for choice in choices %}
-  <li>
-    <input {% if choice.0 in value %}checked="checked" {% endif %}type="checkbox" id="{{ attrs.id }}_{{ forloop.counter }}" name="{{ name }}" value="{{ choice.0 }}">
-    <label for="{{ attrs.id }}_{{ forloop.counter }}" class="img-check {% if not choice.0 in value %}uncheck{% endif %} ">
-      <img src="{{choice.1|avatar_url}}" class="list-pic img-responsive img-thumbnail"/> {{ choice.1 }}
-    </label>
-  </li>
-  {% endfor %}
+      {% for choice in choices %}
+      <li>
+        <input {% if choice.0 in value %}checked="checked" {% endif %}type="checkbox" id="{{ attrs.id }}_{{ forloop.counter }}" name="{{ name }}" value="{{ choice.0 }}">
+        <label for="{{ attrs.id }}_{{ forloop.counter }}" class="img-check {% if not choice.0 in value %}uncheck{% endif %} ">
+          <img src="{{choice.1|avatar_url}}" class="list-pic img-responsive img-thumbnail"/> {{ choice.1 }}
+        </label>
+      </li>
+      {% endfor %}
   {% endfor %}
 </ul>

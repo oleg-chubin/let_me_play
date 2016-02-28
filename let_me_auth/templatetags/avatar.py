@@ -9,4 +9,4 @@ def avatar_url(user):
         return user.avatar.url
     else:
         return '/'.join(
-            [settings.STATIC_URL.rstrip('/'), "images/default.png"])
+            [settings.STATIC_URL.rstrip('/'), "images/default_profile.png"])
