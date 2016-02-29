@@ -8,13 +8,13 @@ from let_me_app.models import (InternalMessage, Peeper, PrivateComment,
     Changelog, Site, Court, Occasion, BookingPolicy, Invoice, InventoryList,
     Event, Equipment, Inventory, Proposal, Application, Receipt, Visit,
     ChatParticipant, GalleryImage, ActivityType, StaffRole,
-    VisitRole, IndexParametr, CoachRecommendation, VisitIndex)
+    VisitRole, IndexParametr, CoachRecommendation, VisitIndex, CoolnessRate)
 
 
 model_list = (InternalMessage, Peeper, PrivateComment, GalleryImage,
     Changelog, Court, Occasion, BookingPolicy, Invoice, ChatParticipant,
     Event, Equipment, Inventory, Proposal, Application, Receipt, Visit,
-    ActivityType, StaffRole, VisitRole, IndexParametr,
+    ActivityType, StaffRole, VisitRole, IndexParametr, CoolnessRate,
     CoachRecommendation, VisitIndex
 )
 

@@ -16,7 +16,13 @@ class RateUserView(UpdateView):
             'let_me_help:rate-user', kwargs={'user_id': self.kwargs['user_id']})
 
     def get_object(self):
-        obj, _ = models.CoolnessRate.objects.get_or_create(
+        rates = models.CoolnessRate.objects.filter(
             topic_id=self.kwargs['user_id'], rater=self.request.user
         )
-        return obj
+
+        if rates:
+            return rates[0]
+
+        return models.CoolnessRate(
+            topic_id=self.kwargs['user_id'], rater=self.request.user
+        )
