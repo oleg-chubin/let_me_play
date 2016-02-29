@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, include, url
-from . import views
+from let_me_app import views
 
 urlpatterns = patterns('',
     url(r'^view/event/(?P<pk>[0-9]+)/$',

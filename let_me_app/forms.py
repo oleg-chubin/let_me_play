@@ -46,6 +46,19 @@ class ReadonlySelect(floppyforms_widgets.Select):
     template_name = 'floppyforms/readonly.html'
 
 
+class ImageRadioSelect(floppyforms_widgets.RadioSelect):
+    template_name = "floppyforms/image_radio_select.html"
+
+    def get_context_data(self):
+        return {'COOLNESS_IMAGES': models.Coolness.IMAGES}
+
+    class Media:
+        css = {
+            'all': ('css/imaged_checkboxes.css',)
+        }
+        js = ('js/imaged_radiobuttons.js',)
+
+
 class CheckboxUserSelectMultiple(floppyforms_widgets.CheckboxSelectMultiple):
     template_name = "floppyforms/checkbox_user_select.html"
 
@@ -58,6 +71,15 @@ class CheckboxUserSelectMultiple(floppyforms_widgets.CheckboxSelectMultiple):
 
 class ChatMessageForm(forms.Form):
     message = forms.CharField()
+
+
+class RateForm(forms.ModelForm):
+    class Meta:
+        fields = ['value']
+        widgets = {
+            'value': ImageRadioSelect,
+        }
+        model = models.CoolnessRate
 
 
 class EventProposalForm(forms.Form):

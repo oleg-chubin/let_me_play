@@ -171,7 +171,7 @@
           <ul class="user-list">
             {% for application in active_applications %}
               <li>
-                <img src="{{application.user|avatar_url}}" class="list-pic img-responsive img-thumbnail">
+                <img src="{{application.user|avatar_url}}" class="list-pic img-responsive img-thumbnail" data-toggle="popover" data-popover_url="{% url 'let_me_help:rate-user' user_id=application.user.id %}">
                 {{ application.user.get_full_name }} ({{ application.comment|truncatewords_html:4 }})
                 {% if object.status == EVENT_STATUSES.PENDING %}
                     <div class="ui-group-buttons marginBottom10">
@@ -198,7 +198,7 @@
             {% for proposal in active_proposals %}
               {% if proposal.status == PROPOSAL_STATUSES.ACTIVE %}
                   <li>
-                      <img src="{{proposal.user|avatar_url}}" class="list-pic img-responsive img-thumbnail">
+                      <img src="{{proposal.user|avatar_url}}" class="list-pic img-responsive img-thumbnail" data-toggle="popover" data-popover_url="{% url 'let_me_help:rate-user' user_id=proposal.user.id %}">
                       {{ proposal.user.get_full_name }}
 
                         {% if object.status == EVENT_STATUSES.PENDING %}
@@ -265,6 +265,8 @@
   <script src="{% static "js/expandable_listgroup.js" %}"></script>
   <script src="{% static "js/modal.js" %}"></script>
   <script src="{% static "js/sidebar_chat.js" %}"></script>
+  <script src="{% static "js/rateable_avatars.js" %}"></script>
+  <script src="{% static "js/imaged_radiobuttons.js" %}"></script>
 {% endblock %}
 
 {% block extra_content %}

@@ -71,6 +71,30 @@ class RecommendationStatuses:
     )
 
 
+class Coolness:
+    WEAKER = 1
+    BIT_WEAKER = 2
+    SAME = 3
+    BIT_STRONGER = 4
+    STRONGER = 5
+
+    CHOICES = (
+        (WEAKER, _('weaker')),
+        (BIT_WEAKER, _('bit_weaker')),
+        (SAME, _('same')),
+        (BIT_STRONGER, _('bit_stronger')),
+        (STRONGER, _('stronger'))
+    )
+
+    IMAGES = {
+        WEAKER: 'images/weaker_coolness.png',
+        BIT_WEAKER: 'images/bit_weaker_coolness.png',
+        SAME: 'images/same_coolness.png',
+        BIT_STRONGER: 'images/bit_stronger_coolness.png',
+        STRONGER: 'images/stronger_coolness.png'
+    }
+
+
 class EventStatuses:
     PENDING = 1
     COMPLETED = 2
@@ -126,6 +150,21 @@ class Peeper(models.Model):
     def __str__(self):
         return "{} follows {}".format(self.user, self.followable.id)
 
+
+class CoolnessRate(models.Model):
+    topic = models.ForeignKey(Followable, related_name='expertise')
+    rater = models.ForeignKey(UserModel)
+    value = models.IntegerField(choices=Coolness.CHOICES,
+                                default=Coolness.SAME)
+
+    class Meta:
+        unique_together = ('topic', 'rater')
+
+    def __str__(self):
+        return "{} thinks that {} is {}".format(
+            self.rater_id,
+            self.topic_id,
+            dict(Coolness.CHOICES)[self.value])
 
 
 class PrivateComment(models.Model):
