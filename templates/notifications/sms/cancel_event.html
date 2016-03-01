@@ -1,1 +1,1 @@
-{% load i18n %}{% blocktrans %}Event at {{event.start_at}} was cancelled.{% endblocktrans %}
+{% load i18n %}{%with event.start_at as event_start_at%}{% blocktrans %}Event at {{event_start_at}} was cancelled.{% endblocktrans %}{%endwith%}

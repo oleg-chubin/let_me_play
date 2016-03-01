@@ -53,7 +53,13 @@ class GroupFactory(factory.django.DjangoModelFactory):
         self.user_set.add(UserFactory())
 
 
+class StaffRoleFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.StaffRole
+
+
 class ActivityTypeFactory(factory.django.DjangoModelFactory):
+    default_role = factory.SubFactory(StaffRoleFactory)
     class Meta:
         model = models.ActivityType
 

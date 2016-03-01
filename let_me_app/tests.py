@@ -44,7 +44,7 @@ class NotificationTasksTest(TestCase):
             lang='ru',
             user=self.user
         )
-        response = self.client.post(url, {'users': [self.user.id]})
+        response = self.client.post(url, {'proposal-users': [self.user.id]})
         self.assertEqual(response.status_code, 302)
         fake_render.assert_called_with(
             'notifications/email/create_proposal.html',
@@ -79,7 +79,7 @@ class NotificationTasksTest(TestCase):
             lang='ru',
             user=self.user
         )
-        response = self.client.post(url, {'users': [self.user.id]})
+        response = self.client.post(url, {'proposal-users': [self.user.id]})
         self.assertEqual(response.status_code, 302)
         fake_render.assert_called_with(
             'notifications/sms/create_proposal.html',
@@ -152,6 +152,74 @@ class NotificationTasksTest(TestCase):
         }
         self.assertEqual(mail_notifications, expected_mail_notifications)
 
+        sms_notifications = {
+            i[0][0] for i in fake_send_sms.call_args_list}
+        expected_sms_notifications = {
+            self.admin_user.cell_phone, self.user.cell_phone
+        }
+        self.assertEqual(sms_notifications, expected_sms_notifications)
+
+    @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
+                       CELERY_ALWAYS_EAGER=True,
+                       BROKER_BACKEND='memory')
+    @patch('let_me_app.tasks.send_sms')
+    @patch('let_me_app.tasks.send_mail')
+    def test_event_cancelled(self, fake_send_mail, fake_send_sms):
+        self.client.login(
+            email=self.admin_user.email,
+            password=self.admin_user.first_name
+        )
+
+        factories.VisitFactory(user=self.user, event=self.event)
+
+        url = reverse('let_me_app:cancel_event',
+                      kwargs={'event': self.event.id})
+        for user in [self.user, self.admin_user]:
+            auth_models.NotificationSettings.objects.create(
+                sms_notifications=True,
+                email_notifications=True,
+                lang='ru',
+                user=user
+            )
+        response = self.client.post(url, {})
+        self.assertEqual(response.status_code, 302)
+
+        mail_notifications = {
+            i[0][0]: i[0][-1] for i in fake_send_mail.call_args_list}
+        expected_mail_notifications = {
+            'cancel_event': [self.user.email],
+        }
+        self.assertEqual(mail_notifications, expected_mail_notifications)
+
+    @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
+                       CELERY_ALWAYS_EAGER=True,
+                       BROKER_BACKEND='memory')
+    @patch('let_me_app.tasks.send_sms')
+    @patch('let_me_app.tasks.send_mail')
+    def test_visit_cancelled(self, fake_send_mail, fake_send_sms):
+        self.client.login(
+            email=self.user.email, password=self.user.first_name)
+
+        factories.VisitFactory(user=self.user, event=self.event)
+
+        url = reverse(
+            'let_me_app:cancel_visit', kwargs={'event': self.event.id})
+        for user in [self.user, self.admin_user]:
+            auth_models.NotificationSettings.objects.create(
+                sms_notifications=True,
+                email_notifications=True,
+                lang='ru',
+                user=user
+            )
+        response = self.client.post(url, {})
+        self.assertEqual(response.status_code, 302)
+
+        mail_notifications = {
+            i[0][0]: i[0][-1] for i in fake_send_mail.call_args_list}
+        expected_mail_notifications = {
+            'cancel_visit': [self.admin_user.email],
+        }
+        self.assertEqual(mail_notifications, expected_mail_notifications)
 
     @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
                        CELERY_ALWAYS_EAGER=True,
@@ -176,7 +244,7 @@ class NotificationTasksTest(TestCase):
                 lang='ru',
                 user=u
             )
-        response = self.client.post(url, {'users': [user.id, self.user.id]})
+        response = self.client.post(url, {'proposal-users': [user.id, self.user.id]})
         self.assertEqual(response.status_code, 302)
         fake_render.assert_called_with(
             'notifications/email/create_proposal.html',

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-29 08:49+0000\n"
+"POT-Creation-Date: 2016-03-01 08:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1021,42 +1021,42 @@ msgstr ""
 #: templates/notifications/sms/accept_application.html:2
 #, python-format
 msgid ""
-"Application for the event at %(event.start_at)s was accepted by %(user)s."
+"Application for the event at %(event_start_at)s was accepted by %(user)s."
 msgstr ""
 
 #: templates/notifications/sms/cancel_event.html:1
 #, python-format
-msgid "Event at %(event.start_at)s was cancelled."
+msgid "Event at %(event_start_at)s was cancelled."
 msgstr ""
 
 #: templates/notifications/sms/cancel_visit.html:1
 #, python-format
-msgid "User %(user)s cancelled his visit for the event at %(event.start_at)s."
+msgid "User %(user)s cancelled his visit for the event at %(event_start_at)s."
 msgstr ""
 
 #: templates/notifications/sms/create_event.html:1
 #, python-format
-msgid "There is new event (%(court.activity_type)s) at %(event.start_at)s."
+msgid "There is new event (%(court_activity_type)s) at %(event_start_at)s."
 msgstr ""
 
 #: templates/notifications/sms/create_proposal.html:1
 #, python-format
-msgid "You have been proposed to visit event at %(event.start_at)s."
+msgid "You have been proposed to visit event at %(event_start_at)s."
 msgstr ""
 
 #: templates/notifications/sms/create_visit.html:1
 #, python-format
-msgid "You have been add as a visitor for the event at %(event.start_at)s."
+msgid "You have been add as a visitor for the event at %(event_start_at)s."
 msgstr ""
 
 #: templates/notifications/sms/decline_application.html:1
 #, python-format
-msgid "Your application for the event at %(event.start_at)s has been declined."
+msgid "Your application for the event at %(event_start_at)s has been declined."
 msgstr ""
 
 #: templates/notifications/sms/decline_visit.html:1
 #, python-format
-msgid "Your visit for the event at %(event.start_at)s has been declined."
+msgid "Your visit for the event at %(event_start_at)s has been declined."
 msgstr ""
 
 #: templates/user/details_form.html:12 templates/user/settings.html:12

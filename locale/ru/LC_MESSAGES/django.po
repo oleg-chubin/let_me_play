@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-29 08:49+0000\n"
+"POT-Creation-Date: 2016-03-01 08:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1094,46 +1094,57 @@ msgstr ""
 "  "
 
 #: templates/notifications/sms/accept_application.html:2
-#, python-format
+#, fuzzy, python-format
+#| msgid ""
+#| "Application for the event at %(event.start_at)s was accepted by %(user)s."
 msgid ""
-"Application for the event at %(event.start_at)s was accepted by %(user)s."
+"Application for the event at %(event_start_at)s was accepted by %(user)s."
 msgstr ""
-"Заявка на посещение (%(event.start_at)s) принята пользователем %(user)s."
+"Заявка на посещение (%(event_start_at)s) принята пользователем %(user)s."
 
 #: templates/notifications/sms/cancel_event.html:1
-#, python-format
-msgid "Event at %(event.start_at)s was cancelled."
-msgstr "Событие (%(event.start_at)s) не состоится"
+#, fuzzy, python-format
+#| msgid "Event at %(event.start_at)s was cancelled."
+msgid "Event at %(event_start_at)s was cancelled."
+msgstr "Событие (%(event_start_at)s) не состоится"
 
 #: templates/notifications/sms/cancel_visit.html:1
-#, python-format
-msgid "User %(user)s cancelled his visit for the event at %(event.start_at)s."
-msgstr "Пользователь %(user)s не прийдет на событие (%(event.start_at)s)."
+#, fuzzy, python-format
+#| msgid ""
+#| "User %(user)s cancelled his visit for the event at %(event.start_at)s."
+msgid "User %(user)s cancelled his visit for the event at %(event_start_at)s."
+msgstr "Пользователь %(user)s не прийдет на событие (%(event_start_at)s)."
 
 #: templates/notifications/sms/create_event.html:1
-#, python-format
-msgid "There is new event (%(court.activity_type)s) at %(event.start_at)s."
-msgstr "Появилось событие (%(court.activity_type)s) %(event.start_at)s."
+#, fuzzy, python-format
+#| msgid "There is new event (%(court.activity_type)s) at %(event.start_at)s."
+msgid "There is new event (%(court_activity_type)s) at %(event_start_at)s."
+msgstr "Появилось событие (%(court_activity_type)s) %(event_start_at)s."
 
 #: templates/notifications/sms/create_proposal.html:1
-#, python-format
-msgid "You have been proposed to visit event at %(event.start_at)s."
-msgstr "Вас приглашают на событие %(event.start_at)s."
+#, fuzzy, python-format
+#| msgid "You have been proposed to visit event at %(event.start_at)s."
+msgid "You have been proposed to visit event at %(event_start_at)s."
+msgstr "Вас приглашают на событие %(event_start_at)s."
 
 #: templates/notifications/sms/create_visit.html:1
-#, python-format
-msgid "You have been add as a visitor for the event at %(event.start_at)s."
-msgstr "Вас жаждут видеть на событии (%(event.start_at)s)."
+#, fuzzy, python-format
+#| msgid "You have been add as a visitor for the event at %(event.start_at)s."
+msgid "You have been add as a visitor for the event at %(event_start_at)s."
+msgstr "Вас жаждут видеть на событии (%(event_start_at)s)."
 
 #: templates/notifications/sms/decline_application.html:1
-#, python-format
-msgid "Your application for the event at %(event.start_at)s has been declined."
-msgstr "Ваша заявка на событие (%(event.start_at)s) отклонена."
+#, fuzzy, python-format
+#| msgid ""
+#| "Your application for the event at %(event.start_at)s has been declined."
+msgid "Your application for the event at %(event_start_at)s has been declined."
+msgstr "Ваша заявка на событие (%(event_start_at)s) отклонена."
 
 #: templates/notifications/sms/decline_visit.html:1
-#, python-format
-msgid "Your visit for the event at %(event.start_at)s has been declined."
-msgstr "Посещение события (%(event.start_at)s) не состоится."
+#, fuzzy, python-format
+#| msgid "Your visit for the event at %(event.start_at)s has been declined."
+msgid "Your visit for the event at %(event_start_at)s has been declined."
+msgstr "Посещение события (%(event_start_at)s) не состоится."
 
 #: templates/user/details_form.html:12 templates/user/settings.html:12
 msgid "User settings"
@@ -1509,6 +1520,7 @@ msgid "Raw binary data"
 msgstr "Данные"
 
 #: venv/lib/python3.4/site-packages/django/db/models/fields/__init__.py:2375
+#, python-format
 msgid "'%(value)s' is not a valid UUID."
 msgstr "Значение %(value)r не может быть выбрано."
 
