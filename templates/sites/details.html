@@ -4,6 +4,12 @@
 
 {% load staticfiles let_me_escort leaflet_tags %}
 
+{% block page_title %}
+  {% with name=object.name %}
+    {% blocktrans %}Site "{{name}}" details{% endblocktrans %}
+  {% endwith %}
+{% endblock %}
+
 {% block extra_head %}
     {% leaflet_css %}
     <link href="{% static "css/group_buttons.css" %}" rel="stylesheet">

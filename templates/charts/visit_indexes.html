@@ -2,6 +2,8 @@
 
 {% load i18n %}
 
+{% block page_title %}{% with request.user as user %}{% blocktrans %}Visit indexes for {{user}}{% endblocktrans %}{% endwith %}{% endblock %}
+
 {% load staticfiles let_me_escort leaflet_tags %}
 
 {% block extra_head %}

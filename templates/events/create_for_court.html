@@ -2,6 +2,12 @@
 
 {% load staticfiles let_me_escort leaflet_tags i18n %}
 
+{% block page_title %}
+  {% with activity_type=court.activity_type.title name=court.description|truncatewords:5 %}
+    {% blocktrans %}Create event for {{activity_type}} court "{{name}}" details{% endblocktrans %}
+  {% endwith %}
+{% endblock %}
+
 {% block extra_head %}
   {% leaflet_css %}
   <link href="{% static "css/event.css" %}" rel="stylesheet">

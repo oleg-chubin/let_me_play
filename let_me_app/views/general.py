@@ -1144,7 +1144,7 @@ class IndexRecommendations(ListView):
             queryset = queryset.filter(
                 visit__event__eventstaff__staff__user=self.request.user)
         queryset = queryset.order_by('status', '-visit__event__start_at')
-        queryset = queryset.select_related('visit__event', 'coach__user')
+        queryset = queryset.select_related('visit__event', 'coach')
         return queryset
 
 

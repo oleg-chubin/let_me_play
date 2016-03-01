@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-01 08:03+0000\n"
+"POT-Creation-Date: 2016-03-01 21:58+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -165,7 +165,7 @@ msgstr "Имя"
 
 #: let_me_app/models.py:192 let_me_app/models.py:220 let_me_app/models.py:279
 #: let_me_app/models.py:383 templates/details_blocks/court.html:15
-#: templates/details_blocks/site.html:17 templates/events/details.html:89
+#: templates/details_blocks/site.html:17 templates/events/details.html:95
 msgid "Description"
 msgstr "описание"
 
@@ -193,7 +193,7 @@ msgstr "старт регистрации"
 msgid "estimated price"
 msgstr "приблизительная стоимость"
 
-#: let_me_app/models.py:283 templates/events/details.html:85
+#: let_me_app/models.py:283 templates/events/details.html:91
 msgid "Preliminary price"
 msgstr "Приблизительная стоимость"
 
@@ -207,7 +207,7 @@ msgstr "Комментарий"
 
 #: let_me_app/models.py:363
 #: templates/dashboard/messages/let_me_app.visit.html:7
-#: templates/visits/annotate_visit.html:17
+#: templates/visits/annotate_visit.html:23
 msgid "Visit"
 msgstr "Посещение"
 
@@ -306,62 +306,84 @@ msgstr "код подтверждения"
 msgid "Confirmation code is %(phone)s."
 msgstr "Ваш код подтверждение %(phone)s."
 
-#: templates/charts/recommendations.html:14
-#: templates/charts/visit_indexes.html:14 templates/chat/details.html:13
-#: templates/chat/list.html:12 templates/courts/details.html:12
-#: templates/courts/search.html:14
-#: templates/courts/user_managed_courts.html:12
-#: templates/dashboard/list.html:13 templates/events/clone_event.html:13
-#: templates/events/complete_event.html:13
-#: templates/events/create_for_court.html:13
-#: templates/events/create_for_site.html:13
-#: templates/events/create_new.html:13 templates/events/create_staff.html:13
-#: templates/events/details.html:16 templates/events/search.html:14
-#: templates/events/user_events.html:11
-#: templates/events/user_proposals.html:11 templates/sites/details.html:14
-#: templates/user/details_form.html:11 templates/user/profile_details.html:11
-#: templates/user/settings.html:11 templates/visits/annotate_visit.html:13
+#: templates/charts/recommendations.html:5
+#, fuzzy, python-format
+#| msgid "Recommendations"
+msgid "Recomendation for %(user)s"
+msgstr "Рекомендации"
+
+#: templates/charts/recommendations.html:16
+#: templates/charts/visit_indexes.html:16 templates/chat/details.html:15
+#: templates/chat/list.html:14 templates/courts/details.html:19
+#: templates/courts/search.html:18
+#: templates/courts/user_managed_courts.html:18
+#: templates/dashboard/list.html:19 templates/events/clone_event.html:19
+#: templates/events/complete_event.html:19
+#: templates/events/create_for_court.html:19
+#: templates/events/create_for_site.html:19
+#: templates/events/create_new.html:17 templates/events/create_staff.html:19
+#: templates/events/details.html:22 templates/events/search.html:18
+#: templates/events/user_events.html:17
+#: templates/events/user_proposals.html:17 templates/sites/details.html:20
+#: templates/user/details_form.html:15 templates/user/profile_details.html:15
+#: templates/user/settings.html:15 templates/visits/annotate_visit.html:19
 #: venv/djcelery/templates/admin/djcelery/change_list.html:7
 #: venv/djcelery/templates/djcelery/confirm_rate_limit.html:6
 msgid "Home"
 msgstr "Главная"
 
-#: templates/charts/recommendations.html:15
-#: templates/charts/recommendations.html:23 templates/navbar.html:76
+#: templates/charts/recommendations.html:17
+#: templates/charts/recommendations.html:25 templates/navbar.html:76
 msgid "Visit recommendations"
 msgstr "Рекомендации"
 
-#: templates/charts/recommendations.html:31
+#: templates/charts/recommendations.html:33
 #, python-format
 msgid " %(coach)s recommendation (%(start_at)s)"
 msgstr " Рекомендация тренера %(coach)s (%(start_at)s)"
 
-#: templates/charts/visit_indexes.html:15
-#: templates/charts/visit_indexes.html:23
+#: templates/charts/visit_indexes.html:5
+#, fuzzy, python-format
+#| msgid "Visit indexes"
+msgid "Visit indexes for %(user)s"
+msgstr "Показатели Посещений"
+
+#: templates/charts/visit_indexes.html:17
+#: templates/charts/visit_indexes.html:25
 msgid "Indexes charts"
 msgstr "Графики показателей"
 
-#: templates/charts/visit_indexes.html:37
+#: templates/charts/visit_indexes.html:39
 msgid "date"
 msgstr "дата"
 
-#: templates/charts/visit_indexes.html:37
+#: templates/charts/visit_indexes.html:39
 msgid "value"
 msgstr "значение"
 
-#: templates/chat/details.html:14 templates/chat/list.html:13
+#: templates/chat/details.html:5
+#, python-format
+msgid "Chat about event %(subject)s"
+msgstr "обсуждение события %(subject)s"
+
+#: templates/chat/details.html:16 templates/chat/list.html:15
 msgid "Chats"
 msgstr "Чаты"
 
-#: templates/chat/details.html:15
+#: templates/chat/details.html:17
 msgid "Chat"
 msgstr "Чат"
 
-#: templates/chat/list.html:22
+#: templates/chat/list.html:5
+#, python-format
+msgid "Chats list for %(user)s"
+msgstr "Список обсуждения пользователя %(user)s"
+
+#: templates/chat/list.html:24
 msgid "Chat list"
 msgstr "Чаты"
 
-#: templates/chat/list.html:38
+#: templates/chat/list.html:40
 #, python-format
 msgid ""
 "\n"
@@ -372,49 +394,55 @@ msgstr ""
 "Обсуждение события \"%(event_name)s\"\n"
 "                "
 
-#: templates/chat/list.html:42
+#: templates/chat/list.html:44
 msgid "Group chat"
 msgstr "Групповой чат"
 
-#: templates/chat/list.html:66
+#: templates/chat/list.html:68
 msgid "More..."
 msgstr "Детальнее..."
 
-#: templates/courts/buttons/create_event.html:4 templates/navbar.html:29
-#: templates/navbar.html.py:49 templates/sites/details.html:56
+#: templates/courts/buttons/create_event.html:4
+#: templates/events/create_new.html:6 templates/navbar.html:29
+#: templates/navbar.html.py:49 templates/sites/details.html:62
 msgid "Create event"
 msgstr "Создать событие"
 
-#: templates/courts/details.html:13 templates/details_blocks/site.html:5
-#: templates/events/clone_event.html:14 templates/events/clone_event.html:27
-#: templates/events/complete_event.html:14
-#: templates/events/create_for_court.html:14
-#: templates/events/create_for_court.html:27
-#: templates/events/create_for_site.html:14
-#: templates/events/create_for_site.html:26
-#: templates/events/create_staff.html:14 templates/events/details.html:17
-#: templates/sites/details.html:15 templates/visits/annotate_visit.html:14
+#: templates/courts/details.html:7 templates/dashboard/list.html:7
+#, python-format
+msgid "%(activity_type)s court \"%(name)s\" details"
+msgstr "Детали секции %(activity_type)s  \"%(name)s\" "
+
+#: templates/courts/details.html:20 templates/details_blocks/site.html:5
+#: templates/events/clone_event.html:20 templates/events/clone_event.html:33
+#: templates/events/complete_event.html:20
+#: templates/events/create_for_court.html:20
+#: templates/events/create_for_court.html:33
+#: templates/events/create_for_site.html:20
+#: templates/events/create_for_site.html:32
+#: templates/events/create_staff.html:20 templates/events/details.html:23
+#: templates/sites/details.html:21 templates/visits/annotate_visit.html:20
 msgid "Site"
 msgstr "Точка"
 
-#: templates/courts/details.html:14
+#: templates/courts/details.html:21
 #: templates/dashboard/messages/let_me_app.court.html:7
-#: templates/details_blocks/court.html:5 templates/events/clone_event.html:15
-#: templates/events/clone_event.html:37
-#: templates/events/complete_event.html:15
-#: templates/events/create_for_court.html:15
-#: templates/events/create_for_court.html:37
-#: templates/events/create_staff.html:15 templates/events/details.html:18
-#: templates/visits/annotate_visit.html:15
+#: templates/details_blocks/court.html:5 templates/events/clone_event.html:21
+#: templates/events/clone_event.html:43
+#: templates/events/complete_event.html:21
+#: templates/events/create_for_court.html:21
+#: templates/events/create_for_court.html:43
+#: templates/events/create_staff.html:21 templates/events/details.html:24
+#: templates/visits/annotate_visit.html:21
 msgid "Court"
-msgstr "Площадка"
+msgstr "Секция"
 
-#: templates/courts/details.html:32 templates/courts/search.html:15
-#: templates/events/search.html:15 templates/navbar.html:20
+#: templates/courts/details.html:39 templates/courts/search.html:19
+#: templates/events/search.html:19 templates/navbar.html:20
 msgid "Events"
 msgstr "События"
 
-#: templates/courts/details.html:55
+#: templates/courts/details.html:62
 msgid "Admin group"
 msgstr "Админ группа"
 
@@ -426,23 +454,33 @@ msgstr "Добавить пользователя в админ группу"
 msgid "Add User"
 msgstr "Добавить пользователя"
 
-#: templates/courts/search.html:29 templates/events/search.html:29
+#: templates/courts/search.html:6
+#, fuzzy
+#| msgid "Search Courts"
+msgid "Search courts"
+msgstr "Поиск площадок"
+
+#: templates/courts/search.html:33 templates/events/search.html:33
 msgid "Find"
 msgstr "Найти"
 
-#: templates/courts/search.html:35 templates/events/search.html:35
+#: templates/courts/search.html:39 templates/events/search.html:39
 msgid "Search Results"
 msgstr "Результаты поиска"
 
-#: templates/courts/search.html:37 templates/events/search.html:37
+#: templates/courts/search.html:41 templates/events/search.html:41
 msgid "results were found"
 msgstr "результатов найдено"
 
-#: templates/courts/user_managed_courts.html:13
+#: templates/courts/user_managed_courts.html:7
+msgid "Courts managed by %(user)s"
+msgstr "Подопечные площадки пользователя %(user)s"
+
+#: templates/courts/user_managed_courts.html:19
 msgid "Managed events"
 msgstr "Управляемые события"
 
-#: templates/dashboard/list.html:14
+#: templates/dashboard/list.html:20
 msgid "Dashboard"
 msgstr "Лента"
 
@@ -505,16 +543,16 @@ msgid "Court was updated"
 msgstr "Площадка была обновлен"
 
 #: templates/dashboard/messages/let_me_app.event.html:7
-#: templates/events/clone_event.html:16
-#: templates/events/complete_event.html:16
-#: templates/events/complete_event.html:26
-#: templates/events/create_for_court.html:16
-#: templates/events/create_for_court.html:41
-#: templates/events/create_for_site.html:15
-#: templates/events/create_staff.html:16 templates/events/create_staff.html:26
-#: templates/events/details.html:19 templates/events/details.html.py:75
-#: templates/visits/annotate_visit.html:16
-#: templates/visits/annotate_visit.html:24
+#: templates/events/clone_event.html:22
+#: templates/events/complete_event.html:22
+#: templates/events/complete_event.html:32
+#: templates/events/create_for_court.html:22
+#: templates/events/create_for_court.html:47
+#: templates/events/create_for_site.html:21
+#: templates/events/create_staff.html:22 templates/events/create_staff.html:32
+#: templates/events/details.html:25 templates/events/details.html.py:81
+#: templates/visits/annotate_visit.html:22
+#: templates/visits/annotate_visit.html:30
 msgid "Event"
 msgstr "События"
 
@@ -608,12 +646,12 @@ msgid "Cancel application"
 msgstr "Отменить заявку"
 
 #: templates/events/buttons/cancel_event.html:6
-#: templates/events/clone_event.html:49
-#: templates/events/complete_event.html:48
-#: templates/events/create_for_court.html:57
-#: templates/events/create_for_site.html:46
-#: templates/events/create_new.html:29 templates/events/create_staff.html:46
-#: templates/visits/annotate_visit.html:54
+#: templates/events/clone_event.html:55
+#: templates/events/complete_event.html:54
+#: templates/events/create_for_court.html:63
+#: templates/events/create_for_site.html:52
+#: templates/events/create_new.html:33 templates/events/create_staff.html:52
+#: templates/visits/annotate_visit.html:60
 msgid "Cancel"
 msgstr "Отменить"
 
@@ -640,55 +678,85 @@ msgstr "Завершить"
 msgid "Decline proposal"
 msgstr "Отклонить предложение"
 
-#: templates/events/clone_event.html:47
-#: templates/events/complete_event.html:46
-#: templates/events/create_for_court.html:55
-#: templates/events/create_for_site.html:44
-#: templates/events/create_new.html:27 templates/events/create_staff.html:44
-#: templates/helpers/rate_popup.html:18 templates/user/details_form.html:27
-#: templates/user/settings.html:26 templates/visits/annotate_visit.html:52
+#: templates/events/clone_event.html:7
+#, python-format
+msgid "Clone event started at %(start_at)s"
+msgstr "Создать событие на базе прошедшего %(start_at)s"
+
+#: templates/events/clone_event.html:53
+#: templates/events/complete_event.html:52
+#: templates/events/create_for_court.html:61
+#: templates/events/create_for_site.html:50
+#: templates/events/create_new.html:31 templates/events/create_staff.html:50
+#: templates/helpers/rate_popup.html:18 templates/user/details_form.html:31
+#: templates/user/settings.html:30 templates/visits/annotate_visit.html:58
 msgid "Save"
 msgstr "Сохранить"
 
-#: templates/events/complete_event.html:40
-#: templates/events/create_for_court.html:46 templates/events/details.html:132
+#: templates/events/complete_event.html:7
+#, python-format
+msgid "Complete event started at %(start_at)s"
+msgstr "Завершить событие %(start_at)s"
+
+#: templates/events/complete_event.html:46
+#: templates/events/create_for_court.html:52 templates/events/details.html:138
 msgid "Visitors"
 msgstr "Посетитель"
 
-#: templates/events/create_for_court.html:50 templates/events/details.html:192
+#: templates/events/create_for_court.html:7
+#, python-format
+msgid "Create event for %(activity_type)s court \"%(name)s\" details"
+msgstr "Создать событие %(activity_type)s для секции \"%(name)s\""
+
+#: templates/events/create_for_court.html:56 templates/events/details.html:198
 #: templates/navbar.html:95
 msgid "Proposals"
 msgstr "Предложения"
 
-#: templates/events/create_for_site.html:39
-#: templates/events/create_new.html:23
+#: templates/events/create_for_site.html:7
+#, python-format
+msgid "Create event for site \"%(name)s\"."
+msgstr "Создать событие для точки \"%(name)s\"."
+
+#: templates/events/create_for_site.html:45
+#: templates/events/create_new.html:27
 msgid "details"
 msgstr "детали"
 
-#: templates/events/create_new.html:14
+#: templates/events/create_new.html:18
 msgid "Create new event"
 msgstr "Создать событие"
 
-#: templates/events/create_staff.html:39
+#: templates/events/create_staff.html:7
+#, fuzzy, python-format
+msgid "Create staff for event at %(start_at)s"
+msgstr "Управление персоналом события %(start_at)s."
+
+#: templates/events/create_staff.html:45
 msgid "Staff"
 msgstr "Персонал"
 
-#: templates/events/details.html:81
+#: templates/events/details.html:7
+#, python-format
+msgid "Details of event %(start_at)s"
+msgstr "Событие %(start_at)s в деталях"
+
+#: templates/events/details.html:87
 msgid "Start at"
 msgstr "начальная дата"
 
-#: templates/events/details.html:96
+#: templates/events/details.html:102
 #: templates/events/panels/my_application.html:11
 #: templates/events/panels/my_visit.html:15
 msgid "Inventory"
 msgstr "Инвентарь"
 
-#: templates/events/details.html:145
+#: templates/events/details.html:151
 #, python-format
 msgid "There are %(visit_count)s visitors "
 msgstr "Запланировано %(visit_count)s посетителей"
 
-#: templates/events/details.html:166 templates/navbar.html:115
+#: templates/events/details.html:172 templates/navbar.html:115
 msgid "Applications"
 msgstr "Заявки"
 
@@ -754,19 +822,33 @@ msgstr "Показатели"
 msgid "Units"
 msgstr "Единицы измерения"
 
-#: templates/events/search.html:59
+#: templates/events/search.html:6
+msgid "Search events"
+msgstr "Искать события"
+
+#: templates/events/search.html:63
 msgid "People"
 msgstr "Людей"
 
-#: templates/events/user_events.html:12 templates/navbar.html:24
+#: templates/events/user_events.html:7
+#, python-format
+msgid "Events for user %(user)s"
+msgstr "События для пользователя %(user)s"
+
+#: templates/events/user_events.html:18 templates/navbar.html:24
 msgid "My events"
 msgstr "Мои события"
 
-#: templates/events/user_proposals.html:12
+#: templates/events/user_proposals.html:7
+#, python-format
+msgid "Proposals for user %(user)s"
+msgstr "Предложения для пользователя %(user)s"
+
+#: templates/events/user_proposals.html:18
 msgid "My proposals"
 msgstr "Мое Предложения"
 
-#: templates/events/user_proposals.html:53
+#: templates/events/user_proposals.html:59
 msgid "Inactive"
 msgstr "Неактивный"
 
@@ -778,11 +860,15 @@ msgstr "Вычисленная оценка"
 msgid "Your rate"
 msgstr "Ваша оценка"
 
+#: templates/home.html:5
+msgid "Welcome to let.me.play."
+msgstr "Добро пожаловать в let.me.play."
+
 #: templates/navbar.html:25
 msgid "Search Events"
 msgstr "Искать события"
 
-#: templates/navbar.html:37 templates/sites/details.html:32
+#: templates/navbar.html:37 templates/sites/details.html:38
 msgid "Courts"
 msgstr "Площадки"
 
@@ -798,11 +884,11 @@ msgstr "Поиск площадок"
 msgid "Settings"
 msgstr "Настройки"
 
-#: templates/navbar.html:68 templates/user/details_form.html:21
+#: templates/navbar.html:68 templates/user/details_form.html:25
 msgid "Profile"
 msgstr "Профиль"
 
-#: templates/navbar.html:71 templates/visits/annotate_visit.html:38
+#: templates/navbar.html:71 templates/visits/annotate_visit.html:44
 msgid "Visit indexes"
 msgstr "Показатели Посещений"
 
@@ -1146,7 +1232,17 @@ msgstr "Ваша заявка на событие (%(event_start_at)s) откл�
 msgid "Your visit for the event at %(event_start_at)s has been declined."
 msgstr "Посещение события (%(event_start_at)s) не состоится."
 
-#: templates/user/details_form.html:12 templates/user/settings.html:12
+#: templates/sites/details.html:9
+#, python-format
+msgid "Site \"%(name)s\" details"
+msgstr ""
+
+#: templates/user/details_form.html:6
+#, python-format
+msgid "Edit user %(object)s details"
+msgstr ""
+
+#: templates/user/details_form.html:16 templates/user/settings.html:16
 msgid "User settings"
 msgstr "Настройки пользователя"
 
@@ -1159,47 +1255,65 @@ msgstr "Подтвердите номер телефона"
 msgid "Confirmation code"
 msgstr "Код подтверждения"
 
-#: templates/user/profile_details.html:12
+#: templates/user/profile_details.html:6
+#, python-format
+msgid "User %(object)s details"
+msgstr ""
+
+#: templates/user/profile_details.html:16
 msgid "User profile"
 msgstr "Профиль пользователя"
 
-#: templates/user/profile_details.html:24
+#: templates/user/profile_details.html:28
 msgid "Email"
 msgstr "Мэйл"
 
-#: templates/user/profile_details.html:27
+#: templates/user/profile_details.html:31
 msgid "First name"
 msgstr "Имя"
 
-#: templates/user/profile_details.html:28
+#: templates/user/profile_details.html:32
 msgid "Last name"
 msgstr "Фамилия"
 
-#: templates/user/profile_details.html:30
+#: templates/user/profile_details.html:34
 msgid "Cell phone"
 msgstr "мобильный телефон"
 
-#: templates/user/profile_details.html:35
+#: templates/user/profile_details.html:39
 msgid "Phone number was confirmed."
 msgstr "Номер телефона подтвержден."
 
-#: templates/user/profile_details.html:39
+#: templates/user/profile_details.html:43
 msgid "Phone number was not confirmed. Please click me to confirm via sms"
 msgstr "Номер телефона не подтвержден, нажмите, чтоб подтвердить через смс."
 
-#: templates/user/profile_details.html:45
+#: templates/user/profile_details.html:49
 msgid "Sex"
 msgstr "Пол"
 
-#: templates/user/profile_details.html:49
+#: templates/user/profile_details.html:53
 msgid "Update profile"
 msgstr "Обновить профиль"
 
-#: templates/user/settings.html:21
+#: templates/user/settings.html:6
+#, fuzzy
+#| msgid "User settings"
+msgid "Edit user settings"
+msgstr "Настройки пользователя"
+
+#: templates/user/settings.html:25
 msgid "Localization"
 msgstr "Переводы"
 
-#: templates/visits/annotate_visit.html:47
+#: templates/visits/annotate_visit.html:7
+#, fuzzy, python-format
+#| msgid ""
+#| "User %(user)s cancelled his visit for the event at %(event.start_at)s."
+msgid "Annotate user %(user)s visit at %(event_start_at)s"
+msgstr "Пользователь %(user)s не прийдет на событие (%(event_start_at)s)."
+
+#: templates/visits/annotate_visit.html:53
 msgid "Recommendations"
 msgstr "Рекомендации"
 
