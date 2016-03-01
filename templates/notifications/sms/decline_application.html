@@ -1,1 +1,1 @@
-{% load i18n %}{% blocktrans %}Your application for the event at {{event.start_at}} has been declined.{% endblocktrans %}
+{% load i18n %}{%with event.start_at as event_start_at%}{% blocktrans %}Your application for the event at {{event_start_at}} has been declined.{% endblocktrans %}{%endwith%}

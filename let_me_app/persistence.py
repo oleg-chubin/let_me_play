@@ -117,3 +117,14 @@ def get_user_visit_applications_and_proposals(user):
         list(applications) + list(proposals) + list(visits),
         key=lambda x: (now - x.event.start_at, x.__class__.__name__),
     )
+
+
+def finish_event(event, status):
+    event.status = status
+    event.save()
+    applications = event.application_set.filter(
+        status=models.ApplicationStatuses.ACTIVE)
+    applications.update(status=models.ApplicationStatuses.DECLINED)
+    proposals = event.proposal_set.filter(
+        status=models.ApplicationStatuses.ACTIVE)
+    proposals.update(status=models.ProposalStatuses.CANCELED)

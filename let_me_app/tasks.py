@@ -278,7 +278,7 @@ class MailNotificator:
 
         mail_info = []
         for application in applications:
-            context = {'event': application.event}
+            context = {'event': application.event, 'user': application.user}
             mail_info.append([[application.user], context])
         return mail_info
 
@@ -299,7 +299,7 @@ class MailNotificator:
             user_list = event.court.admin_group.user_set.all()
             context = {
                 'event': event,
-                'users': [a.user for a in visit_list]
+                'user': visit_list and visit_list[0].user
             }
             mail_info.append([user_list, context])
         return mail_info
@@ -327,7 +327,17 @@ class MailNotificator:
         return mail_info
 
     def cancel_event(self,  notification_context):
-        return []
+        event_ids = notification_context['object_ids']
+        events = models.Event.objects.filter(id__in=event_ids)
+
+        mail_info = []
+        for event in events:
+            context = {'event': event}
+            visits = event.visit_set.filter(
+                status=models.VisitStatuses.DECLINED)
+            visits = visits.select_related('user')
+            mail_info.append([[i.user for i in visits], context])
+        return mail_info
 
     def create_event(self,  notification_context):
         return []

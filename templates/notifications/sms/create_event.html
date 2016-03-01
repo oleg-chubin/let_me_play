@@ -1,1 +1,1 @@
-{% load i18n %}{% blocktrans %}There is new event ({{court.activity_type}}) at {{event.start_at}}.{% endblocktrans %}
+{% load i18n %}{%with event.start_at as event_start_at court.activity_type as court_activity_type %}{% blocktrans %}There is new event ({{court_activity_type}}) at {{event_start_at}}.{% endblocktrans %}{%endwith%}

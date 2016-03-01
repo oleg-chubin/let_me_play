@@ -740,8 +740,9 @@ class CancelEventView(EventActionMixin, BaseView):
         )
 
     def process_object(self, event):
-        event.status = models.EventStatuses.CANCELED
-        event.save()
+        persistence.finish_event(event, models.EventStatuses.CANCELED)
+        visits = event.visit_set.filter(status=models.VisitStatuses.PENDING)
+        visits.update(status=models.VisitStatuses.DECLINED)
 
     def send_notification(self, objects):
         notification_context = {
@@ -1337,8 +1338,8 @@ class CompleteEventView(TemplateView):
         formset = context['visit_formset']
         if formset.is_valid():
             formset.save(commit=False)
-            context['event'].status = models.EventStatuses.COMPLETED
-            context['event'].save()
+            persistence.finish_event(
+                context['event'], models.EventStatuses.COMPLETED)
             for form in formset.forms:
                 instance = form.instance
                 receipt = instance.receipt or models.Receipt()
