@@ -2,6 +2,12 @@
 
 {% load staticfiles let_me_escort leaflet_tags i18n %}
 
+{% block page_title %}
+  {% with name=site.name %}
+    {% blocktrans %}Create event for site "{{name}}".{% endblocktrans %}
+  {% endwith %}
+{% endblock %}
+
 {% block extra_head %}
   {% leaflet_css %}
   <link href="{% static "css/event.css" %}" rel="stylesheet">

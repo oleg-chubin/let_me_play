@@ -2,6 +2,13 @@
 
 {% load staticfiles let_me_escort leaflet_tags i18n avatar %}
 
+{% block page_title %}
+  {% with activity_type=object.activity_type.title name=object.description|truncatewords:5 %}
+    {% blocktrans %}{{activity_type}} court "{{name}}" details{% endblocktrans %}
+  {% endwith %}
+{% endblock %}
+
+
 {% block extra_head %}
   {% leaflet_css %}
   <link href="{% static "css/group_buttons.css" %}" rel="stylesheet">

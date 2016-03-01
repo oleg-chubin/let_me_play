@@ -2,6 +2,8 @@
 
 {% load let_me_chat i18n staticfiles avatar %}
 
+{% block page_title %}{% with request.user as user %}{% blocktrans %}Chats list for {{user}}{% endblocktrans %}{% endwith %}{% endblock %}
+
 {% block extra_head %}
 <link href="{% static "css/event.css" %}" rel="stylesheet">
 <link href="{% static "css/group_buttons.css" %}" rel="stylesheet">

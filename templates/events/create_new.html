@@ -2,6 +2,10 @@
 
 {% load leaflet_tags static floppyforms i18n %}
 
+{% block page_title %}
+    {% blocktrans %}Create event{% endblocktrans %}
+{% endblock %}
+
 {% block extra_head %}
     {% leaflet_js plugins="forms" %}
     {% leaflet_css plugins="forms" %}
