@@ -2,13 +2,17 @@
 
 {% load staticfiles let_me_escort i18n %}
 
+{% block page_title %}
+  {% blocktrans %}Edit user settings{% endblocktrans %}
+{% endblock %}
+
 {% block extra_head %}
   <link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block breadcrumbs %}
   <ol class="breadcrumb">
-    <li><a href="#">{% trans "Home" %}</a></li>
+    <li><a href="{% url "home" %}">{% trans "Home" %}</a></li>
     <li class="active">{% trans "User settings" %}</li>
   </ol>
 {% endblock %}

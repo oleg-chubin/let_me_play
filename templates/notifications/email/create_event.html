@@ -1,0 +1,14 @@
+{% extends "notifications/email/base.html" %}
+{% load i18n %}
+
+{% block subject %}
+{% blocktrans %}
+Event created
+{% endblocktrans %}
+{% endblock %}
+
+{% block content %}
+    {% blocktrans %}
+    Event <a href="{{event_url}}">{{event}}</a> was created for the court {{court}}.
+    {% endblocktrans %}
+{% endblock %}

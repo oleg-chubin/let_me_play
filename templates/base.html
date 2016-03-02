@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Let me play</title>
+    <title>{% block page_title %}Let me play{% endblock %}</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
@@ -17,6 +17,7 @@
     <!-- Custom styles for this template -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
     <link href="{% static "css/starter-template.css" %}" rel="stylesheet">
+    <link href="{% static "css/user-list.css" %}" rel="stylesheet">
     {% block extra_head %}
     {% endblock %}
 
@@ -48,8 +49,11 @@
     <!--<script src="/static/js/bootstrap.min.js"></script>-->
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="/static/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="{% static "js/dangerous_action.js" %}"></script>
     {% block extra_scripts %}
     {% endblock %}
     <!-- <script src="/static/js/tree.js"></script> -->
+    {% block extra_content %}
+    {% endblock %}
   </body>
 </html>

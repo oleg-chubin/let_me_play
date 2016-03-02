@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 
-{% load let_me_chat staticfiles i18n %}
+{% load let_me_chat staticfiles i18n let_me_app %}
+
+{% block page_title %}
+  {% with user=request.user %}
+    {% blocktrans %}Events for user {{user}}{% endblocktrans %}
+  {% endwith %}
+{% endblock %}
 
 {% block extra_head %}
 <link href="{% static "css/timeline.css" %}" rel="stylesheet">
@@ -8,7 +14,7 @@
 
 {% block breadcrumbs %}
 <ol class="breadcrumb">
-  <li><a href="#">{% trans "Home" %}</a></li>
+  <li><a href="{% url "home" %}">{% trans "Home" %}</a></li>
   <li class="active">{% trans "My events" %}</li>
 </ol>
 {% endblock %}
@@ -37,27 +43,21 @@
         <span class="timeline-balloon-date-month">{{ event_date|date:"M" }}</span>
       </div>
       {% for object in object_group %}
-          <div class="{% if forloop.counter|divisibleby:2 %} col-sm-offset-6 {% endif %} col-sm-6  timeline-item">
+          <div class="{% if object|is_visit %} col-sm-offset-6 {% endif %} col-sm-6  timeline-item">
             <div class="row">
-                <div class="{% if forloop.counter|divisibleby:2 %} col-sm-offset-1 {% endif %} col-sm-11">
-                    <div class="timeline-panel {% if forloop.counter|divisibleby:2 %} debits {% else %} credits {% endif %}">
+                <div class="{% if object|is_visit %} col-sm-offset-1 {% endif %} col-sm-11">
+                    <div class="timeline-panel {% if object|is_outdated %} debits {% else %} credits {% endif %}">
                         <ul class="timeline-panel-ul">
                             <li>
                               <span class="importo">
-                                <a href="{% url "let_me_app:view_event" pk=object.event_id %}">
-                                  {% if object.event.status == EVENT_STATUSES.PENDING and object.status == VISIT_STATUSES.PENDING %}
-                                    {{ object.event.name }}
-                                  {% else %}
-                                  <s>
-                                    {{ object.event.name }}
-                                  </s><span class="label label-default">{% trans "Inactive" %}</span>
-                                  {% endif %}
-                                </a>
+                                {{ object|model_name }}
                               </span>
                             </li>
                             <li>
                               <span class="causale">
-                                {{ object.event.description|linebreaksbr }}
+                                <a href="{% url "let_me_app:view_event" pk=object.event_id %}">
+                                    {{ object.event.description|linebreaksbr }}
+                                </a>
                               </span> </li>
                             <li>
                               <p>

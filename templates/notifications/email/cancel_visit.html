@@ -1,0 +1,14 @@
+{% extends "notifications/email/base.html" %}
+{% load i18n %}
+
+{% block subject %}
+{% blocktrans %}
+Visit was cancelled
+{% endblocktrans %}
+{% endblock %}
+
+{% block content %}
+  {% blocktrans %}
+    User {{user}} cancelled his visit for the event <a href="{{event_url}}">{{event}}</a>.
+  {% endblocktrans %}
+{% endblock %}

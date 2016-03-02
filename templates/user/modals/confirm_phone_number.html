@@ -1,0 +1,18 @@
+{% extends "base_modal.html" %}
+
+{% load i18n %}
+
+{% block modal_content %}
+  <form method="post" enctype="multipart/form-data" action="{% url 'let_me_app:create_application' event=object.id %}">
+    {% csrf_token %}
+    {{ block.super }}
+</form>
+{% endblock %}
+
+{% block modal_title %}{% trans "Confirm phone number" %}{% endblock %}
+{% block modal_body %}
+<input class="form-control" type="text" id="code" name="code" placeholder="{% trans 'Confirmation code' %}" />
+{% endblock %}
+{% block modal_footer %}
+    <button type="submit" class="btn btn-primary">{% trans "Confirm phone number" %}</button>
+{% endblock %}

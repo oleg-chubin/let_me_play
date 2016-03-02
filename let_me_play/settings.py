@@ -35,12 +35,16 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = (
     'django.contrib.admin',
-    'autocomplete_light',
+    'dal_select2',
+    'dal',
+#      'dal_queryset_sequence',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',)
+    'django.contrib.staticfiles',
+    'kombu.transport.django',
+    'djcelery',)
 
 if DEBUG:
     INSTALLED_APPS += ('debug_toolbar', 'template_timings_panel')
@@ -67,6 +71,9 @@ if DEBUG:
         'debug_toolbar.panels.sql.SQLPanel',
         'template_timings_panel.panels.TemplateTimings.TemplateTimings',
     ]
+    DEBUG_TOOLBAR_CONFIG = {
+        'RESULTS_CACHE_SIZE': 100,
+    }
 else:
     TEMPLATE_LOADERS = (
         (
@@ -92,6 +99,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
     'let_me_app.context_processors.user_events',
     'let_me_app.context_processors.oject_statuses',
+    'let_me_auth.context_processors.user_sex',
+    'let_me_app.context_processors.site_host',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -138,6 +147,12 @@ DATABASES = {
     }
 }
 
+ROCKET_SMS_CONFIG = {
+    'host': 'https://api.rocketsms.by',
+    'username': '',
+    'password': ''
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
@@ -182,7 +197,7 @@ TEMPLATE_DIRS = (
 )
 
 LOGIN_EXEMPT_NAMESPACES = ('social', 'let_me_auth')
-DEFAULT_VIEW_NAME = 'let_me_escort:view_dashboard'
+DEFAULT_VIEW_NAME = 'let_me_app:search_events'
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/done/'
@@ -197,6 +212,7 @@ SOCIAL_AUTH_EMAIL_FORM_HTML = 'email_signup.html'
 SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION = 'let_me_auth.mail.send_validation'
 SOCIAL_AUTH_EMAIL_VALIDATION_URL = '/email-sent/'
 EMAIL_SECRET_KEY = "some salt as secret"
+FIELDS_STORED_IN_SESSION = ['next',]
 SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_details',
     'social.pipeline.social_auth.social_uid',
@@ -269,11 +285,18 @@ DATABASES['default'] = dj_database_url.config()
 AUTH_USER_MODEL = 'let_me_auth.User'
 
 LEAFLET_CONFIG = {
-    'DEFAULT_CENTER': (6.0, 45.0),
-    'DEFAULT_ZOOM': 16,
+    'DEFAULT_CENTER': (53.9002, 27.557144),
+    'DEFAULT_ZOOM': 10,
     'MIN_ZOOM': 3,
     'MAX_ZOOM': 18,
 }
+
+
+CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
+BROKER_URL = 'django://'
+
+
+SITE_DOMAIN = ""
 
 try:
     from .local_settings import *

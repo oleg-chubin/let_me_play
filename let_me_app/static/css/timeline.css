@@ -97,16 +97,24 @@
   text-align: right;
 }
 #timeline .timeline-movement .timeline-item .timeline-panel.credits .timeline-panel-ul li {
-  color: #666;
+  color: grey;
 }
 #timeline .timeline-movement .timeline-item .timeline-panel.credits .timeline-panel-ul li span.importo {
   color: #468c1f;
   font-size: 1.3em;
 }
+#timeline .timeline-movement .timeline-item .timeline-panel.debits {
+    background-color: lightgrey;
+}
+
 #timeline .timeline-movement .timeline-item .timeline-panel.debits .timeline-panel-ul {
   text-align: left;
 }
 #timeline .timeline-movement .timeline-item .timeline-panel.debits .timeline-panel-ul span.importo {
-  color: #e2001a;
+  color: grey;
   font-size: 1.3em;
+}
+
+#timeline .timeline-movement .timeline-item .timeline-panel.debits .timeline-panel-ul a {
+  color: grey;
 }

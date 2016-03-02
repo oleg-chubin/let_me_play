@@ -2,13 +2,19 @@
 
 {% load let_me_chat staticfiles i18n %}
 
+{% block page_title %}
+  {% with user=request.user %}
+    {% blocktrans %}Proposals for user {{user}}{% endblocktrans %}
+  {% endwith %}
+{% endblock %}
+
 {% block extra_head %}
 <link href="{% static "css/timeline.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block breadcrumbs %}
 <ol class="breadcrumb">
-  <li><a href="#">{% trans "Home" %}</a></li>
+  <li><a href="{% url "home" %}">{% trans "Home" %}</a></li>
   <li class="active">{% trans "My proposals" %}</li>
 </ol>
 {% endblock %}

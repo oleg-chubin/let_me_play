@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n avatar %}
 
 {% block navbar %}
 
@@ -22,7 +22,6 @@
                 </a>
                 <ul class="dropdown-menu" role="menu">
                   <li><a href="{% url "let_me_app:user_events" %}">{% trans "My events" %}</a></li>
-                  <li><a href="{% url "let_me_app:user_managed_events" %}">{% trans "Events managed" %}</a></li>
                   <li><a href="{% url "let_me_app:search_events" %}">{% trans "Search Events" %}</a></li>
                   {% if user and not user.is_anonymous %}
                   <li>
@@ -31,6 +30,16 @@
                     </a>
                   </li>
                   {% endif %}
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    {% trans "Courts" %}
+                  <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="{% url "let_me_app:user_managed_courts" %}">{% trans "Courts managed" %}</a></li>
+                  <li><a href="{% url "let_me_app:search_courts" %}">{% trans "Search Courts" %}</a></li>
                 </ul>
             </li>
           </ul>
@@ -46,7 +55,7 @@
               {% with proposals_count=user_active_proposals.count visits_count=user_active_visits.count messages_count=user_messages.count applications_count=user_active_applications.count %}
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <span class="glyphicon glyphicon-user"> </span>
+                    <img src="{{user|avatar_url}}" class="avatar img-circle">
                     {{ user.get_full_name }}
                     {% with total_count=proposals_count|add:visits_count|add:messages_count|add:applications_count %}
                       <span class="label label-info">{{ total_count }} </span>
@@ -55,6 +64,19 @@
                   </a>
                   <ul class="dropdown-menu" role="menu">
                     <li><a href="{% url 'user_settings' %}">{% trans "Settings" %}</a></li>
+                    {% if user %}
+                      <li><a href="{% url 'let_me_auth:profile_details' %}">{% trans "Profile" %}</a></li>
+                      <li>
+                        <a href="{% url 'let_me_app:view_index_charts' user_id=user.id %}">
+                          {% trans "Visit indexes" %}
+                        </a>
+                      </li>
+                      <li>
+                        <a href="{% url 'let_me_app:view_visit_recommendations' user_id=user.id %}">
+                          {% trans "Visit recommendations" %}
+                        </a>
+                      </li>
+                    {% endif %}
                     <li class="divider"></li>
                     <li><a href="#">{% trans "User stats" %}</a></li>
                     <li class="divider"></li>
@@ -89,7 +111,7 @@
                       </a>
                     </li>
                     <li>
-                      <a href="{% url "let_me_app:user_managed_events" %}">
+                      <a href="{% url "let_me_app:user_managed_courts" %}">
                         {% trans "Applications" %}
                       {% if applications_count %}
                         <span class="badge badge-info">

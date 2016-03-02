@@ -1,0 +1,23 @@
+{% extends "base_modal.html" %}
+
+{% load i18n %}
+
+{% block modal_id %}modalUpdateVisit{% endblock %}
+{% block modal_labelledby %}modalUpdateVisit{% endblock %}
+
+{% block modal_content %}
+  <form method="post" enctype="multipart/form-data" action="{% url 'let_me_app:create_visit' pk=object.id %}">
+    {% csrf_token %}
+    {{ block.super }}
+</form>
+  {% endblock %}
+
+{% block modal_title %}{% trans "Update visit" %}{% endblock %}
+{% block modal_body %}
+  <div class="form-group">
+    {{ visit_role_form.roles }}
+  </div>
+{% endblock %}
+{% block modal_footer %}
+    <button type="submit" class="btn btn-primary">{% trans "Update visit" %}</button>
+{% endblock %}

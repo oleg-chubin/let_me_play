@@ -2,6 +2,12 @@
 
 {% load staticfiles let_me_escort leaflet_tags i18n %}
 
+{% block page_title %}
+  {% with activity_type=court.activity_type.title name=court.description|truncatewords:5 %}
+    {% blocktrans %}Create event for {{activity_type}} court "{{name}}" details{% endblocktrans %}
+  {% endwith %}
+{% endblock %}
+
 {% block extra_head %}
   {% leaflet_css %}
   <link href="{% static "css/event.css" %}" rel="stylesheet">
@@ -10,7 +16,7 @@
 
 {% block breadcrumbs %}
   <ol class="breadcrumb">
-    <li><a href="#">{% trans "Home" %}</a></li>
+    <li><a href="{% url "home" %}">{% trans "Home" %}</a></li>
     <li><a href="{% url 'let_me_app:view_site' pk=court.site_id %}">{% trans "Site" %}</a></li>
     <li><a href="{% url 'let_me_app:view_court' pk=court.id %}">{% trans "Court" %}</a></li>
     <li class="active">{% trans "Event" %}</li>
@@ -19,8 +25,8 @@
 
 {% block main %}
 <div class="row-fluid">
-  <div class="col-md-6">
-    {% leaflet_map "yourmap" callback="window.map_init_basic" %}
+  <div class="col-md-6 inline-map" data-geopoint="[{{ court.site.geo_point.1|stringformat:'f' }}, {{ court.site.geo_point.0|stringformat:'f' }}]">
+    {% leaflet_map "yourmap" %}
   </div>
   <div class="col-md-6">
     <form method="post">
@@ -43,7 +49,12 @@
         {% with forms.event as form %}
             {% include "form.html" %}
         {% endwith %}
+    <legend>{% trans "Visitors" %} </legend>
         {% with forms.visitors as form %}
+            {% include "form.html" %}
+        {% endwith %}
+    <legend>{% trans "Proposals" %} </legend>
+        {% with forms.proposals as form %}
             {% include "form.html" %}
         {% endwith %}
       <div class="ui-group-buttons pull-right marginBottom10">
@@ -57,16 +68,8 @@
 {% endblock %}
 
 {% block extra_scripts %}
-  {% include "autocomplete_light/static.html" %}
+  <script src="{% static "js/detail_map.js" %}"></script>
   {% leaflet_js %}
-  <script type="text/javascript">
-      {% with longitude=court.site.geo_point.0|stringformat:"f" latitude=court.site.geo_point.1|stringformat:"f" %}
-          function map_init_basic (map, options) {
-              L.marker([{{ latitude }}, {{ longitude }}]).addTo(map);
-              map.panTo(new L.LatLng({{ latitude }}, {{ longitude }}));
-          }
-      {% endwith %}
-  </script>
   {% for form in forms.values %}
       {{ form.media }}
   {% endfor %}

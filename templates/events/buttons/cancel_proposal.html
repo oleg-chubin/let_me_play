@@ -1,6 +1,7 @@
+{% load i18n %}
 <form method="post" action="{% url 'let_me_app:cancel_proposal' event=object.id user=invitee.id %}">
 {% csrf_token %}
-<button type="submit" class="btn btn-link">
+<button type="submit" class="btn btn-link"  data-confirmation="{% trans 'Are You sure?'%}">
 <span class="glyphicon glyphicon glyphicon-remove"></span>
 </button>
 </form>

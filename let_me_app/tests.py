@@ -1,80 +1,382 @@
 from django.test import TestCase
 from django.contrib.auth.models import AnonymousUser
 from let_me_auth.models import User
-from let_me_app.persistence import get_event_actions_for_user, get_my_chats
+from let_me_app.persistence import get_my_chats,\
+    get_user_visit_applications_and_proposals
 
 from . import factories, models
+from django.utils import timezone
+from _datetime import timedelta
 
-# Create your tests here.
+from django.test.utils import override_settings
+from let_me_auth import models as auth_models
+from unittest.mock import patch
+from django.core.urlresolvers import reverse
+
+
+class NotificationTasksTest(TestCase):
+    domain = 'http://localhost'
+    fake_body = 'zdfsdffsfsd'
+    domain_mail = "some@ma.il"
+
+    def setUp(self):
+        self.event = factories.EventFactory()
+        self.user = factories.UserFactory()
+        self.admin_user = self.event.court.admin_group.user_set.all()[0]
+
+    @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
+                       CELERY_ALWAYS_EAGER=True,
+                       BROKER_BACKEND='memory',
+                       SITE_DOMAIN=domain,
+                       EMAIL_FROM = domain_mail)
+    @patch('let_me_app.tasks.render_to_string')
+    @patch('let_me_app.tasks.send_mail')
+    def test_create_proposal_email(self, fake_send_mail, fake_render):
+        fake_render.return_value = self.fake_body
+        self.client.login(
+            email=self.admin_user.email,
+            password=self.admin_user.first_name
+        )
+        url = reverse('let_me_app:create_proposal', kwargs={'pk': self.event.id})
+        auth_models.NotificationSettings.objects.create(
+            sms_notifications=False,
+            email_notifications=True,
+            lang='ru',
+            user=self.user
+        )
+        response = self.client.post(url, {'proposal-users': [self.user.id]})
+        self.assertEqual(response.status_code, 302)
+        fake_render.assert_called_with(
+            'notifications/email/create_proposal.html',
+            {
+               'event': self.event,
+               'event_url': '%s/let/me/view/event/%s/' % (self.domain, self.event.id)
+            }
+        )
+        fake_send_mail.assert_called_with(
+            'create_proposal',
+            self.fake_body,
+            self.domain_mail,
+            [self.user.email],
+            html_message=self.fake_body
+        )
+
+    @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
+                       CELERY_ALWAYS_EAGER=True,
+                       BROKER_BACKEND='memory')
+    @patch('let_me_app.tasks.render_to_string')
+    @patch('let_me_app.tasks.send_sms')
+    def test_create_proposal_sms(self, fake_send_sms, fake_render):
+        fake_render.return_value = self.fake_body
+        self.client.login(
+            email=self.admin_user.email,
+            password=self.admin_user.first_name
+        )
+        url = reverse('let_me_app:create_proposal', kwargs={'pk': self.event.id})
+        auth_models.NotificationSettings.objects.create(
+            sms_notifications=True,
+            email_notifications=False,
+            lang='ru',
+            user=self.user
+        )
+        response = self.client.post(url, {'proposal-users': [self.user.id]})
+        self.assertEqual(response.status_code, 302)
+        fake_render.assert_called_with(
+            'notifications/sms/create_proposal.html',
+            {'event': self.event}
+        )
+        fake_send_sms.assert_called_with(
+            self.user.cell_phone, self.fake_body,
+        )
+
+    @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
+                       CELERY_ALWAYS_EAGER=True,
+                       BROKER_BACKEND='memory')
+    @patch('let_me_app.tasks.send_sms')
+    @patch('let_me_app.tasks.send_mail')
+    def test_internal_chat(self, fake_send_mail, fake_send_sms):
+        chat = models.InternalMessage.objects.create(subject=self.event)
+        for u in [self.user, self.admin_user]:
+            models.ChatParticipant.objects.create(user=u, chat=chat)
+
+        self.client.login(
+            email=self.admin_user.email,
+            password=self.admin_user.first_name
+        )
+        url = reverse('let_me_app:post_chat_message', kwargs={'pk': chat.id})
+        auth_models.NotificationSettings.objects.create(
+            sms_notifications=True,
+            email_notifications=True,
+            lang='ru',
+            user=self.user
+        )
+        response = self.client.post(url, {'message': "message"})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(
+            fake_send_mail.call_args[0][3], [self.user.email]
+        )
+
+    @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
+                       CELERY_ALWAYS_EAGER=True,
+                       BROKER_BACKEND='memory')
+    @patch('let_me_app.tasks.send_sms')
+    @patch('let_me_app.tasks.send_mail')
+    def test_event_created(self, fake_send_mail, fake_send_sms):
+        self.client.login(
+            email=self.admin_user.email,
+            password=self.admin_user.first_name
+        )
+        url = reverse('let_me_app:clone_event', kwargs={'event': self.event.id})
+        for user in [self.user, self.admin_user]:
+            auth_models.NotificationSettings.objects.create(
+                sms_notifications=True,
+                email_notifications=True,
+                lang='ru',
+                user=user
+            )
+        post_data = {
+            'eventvisitors-users': self.admin_user.id,
+            'eventproposals-users': self.user.id,
+            'event-description': 'test event',
+            'event-preliminary_price': 23242,
+            'event-start_at': '2016-02-16 17:51',
+        }
+        response = self.client.post(url, post_data)
+        self.assertEqual(response.status_code, 302)
+
+        mail_notifications = {
+            i[0][0]: i[0][-1] for i in fake_send_mail.call_args_list}
+        expected_mail_notifications = {
+            'create_visit': [self.admin_user.email],
+            'create_proposal': [self.user.email]
+        }
+        self.assertEqual(mail_notifications, expected_mail_notifications)
+
+        sms_notifications = {
+            i[0][0] for i in fake_send_sms.call_args_list}
+        expected_sms_notifications = {
+            self.admin_user.cell_phone, self.user.cell_phone
+        }
+        self.assertEqual(sms_notifications, expected_sms_notifications)
+
+    @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
+                       CELERY_ALWAYS_EAGER=True,
+                       BROKER_BACKEND='memory')
+    @patch('let_me_app.tasks.send_sms')
+    @patch('let_me_app.tasks.send_mail')
+    def test_event_cancelled(self, fake_send_mail, fake_send_sms):
+        self.client.login(
+            email=self.admin_user.email,
+            password=self.admin_user.first_name
+        )
+
+        factories.VisitFactory(user=self.user, event=self.event)
+
+        url = reverse('let_me_app:cancel_event',
+                      kwargs={'event': self.event.id})
+        for user in [self.user, self.admin_user]:
+            auth_models.NotificationSettings.objects.create(
+                sms_notifications=True,
+                email_notifications=True,
+                lang='ru',
+                user=user
+            )
+        response = self.client.post(url, {})
+        self.assertEqual(response.status_code, 302)
+
+        mail_notifications = {
+            i[0][0]: i[0][-1] for i in fake_send_mail.call_args_list}
+        expected_mail_notifications = {
+            'cancel_event': [self.user.email],
+        }
+        self.assertEqual(mail_notifications, expected_mail_notifications)
+
+    @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
+                       CELERY_ALWAYS_EAGER=True,
+                       BROKER_BACKEND='memory')
+    @patch('let_me_app.tasks.send_sms')
+    @patch('let_me_app.tasks.send_mail')
+    def test_visit_cancelled(self, fake_send_mail, fake_send_sms):
+        self.client.login(
+            email=self.user.email, password=self.user.first_name)
+
+        factories.VisitFactory(user=self.user, event=self.event)
+
+        url = reverse(
+            'let_me_app:cancel_visit', kwargs={'event': self.event.id})
+        for user in [self.user, self.admin_user]:
+            auth_models.NotificationSettings.objects.create(
+                sms_notifications=True,
+                email_notifications=True,
+                lang='ru',
+                user=user
+            )
+        response = self.client.post(url, {})
+        self.assertEqual(response.status_code, 302)
+
+        mail_notifications = {
+            i[0][0]: i[0][-1] for i in fake_send_mail.call_args_list}
+        expected_mail_notifications = {
+            'cancel_visit': [self.admin_user.email],
+        }
+        self.assertEqual(mail_notifications, expected_mail_notifications)
+
+    @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
+                       CELERY_ALWAYS_EAGER=True,
+                       BROKER_BACKEND='memory',
+                       SITE_DOMAIN=domain,
+                       EMAIL_FROM = domain_mail)
+    @patch('let_me_app.tasks.render_to_string')
+    @patch('let_me_app.tasks.send_mail')
+    def test_email_no_mail_for_me(self, fake_send_mail, fake_render):
+        fake_render.return_value = self.fake_body
+        self.client.login(
+            email=self.admin_user.email,
+            password=self.admin_user.first_name
+        )
+
+        user = factories.UserFactory(email='id123213.vk-oauth2@no.mail.for.me')
+        url = reverse('let_me_app:create_proposal', kwargs={'pk': self.event.id})
+        for u in [self.user, user]:
+            auth_models.NotificationSettings.objects.create(
+                sms_notifications=False,
+                email_notifications=True,
+                lang='ru',
+                user=u
+            )
+        response = self.client.post(url, {'proposal-users': [user.id, self.user.id]})
+        self.assertEqual(response.status_code, 302)
+        fake_render.assert_called_with(
+            'notifications/email/create_proposal.html',
+            {
+               'event': self.event,
+               'event_url': '%s/let/me/view/event/%s/' % (self.domain, self.event.id)
+            }
+        )
+        fake_send_mail.assert_called_with(
+            'create_proposal',
+            self.fake_body,
+            self.domain_mail,
+            [self.user.email],
+            html_message=self.fake_body
+        )
 
 
 class EventUserActionTestCase(TestCase):
-    def test_no_proposals_no_applications_apply_for_event(self):
-        event = factories.EventFactory()
-        user = factories.UserFactory()
-        result = get_event_actions_for_user(user, event)
-        self.assertEqual(result, ['apply_for_event'])
+    def setUp(self):
+        self.user = User.objects.create(email='some@ema.il')
+        self.events = []
+        self.outdated_events = []
 
-    def test_inactive_proposals_inactive_applications_apply_for_event(self):
-        event = factories.EventFactory()
-        user = factories.UserFactory()
-        for status, _ in models.ProposalStatuses.CHOICES:
-            if status != models.ProposalStatuses.ACTIVE:
-                factories.ProposalFactory(user=user, event=event, status=status)
-        for status, _ in models.ApplicationStatuses.CHOICES:
-            if status != models.ApplicationStatuses.ACTIVE:
-                factories.ApplicationFactory(
-                    user=user, event=event, status=status
+        for i in range(1, 5):
+            self.events.append(
+                factories.EventFactory(
+                    start_at=timezone.now() + timedelta(days=i)
                 )
-        result = get_event_actions_for_user(user, event)
-        self.assertEqual(result, ['apply_for_event'])
+            )
 
-    def test_proposal_no_applications_accept_decline_proposal(self):
-        event = factories.EventFactory()
-        user = factories.UserFactory()
-        factories.ProposalFactory(user=user, event=event)
-        result = get_event_actions_for_user(user, event)
-        self.assertEqual(
-            set(result), set(['accept_proposal', 'decline_proposal'])
-        )
+        for i in range(1, 5):
+            self.outdated_events.append(
+                factories.EventFactory(
+                    start_at=timezone.now() - timedelta(days=i)
+                )
+            )
 
-    def test_proposal_application_accept_decline_proposal_cancel_application(self):
-        event = factories.EventFactory()
-        user = factories.UserFactory()
-        factories.ProposalFactory(user=user, event=event)
-        factories.ApplicationFactory(user=user, event=event)
-        result = get_event_actions_for_user(user, event)
-        self.assertEqual(
-            set(result),
-            set(['accept_proposal', 'decline_proposal', 'cancel_application'])
-        )
+    def test_empty_call(self):
+        res = get_user_visit_applications_and_proposals(self.user)
+        self.assertEqual(list(res), [])
 
-    def test_no_proposal_application_cancel_application(self):
-        event = factories.EventFactory()
-        user = factories.UserFactory()
-        factories.ApplicationFactory(user=user, event=event)
-        result = get_event_actions_for_user(user, event)
-        self.assertEqual(set(result), set(['cancel_application']))
+    def test_applications_only(self):
+        applications = []
+        for event in self.events:
+            for status, _ in models.ApplicationStatuses.CHOICES:
+                app = models.Application.objects.create(
+                    user=self.user, status=status, event=event
+                )
+                if status == models.ApplicationStatuses.ACTIVE:
+                    applications.append(app)
+        res = get_user_visit_applications_and_proposals(self.user)
+        self.assertEqual(list(res), list(reversed(applications)))
 
-    def test_anonymous_user_no_actions(self):
-        event = factories.EventFactory()
-        user = AnonymousUser()
-        result = get_event_actions_for_user(user, event)
-        self.assertEqual(result, [])
+    def test_proposals_only(self):
+        proposals = []
+        for event in self.events:
+            for status, _ in models.ProposalStatuses.CHOICES:
+                proposal = models.Proposal.objects.create(
+                    user=self.user, status=status, event=event
+                )
+                if status == models.ProposalStatuses.ACTIVE:
+                    proposals.append(proposal)
 
-    def test_visit_exists_cancel_visit(self):
-        event = factories.EventFactory()
-        user = factories.UserFactory()
-        visit = factories.VisitFactory(event=event, user=user)
-        result = get_event_actions_for_user(user, event)
-        self.assertIn('cancel_visit', result)
+        res = get_user_visit_applications_and_proposals(self.user)
+        self.assertEqual(list(res), list(reversed(proposals)))
 
-    def test_visit_exists_no_create_application(self):
-        event = factories.EventFactory()
-        user = factories.UserFactory()
-        visit = factories.VisitFactory(event=event, user=user)
-        result = get_event_actions_for_user(user, event)
-        self.assertNotIn('apply_for_event', result)
+    def test_incomplete_visits_only(self):
+        visits = []
+        for event in self.events:
+            for status, _ in models.VisitStatuses.CHOICES:
+                if status == models.VisitStatuses.COMPLETED:
+                    continue
+                visit = models.Visit.objects.create(
+                    user=self.user, status=status, event=event
+                )
+                if status == models.VisitStatuses.PENDING:
+                    visits.append(visit)
+
+        res = get_user_visit_applications_and_proposals(self.user)
+        self.assertEqual(list(res), list(reversed(visits)))
+
+    def test_completed_visits_only(self):
+        visits = []
+        for event in self.outdated_events:
+            visit = models.Visit.objects.create(
+                user=self.user, status=models.VisitStatuses.COMPLETED, event=event
+            )
+            visits.append(visit)
+
+        res = get_user_visit_applications_and_proposals(self.user)
+        self.assertEqual(list(res), visits)
+
+    def test_inactive_visits(self):
+        visits = []
+        for event in self.outdated_events:
+            for status, _ in models.VisitStatuses.CHOICES:
+                visit = models.Visit.objects.create(
+                    user=self.user, status=status, event=event
+                )
+                if status in [models.VisitStatuses.PENDING, models.VisitStatuses.COMPLETED]:
+                    visits.append(visit)
+
+        res = get_user_visit_applications_and_proposals(self.user)
+        self.assertEqual(list(res), visits)
+
+    def test_objects_order(self):
+        objects = []
+        for event in self.events:
+                visit = models.Visit.objects.create(
+                    user=self.user, event=event,
+                    status=models.VisitStatuses.PENDING
+                )
+                objects.append(visit)
+                proposal = models.Proposal.objects.create(
+                    user=self.user, event=event,
+                    status=models.ProposalStatuses.ACTIVE
+                )
+                objects.append(proposal)
+                app = models.Application.objects.create(
+                    user=self.user, event=event,
+                    status=models.ApplicationStatuses.ACTIVE
+                )
+                objects.append(app)
+
+        objects = list(reversed(objects))
+        for event in self.outdated_events:
+            visit = models.Visit.objects.create(
+                user=self.user, status=models.VisitStatuses.COMPLETED, event=event
+            )
+            objects.append(visit)
+        res = get_user_visit_applications_and_proposals(self.user)
+        self.assertEqual(list(res), objects)
 
 
 class TestChatList(TestCase):

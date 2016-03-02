@@ -32,11 +32,12 @@ def get_chat_messages(chat_xml, participants):
 def recent_chat_message(chat_thread):
     participants = chat_thread.chatparticipant_set.all()
     participants = {i.user_id: i.user for i in participants}
-    return next(iter(get_chat_messages(chat_thread.text, participants)))
+    return next(iter(get_chat_messages(chat_thread.text, participants)), '')
 
 
 @register.filter(name='chat_messages')
 def chat_messages(chat_thread):
     participants = chat_thread.chatparticipant_set.all()
     participants = {i.user_id: i.user for i in participants}
-    return get_chat_messages(chat_thread.text, participants)
+    distinct_messages = list(get_chat_messages(chat_thread.text, participants))
+    return reversed(distinct_messages)

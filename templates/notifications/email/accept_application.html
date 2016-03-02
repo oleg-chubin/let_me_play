@@ -1,0 +1,10 @@
+{% extends "notifications/email/base.html" %}
+{% load i18n %}
+
+{% block subject %}
+{% blocktrans %} Application accepted{% endblocktrans %}.
+{% endblock %}
+
+{% block content %}
+{% blocktrans %}Your application for the <a href="{{event_url}}">{{event}}</a> was accepted by {{user}}{% endblocktrans %}.
+{% endblock %}

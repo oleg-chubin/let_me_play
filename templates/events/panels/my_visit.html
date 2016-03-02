@@ -1,6 +1,6 @@
 {% extends "base_info_panel.html" %}
 
-{% load i18n %}
+{% load i18n markdown %}
 
 {% block panel_title %}{% trans "My visit" %}{% endblock %}
 
@@ -30,6 +30,51 @@
           </div>
       {% endif %}
   </div>
+
+  {% if coach_recommendation %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">{% trans "Recommendation" %}</h3>
+      </div>
+      <div class="panel-body">
+      {{coach_recommendation.recommendation|markdownify|safe}}
+      </div>
+      <div class="panel-footer">
+          {{coach_recommendation.coach.user}}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if visit_indexes %}
+    <div class="panel panel-default">
+    <!-- Default panel contents -->
+        <div class="panel-heading">{% trans "Indexes" %}</div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>{% trans "Name" %}</th>
+              <th>{% trans "Value" %}</th>
+              <th>{% trans "Units" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for index in visit_indexes %}
+              <tr>
+                <td>
+                  {{ index.parametr__name }}
+                </td>
+                <td>
+                  {{ index.value }}
+                </td>
+                <td>
+                  {{ index.parametr__units }}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
+  {% endif %}
 
   {% if visit.status == VISIT_STATUSES.PENDING %}
     <div class="ui-group-buttons pull-right marginBottom10">

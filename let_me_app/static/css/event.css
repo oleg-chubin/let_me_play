@@ -9,6 +9,11 @@
     border-radius:0;
     margin-bottom:10px
 }
+
+.popover {
+    max-width: 300px;
+}
+
 .btn-blog:hover,
 .btn-blog:focus,
 .btn-blog:active,
@@ -17,4 +22,8 @@
     color: white;
     background-color:#34ca78;
     border-color: #34ca78;
+}
+
+.panel-title img{
+    max-height: 50px;
 }

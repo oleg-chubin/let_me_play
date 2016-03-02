@@ -40,5 +40,6 @@ class LoginRequiredMiddleware:
                     request.resolver_match.namespace in LOGIN_EXEMPT_NAMESPACES):
                 login_path = settings.LOGIN_URL
                 if path and path != login_path:
-                    login_path = "%s?%s" % (login_path, urlencode({'next': path}))
+                    login_path = "%s?%s" % (
+                        login_path, urlencode({'next': request.path_info}))
                 return HttpResponseRedirect(login_path)

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% block page_title %}{% with request.user as user %}{% blocktrans %}Recomendation for {{user}}{% endblocktrans %}{% endwith %}{% endblock %}
+
+{% load staticfiles let_me_escort leaflet_tags markdown %}
+
+{% block extra_head %}
+    <link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
+    <link href="{% static "css/morris.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li><a href="{% url "home" %}">{% trans "Home" %}</a></li>
+  <li class="active">{% trans "Visit recommendations" %}</li>
+</ol>
+{% endblock %}
+
+{% block main %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      {% trans "Visit recommendations" %}
+    </h3>
+  </div>
+  <ul class="list-group">
+    {% for recommendation in object_list %}
+        <li class="list-group-item">
+          <div class="row toggle" id="dropdown-detail-{{forloop.counter}}" data-toggle="chart-{{forloop.counter}}">
+            <div class="col-xs-10">
+              <h4>{% blocktrans with start_at=recommendation.visit.event.start_at coach=recommendation.coach %} {{coach}} recommendation ({{ start_at }}){% endblocktrans %}</h4>
+            </div>
+            <div class="col-xs-2"><span class="glyphicon glyphicon-menu-down pull-right toggle-icon"></span>
+                <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
+          </div>
+          <div id="chart-{{forloop.counter}}" class="charts-div">
+            {{ recommendation.recommendation|markdownify|safe }}
+          </div>
+        </li>
+    {% endfor %}
+  </ul>
+</div>
+
+
+{% endblock %}
+
+{% block extra_scripts %}
+{% endblock %}

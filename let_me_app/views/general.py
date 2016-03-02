@@ -9,6 +9,7 @@ from django.contrib.gis.measure import D
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.db.models import F
 from django.views.generic.base import View as BaseView, TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import BaseUpdateView
@@ -19,8 +20,16 @@ from extra_views.generic import GenericInlineFormSet
 
 from let_me_app import persistence, forms, models
 from django.db import transaction
-from let_me_app.models import VisitStatuses
+from let_me_app.models import VisitStatuses, ApplicationStatuses,\
+    ProposalStatuses
+from let_me_auth.models import User
+import itertools
+from django.db.models.aggregates import Count
+from django.db.models.query import Prefetch
+from let_me_app.tasks import send_notification
 
+
+NUMBER_OF_KNOWN_VISITS = 10
 
 
 class OccasionInline(InlineFormSet):
@@ -38,13 +47,15 @@ class CreateCourtView(CreateWithInlinesView):
 
 class ChatList(ListView):
     template_name = 'chat/list.html'
-    model = models.InternalMessage
+    model = models.ChatParticipant
 
     def get_queryset(self, **kwargs):
         query = super(ChatList, self).get_queryset(**kwargs)
-        query = query.filter(chatparticipant__user=self.request.user)
-        query = query.select_related('subject__event')
-        query = query.prefetch_related('chatparticipant_set__user')
+        query = query.filter(user=self.request.user)
+        query = query.select_related(
+            'chat', 'chat__subject__event', 'user'
+        )
+        query = query.order_by('-chat__last_update')
         return query
 
 
@@ -96,6 +107,13 @@ class PostChatMessage(BaseUpdateView):
         self.object.text = message.toxml() + models.CF('text')
         self.object.save()
 
+        notification_context = {
+            'reason': "new_chat_message",
+            'initiator_id': self.request.user.id,
+            'message_id': self.object.id
+        }
+        send_notification.delay(notification_context)
+
         return http.HttpResponseRedirect(
             reverse('let_me_app:chat_details', kwargs={'pk': self.object.id})
         )
@@ -114,30 +132,91 @@ class EventView(DetailView):
         queryset = super(EventView, self).get_queryset()
         queryset = queryset.select_related(
             'inventory_list', 'court', 'court__site', 'court__activity_type')
-        queryset = queryset.prefetch_related('inventory_list__inventory_set')
+        queryset = queryset.prefetch_related('inventory_list__inventory_set__equipment')
         return queryset
+
+    def _get_user_inventory(self, event, visits):
+        user_inventory = models.Inventory.objects.filter(
+            inventory_list__visit__event=event,
+            inventory_list__visit__status=models.VisitStatuses.PENDING)
+        user_inventory = user_inventory.select_related('equipment')
+        user_inventory = user_inventory.values('equipment__name', 'amount', 'inventory_list_id')
+        inventory_lists = {i.inventory_list_id: i.user for i in visits}
+        for inventory in user_inventory:
+            inventory['user'] = inventory_lists[inventory['inventory_list_id']]
+        return user_inventory
+
+    def _get_coach_recommendation(self, visit):
+        recommendation = models.CoachRecommendation.objects.filter(visit=visit)
+        recommendation = recommendation.select_related('coach')[:1]
+        if recommendation:
+            return recommendation[0]
+
+    def _get_visit_indexes(self, visit):
+        indexes = models.VisitIndex.objects.filter(visit=visit)
+        return indexes.values('parametr__name', 'parametr__units', 'value')
+
+    def get_visitors_form(self, prefix, court_id, exclude_ids):
+        form = forms.ExtendedEventVisitForm(prefix=prefix)
+        checkbox_field = form.fields['known_users']
+        queryset = User.objects.filter(visit__event__court_id=court_id)
+        queryset = queryset.exclude(id__in=exclude_ids)
+        queryset = queryset.annotate(visit_count=Count('id'))
+        queryset = queryset.order_by('-visit_count')[:NUMBER_OF_KNOWN_VISITS]
+        checkbox_field.choices = [
+            (checkbox_field.prepare_value(i), i) for i in queryset]
+        return form
 
     def get_context_data(self, **kwargs):
         result = super(EventView, self).get_context_data(**kwargs)
         event = result['object']
-        is_admin = event.court.admin_group.user_set.filter(
-            email=self.request.user.email).exists()
-        result['is_admin'] = is_admin
-        result['proposal_form'] = forms.EventProposalForm()
-        result['visit_form'] = forms.EventVisitForm()
+        admin_user_ids = event.court.admin_group.user_set.values_list('id', flat=True)
+        result['is_admin'] = self.request.user.id in admin_user_ids
+        result['admin_user_ids'] = admin_user_ids
+
+        result['visit_role_form'] = forms.EventVisitRoleForm()
         result['inventory_form'] = forms.InventoryForm()
-        result['active_applications'] =event.application_set.filter(
+        result['active_applications'] = event.application_set.filter(
             status=models.ApplicationStatuses.ACTIVE
-        ).select_related('user')
-        result['active_visits'] =event.visit_set.filter(
-            status__in=[models.VisitStatuses.PENDING, models.VisitStatuses.COMPLETED]
-        ).select_related('user')
-        result['active_proposals'] = event.proposal_set.all().select_related('user')
+        ).select_related('user').order_by('id')
+
+        default_role = event.court.activity_type.default_role_id
+
+        active_visits = event.visit_set.select_related('user')
+        active_visits = active_visits.prefetch_related('visitrole_set__role').order_by('id')
+
+        result['active_visits'] = []
+        result['staff_list'] = []
+        for visit in active_visits:
+            if any(j.role_id == default_role for j in visit.visitrole_set.all()):
+                result['active_visits'].append(visit)
+            else:
+                result['staff_list'].append(visit)
+
+        result['active_proposals'] = event.proposal_set.all().select_related('user').order_by('id')
+        result['user_inventory'] = self._get_user_inventory(event, active_visits)
+
+        result['is_event_staff'] = any(
+            self.request.user.id == i.user_id for i in result['staff_list'])
 
         for prop in result['active_proposals']:
             if (prop.user == self.request.user
                     and prop.status==models.ProposalStatuses.ACTIVE):
                 result['my_active_proposal'] = prop
+
+
+        result['active_visits_id'] = [
+            i.user_id for i in result['active_visits']
+            if i.status in [models.VisitStatuses.PENDING, models.VisitStatuses.COMPLETED]
+        ]
+
+        result['proposal_form'] = self.get_visitors_form(
+            'proposal',
+            event.court_id,
+            result['active_visits_id'] + [i.user_id for i in result['active_proposals']]
+        )
+        result['visit_form'] = self.get_visitors_form(
+            'visit', event.court_id, result['active_visits_id'])
 
         my_active_applications = [
             i for i in result['active_applications'] if i.user == self.request.user
@@ -145,27 +224,36 @@ class EventView(DetailView):
         if my_active_applications:
             result['my_active_application'] = my_active_applications[0]
 
+
         my_active_visits = [
-            i for i in result['active_visits'] if i.user == self.request.user
+            i for i in result['active_visits']
+            if i.user == self.request.user and i.status in [models.VisitStatuses.PENDING, models.VisitStatuses.COMPLETED]
         ]
         if my_active_visits:
             result['my_active_visit'] = my_active_visits[0]
+
+            result['coach_recommendation'] = self._get_coach_recommendation(
+                result['my_active_visit']
+            )
+            result['visit_indexes'] = self._get_visit_indexes(
+                result['my_active_visit']
+            )
+
+        chats = models.InternalMessage.objects.filter(
+            subject=event, chatparticipant__user=self.request.user)[:1]
+        if chats:
+            result['chat'] = chats[0]
+
         return result
 
 
-class UserEventListView(ListView):
-    model = models.Visit
+class UserEventListView(TemplateView):
     template_name = "events/user_events.html"
-
-    def get_queryset(self, **kwargs):
-        result = super(UserEventListView, self).get_queryset(**kwargs)
-        return result.filter(
-            user=self.request.user,
-            event__start_at__gte=timezone.now()).order_by('-event__start_at')
 
     def get_context_data(self, **kwargs):
         result = super(UserEventListView, self).get_context_data(**kwargs)
-        object_list = result['object_list']
+        object_list = persistence.get_user_visit_applications_and_proposals(
+            self.request.user)
         grouped_objects = groupby(object_list, lambda x: x.event.start_at.date())
         result['grouped_objects'] = [(i, [j for j in g]) for i, g in grouped_objects]
         return result
@@ -189,15 +277,15 @@ class UserProposalsListView(ListView):
         return result
 
 
-class UserManagedEventListView(ListView):
-    model = models.Event
-    template_name = "events/user_managed_events.html"
+class UserManagedCourtsListView(ListView):
+    model = models.Court
+    template_name = "courts/user_managed_courts.html"
 
     def get_queryset(self, **kwargs):
-        result = super(UserManagedEventListView, self).get_queryset(**kwargs)
+        result = super(UserManagedCourtsListView, self).get_queryset(**kwargs)
         return result.filter(
-            court__admin_group__user=self.request.user,
-            start_at__gte=timezone.now()).order_by('-start_at')
+            admin_group__user=self.request.user).order_by('site__name')
+
 
 class EventActionMixin(object):
     def get_success_url(self, **kwargs):
@@ -228,6 +316,8 @@ class EventActionMixin(object):
         for obj in objects:
             self.process_object(obj)
 
+        self.send_notification(objects)
+
         return http.HttpResponseRedirect(self.get_success_url(**kwargs))
 
 
@@ -238,6 +328,14 @@ class CancelApplicationView(EventActionMixin, BaseView):
             user=request.user,
             status=models.ApplicationStatuses.ACTIVE
         )
+
+    def send_notification(self, objects):
+        notification_context = {
+            'reason': "cancel_application",
+            'initiator_id': self.request.user.id,
+            'object_ids': [i.id for i in objects]
+        }
+        send_notification.delay(notification_context)
 
     def process_object(self, application):
         application.status = models.ApplicationStatuses.CANCELED
@@ -261,6 +359,13 @@ class CreateApplicationView(BaseView):
             status=models.ApplicationStatuses.ACTIVE,
             comment=comment
         )
+
+        notification_context = {
+            'reason': "create_application",
+            'initiator_id': self.request.user.id,
+            'object_ids': [application.id]
+        }
+        send_notification.delay(notification_context)
 
         return http.HttpResponseRedirect(
             reverse('let_me_app:view_event', kwargs={'pk': kwargs['event']})
@@ -293,7 +398,6 @@ class DetailRelatedPostView(BaseView):
 
         if form.is_valid():
             self.save_on_success(obj, form)
-
         return http.HttpResponseRedirect(self.get_success_url(obj))
 
     def get_success_url(self, obj):
@@ -301,7 +405,7 @@ class DetailRelatedPostView(BaseView):
 
 class CreateProposalView(DetailRelatedPostView):
     def get_form(self):
-        return forms.EventProposalForm(data=self.request.POST)
+        return forms.EventProposalForm(data=self.request.POST, prefix='proposal')
 
     def action_is_allowed(self, event):
         return event.court.admin_group.user_set.filter(
@@ -309,12 +413,22 @@ class CreateProposalView(DetailRelatedPostView):
 
     def save_on_success(self, event, form):
         comment = form.cleaned_data['comment']
-        for user in form.cleaned_data['users']:
-            models.Proposal.objects.get_or_create(
-                event=event, user=user,
-                status=models.ApplicationStatuses.ACTIVE,
-                defaults={'comment':comment}
-            )
+        proposals = []
+        user_set = set(form.cleaned_data['users']) | set(form.cleaned_data['known_users'])
+        for user in user_set:
+            proposal, _ = models.Proposal.objects.get_or_create(
+                    event=event, user=user,
+                    status=models.ApplicationStatuses.ACTIVE,
+                    defaults={'comment':comment}
+                )
+            proposals.append(proposal)
+
+        notification_context = {
+            'reason': "create_proposal",
+            'initiator_id': self.request.user.id,
+            'object_ids': [i.id for i in proposals]
+        }
+        send_notification.delay(notification_context)
 
 
 class AddEventInventoryView(DetailRelatedPostView):
@@ -370,7 +484,7 @@ class AddVisitInventoryView(DetailRelatedPostView):
     def save_on_success(self, visit, form):
         if not visit.inventory_list:
             inventory_list = models.InventoryList.objects.create(
-                name=visit.event.name)
+                name="inventory_list for %s" %visit.event.id)
             visit.inventory_list = inventory_list
             visit.save()
         inventory = form.save(commit=False)
@@ -383,15 +497,25 @@ class AddVisitInventoryView(DetailRelatedPostView):
 
 class CreateVisitView(DetailRelatedPostView):
     def get_form(self):
-        return forms.EventVisitForm(data=self.request.POST)
+        return forms.ExtendedEventVisitForm(data=self.request.POST, prefix='visit')
 
     def action_is_allowed(self, event):
         return event.court.admin_group.user_set.filter(
             id=self.request.user.id).exists()
 
     def save_on_success(self, event, form):
-        for user in form.cleaned_data['users']:
-            persistence.create_event_visit(event, user, None)
+        visits = []
+
+        user_set = set(form.cleaned_data['users']) | set(form.cleaned_data['known_users'])
+        for user in user_set:
+            visits.append(persistence.create_event_visit(event, user, None))
+
+        notification_context = {
+            'reason': "create_visit",
+            'initiator_id': self.request.user.id,
+            'object_ids': [i.id for i in visits]
+        }
+        send_notification.delay(notification_context)
 
 
 class DeclineProposalEventView(EventActionMixin, BaseView):
@@ -405,6 +529,14 @@ class DeclineProposalEventView(EventActionMixin, BaseView):
     def process_object(self, proposal):
         proposal.status = models.ProposalStatuses.DECLINED
         proposal.save()
+
+    def send_notification(self, objects):
+        notification_context = {
+            'reason': "decline_proposal",
+            'initiator_id': self.request.user.id,
+            'object_ids': [i.id for i in objects]
+        }
+        send_notification.delay(notification_context)
 
 
 class AcceptProposalView(EventActionMixin, BaseView):
@@ -420,6 +552,14 @@ class AcceptProposalView(EventActionMixin, BaseView):
         proposal.save()
         persistence.create_event_visit(proposal.event, proposal.user, None)
 
+    def send_notification(self, objects):
+        notification_context = {
+            'reason': "accept_proposal",
+            'initiator_id': self.request.user.id,
+            'object_ids': [i.id for i in objects]
+        }
+        send_notification.delay(notification_context)
+
 
 class DeclineApplicationEventView(EventActionMixin, BaseView):
     def check_permissions(self, request, *args, **kwargs):
@@ -429,13 +569,21 @@ class DeclineApplicationEventView(EventActionMixin, BaseView):
     def get_queryset(self, request, *args, **kwargs):
         return models.Application.objects.filter(
             event_id=kwargs['event'],
-            user=request.user,
+            id=kwargs['application'],
             status=models.ApplicationStatuses.ACTIVE
         )
 
     def process_object(self, application):
         application.status = models.ApplicationStatuses.DECLINED
         application.save()
+
+    def send_notification(self, objects):
+        notification_context = {
+            'reason': "decline_application",
+            'initiator_id': self.request.user.id,
+            'object_ids': [i.id for i in objects]
+        }
+        send_notification.delay(notification_context)
 
 
 class AcceptApplicationView(EventActionMixin, BaseView):
@@ -460,6 +608,14 @@ class AcceptApplicationView(EventActionMixin, BaseView):
             application.event, application.user, inventory_list
         )
 
+    def send_notification(self, objects):
+        notification_context = {
+            'reason': "accept_application",
+            'initiator_id': self.request.user.id,
+            'object_ids': [i.id for i in objects]
+        }
+        send_notification.delay(notification_context)
+
 
 class CancelVisitView(EventActionMixin, BaseView):
     def get_queryset(self, request, *args, **kwargs):
@@ -473,6 +629,14 @@ class CancelVisitView(EventActionMixin, BaseView):
         application.status = models.VisitStatuses.CANCELED
         application.save()
 
+    def send_notification(self, objects):
+        notification_context = {
+            'reason': "cancel_visit",
+            'initiator_id': self.request.user.id,
+            'object_ids': [i.id for i in objects]
+        }
+        send_notification.delay(notification_context)
+
 
 class DismissVisitorEventView(EventActionMixin, BaseView):
     def get_queryset(self, request, *args, **kwargs):
@@ -485,6 +649,49 @@ class DismissVisitorEventView(EventActionMixin, BaseView):
     def process_object(self, visit):
         visit.status = models.VisitStatuses.DECLINED
         visit.save()
+
+    def send_notification(self, objects):
+        notification_context = {
+            'reason': "decline_visit",
+            'initiator_id': self.request.user.id,
+            'object_ids': [i.id for i in objects]
+        }
+        send_notification.delay(notification_context)
+
+
+class RemoveVisitRoleEventView(EventActionMixin, BaseView):
+    def check_permissions(self, request, *args, **kwargs):
+        return Group.objects.filter(
+            court__event=kwargs['event'], user=request.user).exists()
+
+    def get_queryset(self, request, *args, **kwargs):
+        return models.VisitRole.objects.filter(id=kwargs['role'])
+
+    def process_object(self, obj):
+        obj.delete()
+
+    def send_notification(self, objects):
+        pass
+
+
+class UpdateVisitRoleEventView(EventActionMixin, BaseView):
+    def check_permissions(self, request, *args, **kwargs):
+        return Group.objects.filter(
+            court__event=kwargs['event'], user=request.user).exists()
+
+    def get_queryset(self, request, *args, **kwargs):
+        return models.Visit.objects.filter(id=kwargs['visit'])
+
+    def process_object(self, obj):
+        form = forms.EventVisitRoleForm(
+            data=self.request.POST, files=self.request.FILES
+        )
+        if form.is_valid():
+            for role in form.cleaned_data['roles']:
+                models.VisitRole.objects.get_or_create(visit=obj, role=role)
+
+    def send_notification(self, objects):
+        pass
 
 
 class CancelInventoryEventView(EventActionMixin, BaseView):
@@ -513,6 +720,14 @@ class CancelProposalEventView(EventActionMixin, BaseView):
         proposal.status = models.ProposalStatuses.CANCELED
         proposal.save()
 
+    def send_notification(self, objects):
+        notification_context = {
+            'reason': "cancel_proposal",
+            'initiator_id': self.request.user.id,
+            'object_ids': [i.id for i in objects]
+        }
+        send_notification.delay(notification_context)
+
 
 class CancelEventView(EventActionMixin, BaseView):
     def check_permissions(self, request, *args, **kwargs):
@@ -525,8 +740,17 @@ class CancelEventView(EventActionMixin, BaseView):
         )
 
     def process_object(self, event):
-        event.status = models.EventStatuses.CANCELED
-        event.save()
+        persistence.finish_event(event, models.EventStatuses.CANCELED)
+        visits = event.visit_set.filter(status=models.VisitStatuses.PENDING)
+        visits.update(status=models.VisitStatuses.DECLINED)
+
+    def send_notification(self, objects):
+        notification_context = {
+            'reason': "cancel_event",
+            'initiator_id': self.request.user.id,
+            'object_ids': [i.id for i in objects]
+        }
+        send_notification.delay(notification_context)
 
 
 class CourtDetailView(DetailView):
@@ -570,6 +794,17 @@ class EventSearchView(ListView):
         queryset = queryset.select_related(
             'inventory_list', 'court', 'court__site', 'court__activity_type')
 
+        queryset = queryset.prefetch_related(
+            'visit_set',
+            Prefetch(
+                'visit_set',
+                queryset=models.Visit.objects.filter(
+                    status=VisitStatuses.PENDING,
+                    visitrole__role=F('event__court__activity_type__default_role')).only('id'),
+                to_attr='people_count'
+            )
+        )
+
         form = forms.EventSearchForm(
             data=self.request.GET
         )
@@ -577,6 +812,10 @@ class EventSearchView(ListView):
             if form.cleaned_data['geo_point'] and form.cleaned_data['radius']:
                 site_queryset = models.Site.objects.filter(
                     geo_point__distance_lt=(form.cleaned_data['geo_point'],
+                                            D(m=form.cleaned_data['radius']))
+                )
+                site_queryset = site_queryset | models.Site.objects.filter(
+                    geo_line__distance_lt=(form.cleaned_data['geo_point'],
                                             D(m=form.cleaned_data['radius']))
                 )
                 queryset = queryset.filter(court__site__in=site_queryset)
@@ -620,6 +859,47 @@ class RemoveFromAdminGroup(CourtActionMixin, BaseView):
         obj.admin_group.user_set.remove(self.kwargs['user'])
 
 
+class CourtSearchView(ListView):
+    template_name = 'courts/search.html'
+    model = models.Court
+
+    def get_queryset(self):
+        queryset = super(CourtSearchView, self).get_queryset()
+        queryset = queryset.order_by('site__name')
+
+        form = forms.EventSearchForm(
+            data=self.request.GET
+        )
+        if form.is_valid():
+            if form.cleaned_data['geo_point'] and form.cleaned_data['radius']:
+                site_queryset = models.Site.objects.filter(
+                    geo_point__distance_lt=(form.cleaned_data['geo_point'],
+                                            D(m=form.cleaned_data['radius']))
+                )
+                site_queryset = site_queryset | models.Site.objects.filter(
+                    geo_line__distance_lt=(form.cleaned_data['geo_point'],
+                                            D(m=form.cleaned_data['radius']))
+                )
+                queryset = queryset.filter(site__in=site_queryset)
+            if form.cleaned_data['activity_type']:
+                queryset = queryset.filter(
+                    activity_type__in=form.cleaned_data['activity_type'])
+        queryset = queryset.prefetch_related(
+            Prefetch(
+                'event_set',
+                queryset=models.Event.objects.annotate(
+                    apps_count=Count('application__id')).filter(
+                    application__status=ApplicationStatuses.ACTIVE),
+                to_attr='events_active_applications')
+        )
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        result = super(CourtSearchView, self).get_context_data(**kwargs)
+        result['search_form'] = forms.CourtSearchForm(data=self.request.GET)
+        return result
+
+
 class AddUserToAdminGroupView(BaseView):
     @transaction.atomic
     def post(self, request, *args, **kwargs):
@@ -649,9 +929,13 @@ class CreateEventView(TemplateView):
     template_name = 'events/create_new.html'
 
     def get_visitors_form(self, data, files, **kwargs):
-        return forms.EventVisitForm(
-            data=data, prefix='event', initial={'users': [self.request.user]}
+        suffix = kwargs.get('suffix', '')
+        form = forms.EventVisitForm(
+            data=data,
+            prefix='event' + suffix,
+            initial={'users': kwargs.get('users', [])}
         )
+        return form
 
     def get_forms(self, data, files, **kwargs):
         data_forms = OrderedDict()
@@ -664,7 +948,10 @@ class CreateEventView(TemplateView):
                 data_forms[entity] = form_class(**kw)
         data_forms['event'] = forms.EventForm(
             data=data, files=files, prefix='event')
-        data_forms['visitors'] = self.get_visitors_form(data, files, **kwargs)
+        data_forms['visitors'] = self.get_visitors_form(
+            data, files, suffix="visitors", uesrs=[self.request.user], **kwargs)
+        data_forms['proposals'] = self.get_visitors_form(
+            data, files, suffix="proposals", **kwargs)
         return data_forms
 
     def get_instances(self, view_forms, **kwargs):
@@ -716,8 +1003,12 @@ class CreateEventView(TemplateView):
         instances['court'].admin_group.user_set.add(request.user)
         instances['event'].court = instances['court']
 
+        visitors = self._get_visitors(view_forms)
+        invitees = self._get_proposals(view_forms)
+
         persistence.save_event_and_related_things(
-            instances['event'], request.user, visitors=view_forms['visitors'].cleaned_data['users']
+            instances['event'], request.user,
+            visitors=visitors, invitees=invitees
         )
 
         for form in view_forms.values():
@@ -729,6 +1020,12 @@ class CreateEventView(TemplateView):
                 'let_me_app:view_event', kwargs={'pk': instances['event'].id}
             )
         )
+
+    def _get_visitors(self, view_forms):
+        return view_forms['visitors'].cleaned_data['users']
+
+    def _get_proposals(self, view_forms):
+        return view_forms['proposals'].cleaned_data['users']
 
 
 class CreateSiteEventView(CreateEventView):
@@ -743,6 +1040,22 @@ class CreateSiteEventView(CreateEventView):
 class CreateCourtEventView(CreateEventView):
     template_name = 'events/create_for_court.html'
 
+    def get_visitors_form(self, data, files, **kwargs):
+        suffix = kwargs.get('suffix', '')
+        form = forms.ExtendedEventVisitForm(
+            data=data,
+            prefix='event' + suffix,
+            initial={'users': kwargs.get('users', [])}
+        )
+        checkbox_field = form.fields['known_users']
+        queryset = User.objects.filter(
+            visit__event__court__id=self.kwargs['court'])
+        queryset = queryset.annotate(visit_count=Count('id'))
+        queryset = queryset.order_by('-visit_count')[:NUMBER_OF_KNOWN_VISITS]
+        checkbox_field.choices = [
+            (checkbox_field.prepare_value(i), i) for i in queryset]
+        return form
+
     def check_permissions(self, request, court):
         return (court.admin_group.user_set.filter(id=request.user.id).exists()
             or self.request.user.is_staff)
@@ -752,6 +1065,14 @@ class CreateCourtEventView(CreateEventView):
         context['court'] = get_object_or_404(models.Court, pk=kwargs['court'])
         return context
 
+    def _get_visitors(self, view_forms):
+        return (set(view_forms['visitors'].cleaned_data['users'])
+                | set(view_forms['visitors'].cleaned_data['known_users']))
+
+    def _get_proposals(self, view_forms):
+        return (set(view_forms['proposals'].cleaned_data['users'])
+                | set(view_forms['proposals'].cleaned_data['known_users']))
+
 
 class CreateStaffView(TemplateView):
     template_name = 'events/create_staff.html'
@@ -759,7 +1080,10 @@ class CreateStaffView(TemplateView):
     def get_context_data(self, **kwargs):
         event = get_object_or_404(models.Event, pk=kwargs['pk'])
         formset = forms.EventStaffFormSet(
-                instance=event, data=kwargs.get('data'))
+                instance=event,
+                data=kwargs.get('data'),
+                queryset=models.Visit.objects.filter(
+                    id__in=models.VisitRole.objects.values_list('visit_id', flat=True)))
         result = {
             'event': event,
             'staff_formset': formset}
@@ -785,6 +1109,110 @@ class CreateStaffView(TemplateView):
         return self.render_to_response(context)
 
 
+class IndexCharts(ListView):
+    template_name = 'charts/visit_indexes.html'
+    model = models.VisitIndex
+
+    def get_queryset(self):
+        user_id = int(self.kwargs['user_id'])
+        queryset = super(IndexCharts, self).get_queryset()
+        queryset = queryset.filter(visit__user_id=user_id)
+        if self.request.user.id != user_id:
+            queryset = queryset.filter(
+                visit__event__eventstaff__staff__user=self.request.user)
+        queryset = queryset.order_by('parametr', 'visit__event__start_at')
+        queryset = queryset.values('parametr_id', 'parametr__name', 'value', 'visit__event__start_at')
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context_data = super(IndexCharts, self).get_context_data(**kwargs)
+        param_groups = itertools.groupby(
+            context_data['object_list'], lambda x: (x['parametr_id'], x['parametr__name']))
+        context_data['param_groups'] = [(i, list(j)) for i, j in param_groups]
+        return context_data
+
+
+class IndexRecommendations(ListView):
+    template_name = 'charts/recommendations.html'
+    model = models.CoachRecommendation
+
+    def get_queryset(self):
+        user_id = int(self.kwargs['user_id'])
+        queryset = super(IndexRecommendations, self).get_queryset()
+        queryset = queryset.filter(visit__user_id=user_id)
+        if self.request.user.id != user_id:
+            queryset = queryset.filter(
+                visit__event__eventstaff__staff__user=self.request.user)
+        queryset = queryset.order_by('status', '-visit__event__start_at')
+        queryset = queryset.select_related('visit__event', 'coach')
+        return queryset
+
+
+class AnnotateVisitView(TemplateView):
+    template_name = 'visits/annotate_visit.html'
+
+    def get(self, request, *args, **kwargs):
+        visit = get_object_or_404(models.Visit, pk=kwargs['visit_id'])
+        kwargs['object'] = visit
+        if not self.check_permissions(request, visit):
+            return http.HttpResponseForbidden()
+        return super(AnnotateVisitView, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        result = super(AnnotateVisitView, self).get_context_data(**kwargs)
+        result['visit'] = kwargs['object']
+
+        if 'formsets' in kwargs:
+            result['formsets'] = kwargs['formsets']
+        else:
+            result['formsets'] = self.get_formsets(result['visit'], None, None)
+        return result
+
+    def check_permissions(self, request, visit):
+        query = models.EventStaff.objects.filter(
+            event_id=visit.event_id, staff_id=request.user.id)
+        return query.exists()
+
+    def get_formsets(self, visit, data, files, **kwargs):
+        data_forms = OrderedDict()
+        data_forms['visit_indexes'] = forms.VisitIndexFormSet(
+            instance=visit, data=data, files=files)
+        data_forms['recommendation'] = forms.CoachRecommendationFormSet(
+            instance=visit, data=data, files=files)
+        return data_forms
+
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        visit = get_object_or_404(models.Visit, pk=kwargs['visit_id'])
+
+        if not self.check_permissions(request, visit):
+            return http.HttpResponseForbidden()
+
+        view_formsets = self.get_formsets(
+            visit, request.POST, request.FILES, **kwargs)
+
+        validation_result = True
+        for formset in view_formsets.values():
+            validation_result = validation_result and formset.is_valid()
+
+        if not validation_result:
+            return self.render_to_response(
+                self.get_context_data(
+                    formsets=view_formsets, object=visit, **kwargs)
+            )
+
+        for key, formset in view_formsets.items():
+            formset.save(commit=(key != 'recommendation'))
+
+        for form in view_formsets['recommendation'].forms:
+            form.instance.coach = request.user.staffprofile
+            form.instance.save()
+
+        return http.HttpResponseRedirect(
+            reverse('let_me_app:view_event', kwargs={'pk': visit.event_id})
+        )
+
+
 class CloneEventView(TemplateView):
     template_name = 'events/clone_event.html'
 
@@ -799,12 +1227,38 @@ class CloneEventView(TemplateView):
         return (court.admin_group.user_set.filter(id=request.user.id).exists()
             or self.request.user.is_staff)
 
+    def get_visitors_form(self, data, files, **kwargs):
+        suffix = kwargs.get('suffix', '')
+        form = forms.ExtendedEventVisitForm(
+            data=data,
+            prefix='event' + suffix,
+            initial={'users': kwargs.get('users', [])}
+        )
+        checkbox_field = form.fields['known_users']
+        queryset = User.objects.filter(
+            visit__event__court__event__id=self.kwargs['event'])
+        queryset = queryset.annotate(visit_count=Count('id'))
+        queryset = queryset.order_by('-visit_count')[:NUMBER_OF_KNOWN_VISITS]
+        checkbox_field.choices = [
+            (checkbox_field.prepare_value(i), i) for i in queryset]
+        return form
+
     def get_forms(self, data, files, **kwargs):
         data_forms = OrderedDict()
         data_forms['event'] = forms.EventForm(
             data=self.request.POST, files=self.request.FILES, prefix='event')
-        data_forms['visitors'] = forms.EventVisitForm(
-            data=data, prefix='event', initial={'users': [self.request.user]}
+
+        data_forms['visitors'] = self.get_visitors_form(
+            data=data, files=files, prefix='event', suffix="visitors",
+            users=[self.request.user]
+        )
+        visits = models.Visit.objects.filter(
+            event=kwargs['event'],
+            status__in=[VisitStatuses.COMPLETED, VisitStatuses.PENDING] )
+        visits = visits.exclude(user=self.request.user).values('user_id')
+        data_forms['proposals'] = self.get_visitors_form(
+            data=data, files=files, prefix='event', suffix="proposals",
+            users=User.objects.filter(id__in=visits)
         )
         return data_forms
 
@@ -830,13 +1284,23 @@ class CloneEventView(TemplateView):
             source_event.inventory_list
         )
 
+        visit_set = (set(view_forms['visitors'].cleaned_data['users'])
+                     | set(view_forms['visitors'].cleaned_data['known_users']))
+        proposal_set = (set(view_forms['proposals'].cleaned_data['users'])
+                        | set(view_forms['proposals'].cleaned_data['known_users']))
+
         persistence.save_event_and_related_things(
-            event,
-            request.user,
-            visitors=view_forms['visitors'].cleaned_data['users']
+            event, request.user, visitors=visit_set, invitees=proposal_set
         )
 
         view_forms['event'].save_m2m()
+
+        notification_context = {
+            'reason': "create_event",
+            'initiator_id': self.request.user.id,
+            'object_id': event
+        }
+        send_notification.delay(notification_context)
 
         return http.HttpResponseRedirect(
             reverse('let_me_app:view_event', kwargs={'pk': event.id})
@@ -853,7 +1317,11 @@ class CompleteEventView(TemplateView):
             status=models.EventStatuses.PENDING
         )
         formset = forms.CompleteEventVisitFormSet(
-                instance=event, data=kwargs.get('data'))
+            instance=event, data=kwargs.get('data'),
+            queryset=models.Visit.objects.filter(status=VisitStatuses.PENDING)
+        )
+        for visit_form in formset.forms:
+            visit_form.initial.setdefault('income', event.preliminary_price)
         result = {
             'event': event,
             'visit_formset': formset}
@@ -870,8 +1338,8 @@ class CompleteEventView(TemplateView):
         formset = context['visit_formset']
         if formset.is_valid():
             formset.save(commit=False)
-            context['event'].status = models.EventStatuses.COMPLETED
-            context['event'].save()
+            persistence.finish_event(
+                context['event'], models.EventStatuses.COMPLETED)
             for form in formset.forms:
                 instance = form.instance
                 receipt = instance.receipt or models.Receipt()

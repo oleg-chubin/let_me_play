@@ -1,0 +1,16 @@
+{% extends "notifications/email/base.html" %}
+{% load i18n %}
+
+{% block subject %}
+{% blocktrans %}
+Visit declined
+{% endblocktrans %}
+{% endblock %}
+
+{% block content %}
+  {% blocktrans %}
+    Your visit for the event <a href="{{event_url}}">{{event}}</a> has been declined.
+  {% endblocktrans %}
+{% endblock %}
+
+

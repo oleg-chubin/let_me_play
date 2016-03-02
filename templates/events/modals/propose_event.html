@@ -1,4 +1,4 @@
-{% extends "events/modals/base.html" %}
+{% extends "base_modal.html" %}
 
 {% load i18n %}
 
@@ -15,11 +15,12 @@
 {% block modal_title %}{% trans "Propose event" %}{% endblock %}
 {% block modal_body %}
   <div class="form-group">
-    {{ proposal_form.users }}
-  </div>
-  <div class="form-group">
     <textarea class="form-control" type="textarea" id="comment" name="comment" placeholder="{% trans 'Message' %}" maxlength="140" rows="7"></textarea>
   </div>
+  {% with proposal_form as form %}
+    {% include "form.html" %}
+  {% endwith %}
+
 {% endblock %}
 {% block modal_footer %}
     <button type="submit" class="btn btn-primary">{% trans "Propose event" %}</button>

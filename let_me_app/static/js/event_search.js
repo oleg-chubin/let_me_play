@@ -27,26 +27,41 @@ function draw_markers(map){
     items.each(function(x){
         record_id = $(this).data('record_id')
         coords = $(this).data('geo_point');
-        marker = L.marker([coords[1], coords[0]], get_form_radius()).addTo(map);
-        markers[record_id] = marker;
+        line = $(this).data('geo_line');
+        if (coords) {
+            marker = L.marker([coords[1], coords[0]], get_form_radius()).addTo(map);
+            markers[record_id] = marker;
+        }
+        if (line) {
+            var pointList = line.map(function(x){return new L.LatLng(x[1], x[0])});
+
+            var firstpolyline = new L.polyline(pointList, {
+                color: 'red',
+                weight: 2,
+                opacity: 1,
+                smoothFactor: 1
+            }).addTo(map);
+        }
     });
 }
 
 
-$(function(){
-  form_geo_value = $('form').find('input[name=geo_point]').val();
+$(window).on('map:init', function (e) {
+    var detail = e.originalEvent ? e.originalEvent.detail : e.detail;
+    var map = detail.map;
 
-  function map_init_basic (map, options) {
+    form_geo_value = $('form').find('input[name=geo_point]').val();
+
     circles = [];
     if (form_geo_value.length) {
         draw_circle(map, circles, form_geo_value);
-        draw_markers(map);
     }
+    draw_markers(map);
 
     $('.event_item').closest('article').mouseover(function(){
       for (i in markers){markers[i].setOpacity(0.2);}
       marker = markers[$(this).find('.event_item').data('record_id')];
-      marker.setOpacity(1);
+      if (marker) marker.setOpacity(1);
     });
 
     $('form input[name=radius]').change(function(){
@@ -69,7 +84,5 @@ $(function(){
         circles.push(circle);
       }
     );
-  };
-  window.map_init_basic = map_init_basic;
 
-})
+});

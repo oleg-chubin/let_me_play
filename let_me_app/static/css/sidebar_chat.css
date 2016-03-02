@@ -1,0 +1,59 @@
+
+.chat-controller {
+    position: fixed;
+    top: 65px;
+    right: 15px;
+    padding: 5px 6px 1px;
+    border: 5px solid rgb(51, 51, 51);
+    color: rgb(51, 51, 51);
+    border-radius: 25px;
+    font-size: 12pt;
+    cursor: pointer;
+    z-index: 300;
+}
+
+.chat-controller .new-messages{
+    color: orange;
+}
+
+.chat-container ~ .chat-controller > .controller-open {
+    display: inline-block;
+}
+
+.chat-container ~ .chat-controller > .controller-close {
+    display: none;
+}
+.chat-container.focus ~ .chat-controller > .controller-open {
+    display: none;
+}
+
+.chat-container.focus ~ .chat-controller > .controller-close {
+    display: inline-block;
+}
+
+.chat-container {
+    position: fixed;
+    top: 0px;
+    right: -100%;
+    padding-top: 100px;
+    padding-bottom: 15px;
+    height: 100%;
+    width: 30%;
+    background-color: rgb(255, 255, 255);
+    box-shadow: -3px 0px 3px 0px rgba(160, 160, 160, 0.30);
+    z-index: 100;
+    x-overflow: auto;
+    overflow-y: overlay;
+}
+
+.chat-container.focus {
+    right: 0px;
+}
+
+.chat-container > .divider {
+    content: '';
+    border-bottom: 1px solid rgb(230, 230, 230);
+    max-height: 1px;
+    overflow: hidden;
+    margin: 15px 0px;
+}

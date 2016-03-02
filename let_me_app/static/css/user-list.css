@@ -1,0 +1,23 @@
+.list-pic {
+    height: 50px;
+}
+
+.user-list {
+    list-style-type: none;
+}
+
+.user-list>li{
+    margin-top: 5px;
+}
+
+.court-list {
+    list-style-type: none;
+}
+
+.court-list>li{
+    margin-top: 5px;
+}
+
+nav .avatar {
+    height: 25px;
+}

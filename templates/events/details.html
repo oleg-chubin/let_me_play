@@ -1,17 +1,25 @@
 {% extends 'base.html' %}
 
-{% load staticfiles let_me_escort leaflet_tags i18n %}
+{% load staticfiles let_me_escort leaflet_tags i18n avatar %}
+
+{% block page_title %}
+  {% with start_at=event.start_at %}
+    {% blocktrans %}Details of event {{start_at}}{% endblocktrans %}
+  {% endwith %}
+{% endblock %}
 
 {% block extra_head %}
   {% leaflet_css %}
   <link href="{% static 'css/event.css' %}" rel="stylesheet">
   <link href="{% static 'css/group_buttons.css' %}" rel="stylesheet">
   <link href="{% static 'css/info_panel.css' %}" rel="stylesheet">
+  <link href="{% static 'css/sidebar_chat.css' %}" rel="stylesheet">
+  <link href="{% static "css/chat.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block breadcrumbs %}
   <ol class="breadcrumb">
-    <li><a href="#">{% trans "Home" %}</a></li>
+    <li><a href="{% url "home" %}">{% trans "Home" %}</a></li>
     <li><a href="{% url 'let_me_app:view_site' pk=object.court.site_id %}">{% trans "Site" %}</a></li>
     <li><a href="{% url 'let_me_app:view_court' pk=object.court_id %}">{% trans "Court" %}</a></li>
     <li class="active">{% trans "Event" %}</li>
@@ -42,12 +50,12 @@
   <div class="panel-heading">
     <h3 class="panel-title">
       {% followdropdown object "escort/follow_menu.html" %}
-        {{ object.name }}
+        <img src="{{object.court.activity_type.image.url}}" class="img-rounded"/>{{object.start_at}}
       {% endfollowdropdown %}
       {% if is_admin %}
         <div class="pull-right action-buttons">
           <div class="btn-group pull-right">
-              <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+              <button type="button" class="btn btn-lg dropdown-toggle" data-toggle="dropdown">
                   <span class="glyphicon glyphicon-cog" style="margin-right: 0px;"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
@@ -76,8 +84,12 @@
       </div>
       <div id="detail-3">
         <p>
-          <strong>{% trans "Name" %}</strong>
-          {{ object.name|linebreaksbr }}
+          <strong>{% trans "Start at" %}</strong>
+          {{ object.start_at }}
+        </p>
+        <p>
+          <strong>{% trans "Preliminary price" %}</strong>
+          {{ object.preliminary_price }}
         </p>
         <p>
           <strong>{% trans "Description" %}</strong>
@@ -94,7 +106,7 @@
       <div id="detail-4">
         <ul>
           {% for inventory in object.inventory_list.inventory_set.all %}
-            <li> {{ inventory.equipment }} ({{ inventory.amount }})
+            <li> <strong>{{ inventory.equipment }}</strong> {{ inventory.amount }}
             {% if is_admin %}
 
                 {% if object.status == EVENT_STATUSES.PENDING %}
@@ -102,8 +114,11 @@
                     {% include "events/buttons/cancel_inventory.html" %}
                   </div>
                 {% endif %}
-            </li>
             {% endif %}
+            </li>
+          {% endfor %}
+          {% for inventory in user_inventory %}
+            <li> <strong>{{ inventory.equipment__name }}</strong> {{ inventory.amount }} <small>({{inventory.user}})</small></li>
           {% endfor %}
         </ul>
         {% if is_admin %}
@@ -118,55 +133,27 @@
       </div>
     </li>
     <li class="list-group-item">
-      <div class="row toggle" id="dropdown-detail-5" data-toggle="detail-8">
-        <div class="col-xs-10"> <h4>{% trans "Staff" %}</h4> </div>
-        <div class="col-xs-2"><span class="glyphicon glyphicon-menu-down pull-right toggle-icon"></span>
-            <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
-      </div>
-      <div id="detail-8">
-        <ul>
-          {% for staff in object.eventstaff_set.all %}
-            <li>
-              {{ staff }}
-            </li>
-          {% endfor %}
-        </ul>
-        {% if is_admin %}
 
-            {% if object.status == EVENT_STATUSES.PENDING %}
-              <div class="ui-group-buttons">
-                {% include "events/buttons/create_staff.html" %}
-              </div>
-            {% endif %}
-        {% endif %}
-      </div>
-    </li>
-    <li class="list-group-item">
       <div class="row toggle" id="dropdown-detail-5" data-toggle="detail-5">
         <div class="col-xs-10"> <h4>{% trans "Visitors" %}</h4> </div>
         <div class="col-xs-2"><span class="glyphicon glyphicon-menu-down pull-right toggle-icon"></span>
             <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
       </div>
       <div id="detail-5">
-        <ul>
+        <ul class="user-list">
+          {% for visit in staff_list %}
+            <li>
+             {% include "events/visitor_list_item.html" %}
+            </li>
+          {% endfor %}
+        </ul>
+        {% with active_visits_id|length as visit_count %}
+          {% blocktrans %}There are {{ visit_count }} visitors {% endblocktrans %}:
+        {% endwith %}
+        <ul class="user-list">
           {% for visit in active_visits %}
             <li>
-              {% if visit.status == VISIT_STATUSES.PENDING or visit.status == VISIT_STATUSES.COMPLETED %}
-                {{ visit.user }}
-                {% with visit.user as visitor %}
-                  {% if is_admin %}
-                    {% if object.status == EVENT_STATUSES.PENDING %}
-                      <div class="ui-group-buttons">
-                        {% include "events/buttons/dismiss_visit.html" %}
-                      </div>
-                    {% endif %}
-                  {% endif %}
-                {% endwith %}
-              {% else %}
-                <del>
-                  {{ visit.user }}
-                </del>
-              {% endif %}
+             {% include "events/visitor_list_item.html" %}
             </li>
           {% endfor %}
         </ul>
@@ -187,18 +174,18 @@
             <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
         </div>
         <div id="detail-6">
-          <ul>
+          <ul class="user-list">
             {% for application in active_applications %}
               <li>
+                <img src="{{application.user|avatar_url}}" class="list-pic img-responsive img-thumbnail" data-toggle="popover" data-popover_url="{% url 'let_me_help:rate-user' user_id=application.user.id %}">
                 {{ application.user.get_full_name }} ({{ application.comment|truncatewords_html:4 }})
-
                 {% if object.status == EVENT_STATUSES.PENDING %}
                     <div class="ui-group-buttons marginBottom10">
                       {% with application.user as applicant %}
                         {% include "events/buttons/accept_application.html" %}
                       {% endwith %}
                       <div class="or"></div>
-                      {% include "events/buttons/decline_application.html" %}
+                      {% include "events/buttons/decline_application.html" with object=application %}
                     </div>
                 {% endif %}
               </li>
@@ -213,10 +200,11 @@
             <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
         </div>
         <div id="detail-7">
-          <ul>
+          <ul class="user-list">
             {% for proposal in active_proposals %}
               {% if proposal.status == PROPOSAL_STATUSES.ACTIVE %}
                   <li>
+                      <img src="{{proposal.user|avatar_url}}" class="list-pic img-responsive img-thumbnail" data-toggle="popover" data-popover_url="{% url 'let_me_help:rate-user' user_id=proposal.user.id %}">
                       {{ proposal.user.get_full_name }}
 
                         {% if object.status == EVENT_STATUSES.PENDING %}
@@ -270,20 +258,26 @@
 {% include "events/modals/apply_for_event.html" %}
 {% include "events/modals/propose_event.html" %}
 {% include "events/modals/create_visit.html" %}
+{% include "events/modals/update_visit.html" %}
 
 {% endblock %}
 
 {% block extra_scripts %}
-  {% include "autocomplete_light/static.html" %}
   {% leaflet_js %}
-  <script type="text/javascript">
-      {% with longitude=object.court.site.geo_point.0|stringformat:"f" latitude=object.court.site.geo_point.1|stringformat:"f" %}
-          function map_init_basic (map, options) {
-              L.marker([{{ latitude }}, {{ longitude }}]).addTo(map);
-              map.panTo(new L.LatLng({{ latitude }}, {{ longitude }}));
-          }
-      {% endwith %}
-  </script>
+  {{visit_form.media}}
+  {{inventory_form.media}}
+  {{proposal_form.media}}
+  <script src="{% static "js/detail_map.js" %}"></script>
   <script src="{% static "js/expandable_listgroup.js" %}"></script>
   <script src="{% static "js/modal.js" %}"></script>
+  <script src="{% static "js/sidebar_chat.js" %}"></script>
+  <script src="{% static "js/rateable_avatars.js" %}"></script>
+  <script src="{% static "js/imaged_radiobuttons.js" %}"></script>
+{% endblock %}
+
+{% block extra_content %}
+{% if chat %}
+<div class="chat-container animate" data-chaturl="{% url 'let_me_app:chat_details' pk=chat.id %}" data-postchaturl="{% url 'let_me_app:post_chat_message' pk=chat.id %}">
+</div>
+{% endif %}
 {% endblock %}

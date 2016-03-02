@@ -2,6 +2,10 @@
 
 {% load leaflet_tags static floppyforms i18n %}
 
+{% block page_title %}
+    {% blocktrans %}Create event{% endblocktrans %}
+{% endblock %}
+
 {% block extra_head %}
     {% leaflet_js plugins="forms" %}
     {% leaflet_css plugins="forms" %}
@@ -10,7 +14,7 @@
 
 {% block breadcrumbs %}
   <ol class="breadcrumb">
-    <li><a href="#">{% trans "Home" %}</a></li>
+    <li><a href="{% url "home" %}">{% trans "Home" %}</a></li>
     <li class="active">{% trans "Create new event" %}</li>
   </ol>
 {% endblock %}
@@ -32,7 +36,6 @@
 {% endblock %}
 
 {% block extra_scripts %}
-    {% include "autocomplete_light/static.html" %}
     {% for form in forms.values %}
         {{ form.media }}
     {% endfor %}

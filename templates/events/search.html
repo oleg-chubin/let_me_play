@@ -2,6 +2,10 @@
 
 {% load i18n staticfiles let_me_escort leaflet_tags %}
 
+{% block page_title %}
+    {% blocktrans %}Search events{% endblocktrans %}
+{% endblock %}
+
 {% block extra_head %}
   {% leaflet_css %}
   {% leaflet_js plugins="forms" %}
@@ -11,7 +15,7 @@
 
 {% block breadcrumbs %}
   <ol class="breadcrumb">
-    <li><a href="#">{% trans "Home" %}</a></li>
+    <li><a href="{% url "home" %}">{% trans "Home" %}</a></li>
     <li class="active">{% trans "Events" %}</li>
   </ol>
 {% endblock %}
@@ -43,7 +47,7 @@
     {% for object in object_list %}
         <article class="search-result row">
           <div class="col-xs-12 col-sm-12 col-md-3">
-            <a href="#" title="Lorem ipsum" class="thumbnail">
+            <a href="{% url "let_me_app:view_event" pk=object.id %}" class="thumbnail">
               <img src="{{ object.court.activity_type.image.url }}" alt="Lorem ipsum" />
             </a>
           </div>
@@ -51,11 +55,16 @@
             <ul class="meta-search">
               <li><i class="glyphicon glyphicon-calendar"></i> <span>{{ object.start_at|date }}</span></li>
               <li><i class="glyphicon glyphicon-time"></i> <span>{{ object.start_at|time }}</span></li>
-              <li class="event_item" data-record_id="{{object.id}}" data-geo_point="[{{ object.court.site.geo_point.x }}, {{ object.court.site.geo_point.y }}]"><i class="glyphicon glyphicon-tags"></i> <span>{% trans "People" %}</span></li>
+              {% if object.court.site.geo_point %}
+              <li class="event_item" data-record_id="{{object.id}}" data-geo_point="[{{ object.court.site.geo_point.x|stringformat:"f" }}, {{ object.court.site.geo_point.y|stringformat:"f" }}]">
+              {% else %}
+              <li class="event_item" data-record_id="{{object.id}}" data-geo_line="[{% for x, y in object.court.site.geo_line %} [{{ x|stringformat:"f" }}, {{ y|stringformat:"f" }}] {% if not forloop.last %}, {% endif %} {% endfor %}]">
+              {% endif %}
+                <i class="glyphicon glyphicon-tags"></i> <span>{{object.people_count|length}} {% trans "People" %}</span>
+              </li>
             </ul>
           </div>
             <div class="col-xs-12 col-sm-12 col-md-7 excerpet">
-                <h3><a href="{% url "let_me_app:view_event" pk=object.id %}" title="">{{ object.name }} </a></h3>
                 <p>{{ object.description|linebreaksbr }}</p>
             </div>
             <span class="clearfix borda"></span>

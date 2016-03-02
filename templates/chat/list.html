@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
-{% load let_me_chat i18n staticfiles %}
+{% load let_me_chat i18n staticfiles avatar %}
+
+{% block page_title %}{% with request.user as user %}{% blocktrans %}Chats list for {{user}}{% endblocktrans %}{% endwith %}{% endblock %}
 
 {% block extra_head %}
 <link href="{% static "css/event.css" %}" rel="stylesheet">
@@ -9,7 +11,7 @@
 
 {% block breadcrumbs %}
 <ol class="breadcrumb">
-  <li><a href="#">{% trans "Home" %}</a></li>
+  <li><a href="{% url "home" %}">{% trans "Home" %}</a></li>
   <li class="active">{% trans "Chats" %}</li>
 </ol>
 {% endblock %}
@@ -30,9 +32,13 @@
         <div class="row toggle" id="dropdown-detail-{{forloop.counter}}" data-toggle="detail-{{forloop.counter}}">
           <div class="col-xs-10">
             <h4>
-              {% if object.subject_id %}
-                {% blocktrans with event_name=object.subject.event.name %}
-                Event "{{ event_name}}" discussion
+              {% if object.chat.last_update > object.last_seen %}
+                <span class="label label-warning"><span class="glyphicon glyphicon-envelope"></span></span>
+              {% endif %}
+
+              {% if object.chat.subject_id %}
+                {% blocktrans with event_name=object.chat.subject.event.start_at %}
+                  Event "{{ event_name}}" discussion
                 {% endblocktrans %}
               {% else %}
                 {% trans "Group chat" %}
@@ -43,27 +49,22 @@
             <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
         </div>
         <div id="detail-{{forloop.counter}}">
-            <p>
-              <strong> <i class="glyphicon glyphicon-user"></i></strong>
-                {% for participant in object.chatparticipant_set.all %}
-                  {{ participant.user }}
-                {% endfor %}
-            </p>
-            {% with recent_message=object|recent_chat_message %}
+            {% with recent_message=object.chat|recent_chat_message %}
               {% if recent_message %}
                 <p>
                   <strong> <i class="glyphicon glyphicon-calendar"></i> </strong>
-                  {{ object.last_update }}
+                  {{ object.chat.last_update }}
                 </p>
                 <p>
-                  <strong><i class="glyphicon glyphicon-envelope"></i></strong>
-                  {{ recent_message.text }} ({{ recent_message.author }})
+                  <img src="{{recent_message.author|avatar_url}}" class="list-avatar img-responsive img-thumbnail">
+                  <strong>{{ recent_message.author }}:</strong>
+                  {{ recent_message.text }}
                 </p>
               {% endif %}
             {% endwith %}
             <p>
               <strong><i class="glyphicon glyphicon-link"></i></strong>
-              <a href="{% url "let_me_app:chat_details" pk=object.id %}">
+              <a href="{% url "let_me_app:chat_details" pk=object.chat.id %}">
                {% trans "More..." %}
               </a>
             </p>

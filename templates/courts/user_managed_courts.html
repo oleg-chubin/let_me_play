@@ -2,6 +2,12 @@
 
 {% load staticfiles i18n %}
 
+{% block page_title %}
+  {% with user=request.user %}
+    {% blocktrans %}Courts managed by {{user}}{% endblocktrans %}
+  {% endwith %}
+{% endblock %}
+
 {% block extra_head %}
 <link href="{% static "css/event.css" %}" rel="stylesheet">
 <link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
@@ -9,7 +15,7 @@
 
 {% block breadcrumbs %}
 <ol class="breadcrumb">
-  <li><a href="#">{% trans "Home" %}</a></li>
+  <li><a href="{% url "home" %}">{% trans "Home" %}</a></li>
   <li class="active">{% trans "Managed events" %}</li>
 </ol>
 {% endblock %}
@@ -19,23 +25,11 @@
     <div class="well">
         <div class="media">
           <span class="pull-left" href="#">
-              <img class="media-object" src="http://placehold.it/50/55C1E7/fff&text=E">
+            <a href="{% url "let_me_app:view_court" pk=object.id %}">
+              <img class="media-object" src="{{object.activity_type.image.url}}">
+            </a>
           </span>
           <div class="media-body">
-              <h4 class="media-heading">
-                <a href="{% url "let_me_app:view_event" pk=object.id %}">
-                  {% if object.status == EVENT_STATUSES.PENDING %}
-                    {{ object.name }}
-                  {% else %}
-                    <s> {{ object.name }} </s>
-                    {% if object.status == EVENT_STATUSES.CANCELED %}
-                      <span class="label label-default">Cancelled</span>
-                    {% else %}
-                      <span class="label label-primary">Completed</span>
-                    {% endif %}
-                  {% endif %}
-                </a>
-              </h4>
             <p class="text-right">[some text]</p>
             <p>{{ object.description|linebreaksbr }}</p>
             <ul class="list-inline list-unstyled">

@@ -6,24 +6,22 @@ from django.core.urlresolvers import reverse
 # from django.template.context import RequestContext
 from annoying.decorators import render_to
 from django.template.context import RequestContext
+from django.utils.translation import gettext as _
 from django.contrib.auth.forms import SetPasswordForm
 from django import forms
 from let_me_auth.models import User
+from django.views.generic.edit import UpdateView, BaseUpdateView, BaseCreateView
+from let_me_auth.forms import UserDetailsForm
+from let_me_auth import models
+from django.views.generic.detail import DetailView
+from django.views.generic.base import TemplateView, View
+from django.http.response import HttpResponse, HttpResponseRedirect
+from let_me_app.integration.rocketsms import RocketLauncher
+import random
 
 
 def context(**extra):
     return dict(**extra)
-
-
-def login(request):
-    # context = RequestContext(request, {
-    #     'request': request, 'user': request.user})
-    # return render_to_response('login.html', context_instance=context)
-    context = {'next_url': request.REQUEST.get('next', reverse('home'))}
-    return render(
-        request, 'registration/login.html',
-        context_instance = RequestContext(request, context)
-    )
 
 
 @login_required()
@@ -90,4 +88,46 @@ def require_email(request):
 def signup(request):
     return context(signup=True)
 
+
+class ProfileDetailsView(DetailView):
+    template_name = 'user/profile_details.html'
+    model = models.User
+
+    def get_object(self, **kwargs):
+        return self.request.user
+
+
+class EditUserView(UpdateView):
+    form_class = UserDetailsForm
+    template_name = 'user/details_form.html'
+
+    def get_success_url(self):
+        return reverse('let_me_auth:profile_details')
+
+    def get_object(self):
+        return self.request.user.user
+
+
+class CreateConfirmationCodeView(TemplateView):
+    def post(self, request, *args, **kwargs):
+        confirmation, created = models.ConfirmationCodes.objects.get_or_create(
+            user=request.user)
+        confirmation.code = ''.join(
+            [str(i) for i in random.sample(range(1, 10), 5)])
+        confirmation.save()
+        sms_sender = RocketLauncher(**settings.ROCKET_SMS_CONFIG)
+        sms_text = _(
+            "Confirmation code is %(phone)s.") % {'phone': confirmation.code}
+        sms_sender.send_sms(request.user.cell_phone, sms_text)
+        return HttpResponse()
+
+
+class CheckConfirmationCodeView(BaseUpdateView):
+    def post(self, request, *args, **kwargs):
+        confirmation = models.ConfirmationCodes.objects.filter(
+            user=request.user)
+        if confirmation and confirmation[0].code == request.POST.get('code'):
+            self.request.user.cell_phone_is_valid = True
+            self.request.user.save()
+        return HttpResponseRedirect(reverse('let_me_auth:profile_details'))
 

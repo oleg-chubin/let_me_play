@@ -59,6 +59,42 @@ class VisitStatuses:
     )
 
 
+class RecommendationStatuses:
+    ACTIVE = 1
+    OUTDATED = 2
+    CANCELED = 3
+
+    CHOICES = (
+        (ACTIVE, _("Active")),
+        (OUTDATED, _("Outdated")),
+        (CANCELED, _("Canceled")),
+    )
+
+
+class Coolness:
+    WEAKER = 1
+    BIT_WEAKER = 2
+    SAME = 3
+    BIT_STRONGER = 4
+    STRONGER = 5
+
+    CHOICES = (
+        (WEAKER, _('weaker')),
+        (BIT_WEAKER, _('bit_weaker')),
+        (SAME, _('same')),
+        (BIT_STRONGER, _('bit_stronger')),
+        (STRONGER, _('stronger'))
+    )
+
+    IMAGES = {
+        WEAKER: 'images/weaker_coolness.png',
+        BIT_WEAKER: 'images/bit_weaker_coolness.png',
+        SAME: 'images/same_coolness.png',
+        BIT_STRONGER: 'images/bit_stronger_coolness.png',
+        STRONGER: 'images/stronger_coolness.png'
+    }
+
+
 class EventStatuses:
     PENDING = 1
     COMPLETED = 2
@@ -115,6 +151,21 @@ class Peeper(models.Model):
         return "{} follows {}".format(self.user, self.followable.id)
 
 
+class CoolnessRate(models.Model):
+    topic = models.ForeignKey(Followable, related_name='expertise')
+    rater = models.ForeignKey(UserModel)
+    value = models.IntegerField(choices=Coolness.CHOICES,
+                                default=Coolness.SAME)
+
+    class Meta:
+        unique_together = ('topic', 'rater')
+
+    def __str__(self):
+        return "{} thinks that {} is {}".format(
+            self.rater_id,
+            self.topic_id,
+            dict(Coolness.CHOICES)[self.value])
+
 
 class PrivateComment(models.Model):
     user = models.ForeignKey(UserModel, related_name='my_comments')
@@ -134,12 +185,20 @@ class Changelog(models.Model):
 
 class Site(Followable):
     geo_point = gismodels.PointField(verbose_name=_('Geo point'), null=True, blank=True)
-
+    geo_line = gismodels.LineStringField(
+        verbose_name=_('Geo line'), null=True, blank=True)
+    address = models.TextField(verbose_name=_("Address"))
     name = models.CharField(verbose_name=_('name'), max_length=128)
     description = models.TextField(verbose_name=_("Description"))
-    address = models.TextField(verbose_name=_("Address"))
 
     objects = gismodels.GeoManager()
+
+    def __str__(self):
+        return self.name
+
+
+class StaffRole(models.Model):
+    name = models.CharField(_("name"), max_length=128, default='')
 
     def __str__(self):
         return self.name
@@ -148,13 +207,14 @@ class Site(Followable):
 class ActivityType(models.Model):
     image = models.ImageField(_('image'))
     title = models.CharField(_('title'), max_length=128)
+    default_role = models.ForeignKey(StaffRole)
 
     def __str__(self):
         return self.title
 
 
 class Court(Followable):
-    site = models.ForeignKey(Site)
+    site = models.ForeignKey(Site, related_name='court_set')
     activity_type = models.ForeignKey(ActivityType)
     admin_group = models.ForeignKey(Group, blank=True, null=True)
     description = models.TextField(_("Description"))
@@ -214,48 +274,22 @@ class InventoryList(models.Model):
         return self.name
 
 
-class StaffProfile(Followable):
-    user = models.OneToOneField(UserModel)
-    description = models.TextField(_('description'))
-
-    def __str__(self):
-        return str(self.user)
-
-
 class Event(Followable):
     start_at = models.DateTimeField(_('date started'), db_index=True)
-    name = models.CharField(_("name"), max_length=128, default='')
     description = models.TextField(verbose_name=_("Description"), max_length=1024, default='')
     court = models.ForeignKey(Court)
     invoice = models.ForeignKey(Invoice, null=True, blank=True)
     inventory_list = models.ForeignKey(InventoryList, null=True, blank=True)
-    staff = models.ManyToManyField(StaffProfile, blank=True)
+    preliminary_price = models.IntegerField(_("Preliminary price"))
     status = models.IntegerField(
         choices=EventStatuses.CHOICES, default=EventStatuses.PENDING
     )
 
     def __str__(self):
-        return "{} ({})".format(self.name, self.start_at)
-
-
-class StaffRole(models.Model):
-    name = models.CharField(_("name"), max_length=128, default='')
-
-    def __str__(self):
-        return self.name
-
-
-class EventStaff(models.Model):
-    event = models.ForeignKey(Event, verbose_name=_("event"))
-    staff = models.ForeignKey(StaffProfile, verbose_name=_("staff"))
-    role = models.ForeignKey(StaffRole, verbose_name=_("role"))
-    invoice = models.ForeignKey(
-        Invoice, null=True, blank=True, verbose_name=_("invoice")
-    )
-
-    def __str__(self):
-        return "{} ({})".format(self.staff, self.role)
-
+        description = self.description
+        if len(description) > 20:
+            description = description[:16] + '...'
+        return "{} ({})".format(description, self.start_at)
 
 class Equipment(models.Model):
     name = models.CharField(_("name"), max_length=256)
@@ -324,3 +358,36 @@ class Visit(models.Model):
             dict(VisitStatuses.CHOICES)[self.status], self.user, self.event
         )
 
+
+class VisitRole(models.Model):
+    visit = models.ForeignKey(Visit, verbose_name=_("Visit"))
+    role = models.ForeignKey(StaffRole, verbose_name=_("role"))
+    invoice = models.ForeignKey(
+        Invoice, null=True, blank=True, verbose_name=_("invoice")
+    )
+
+    def __str__(self):
+        return str(self.role)
+
+
+class IndexParametr(models.Model):
+    name = models.CharField(_("name"), max_length=256)
+    units = models.CharField(_("units"), max_length=16)
+
+    def __str__(self):
+        return "{} ({})".format(self.name, self.units)
+
+
+class CoachRecommendation(models.Model):
+    recommendation = models.TextField(
+        verbose_name=_("Description"), max_length=1024, default='')
+    coach = models.ForeignKey(UserModel)
+    visit = models.ForeignKey(Visit)
+    status = models.IntegerField(choices=RecommendationStatuses.CHOICES,
+                                 default=RecommendationStatuses.ACTIVE)
+
+
+class VisitIndex(models.Model):
+    visit = models.ForeignKey(Visit)
+    parametr = models.ForeignKey(IndexParametr)
+    value = models.FloatField(verbose_name=_("Value"))

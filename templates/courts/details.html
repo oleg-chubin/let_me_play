@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
 
-{% load staticfiles let_me_escort leaflet_tags i18n %}
+{% load staticfiles let_me_escort leaflet_tags i18n avatar %}
+
+{% block page_title %}
+  {% with activity_type=object.activity_type.title name=object.description|truncatewords:5 %}
+    {% blocktrans %}{{activity_type}} court "{{name}}" details{% endblocktrans %}
+  {% endwith %}
+{% endblock %}
+
 
 {% block extra_head %}
   {% leaflet_css %}
@@ -9,7 +16,7 @@
 
 {% block breadcrumbs %}
 <ol class="breadcrumb">
-  <li><a href="#">{% trans "Home" %}</a></li>
+  <li><a href="{% url "home" %}">{% trans "Home" %}</a></li>
   <li><a href="{% url "let_me_app:view_site" pk=object.site_id %}">{% trans "Site" %}</a></li>
   <li class="active">{% trans "Court" %}</li>
 </ol>
@@ -34,11 +41,12 @@
             <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
       </div>
       <div id="detail-4">
-        <ul>
+        <ul class="court-list">
           {% for event in object.event_set.all %}
             <li>
+              <img src="{{object.activity_type.image.url}}" class="list-pic img-responsive img-thumbnail">
               {% followdropdown event "escort/follow_menu.html" %}
-                <a href="{% url "let_me_app:view_event" pk=event.id %}"> {{ event.name }} ({{ event.start_at }}) </a>
+                <a href="{% url "let_me_app:view_event" pk=event.id %}"> {{ event.start_at }} </a>
                 <span class="label label-info">
                   {{ event.status|as_status:EVENT_STATUSES.CHOICES }}
                 </span>
@@ -56,9 +64,10 @@
                 <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
           </div>
           <div id="detail-5">
-            <ul>
+            <ul class="user-list">
               {% for group_user in object.admin_group.user_set.all %}
                 <li>
+                  <img src="{{group_user|avatar_url}}" class="list-pic img-responsive img-thumbnail">
                   {% followdropdown group_user "escort/follow_menu.html" %}
                     {{ group_user.get_full_name }}
                   {% endfollowdropdown %}
@@ -93,15 +102,8 @@
 {% endblock %}
 
 {% block extra_scripts %}
-  {% include "autocomplete_light/static.html" %}
+  {{group_admin_form.media}}
   {% leaflet_js %}
-  <script type="text/javascript">
-      {% with longitude=object.site.geo_point.0|stringformat:"f" latitude=object.site.geo_point.1|stringformat:"f" %}
-          function map_init_basic (map, options) {
-              L.marker([{{ latitude }}, {{ longitude }}]).addTo(map);
-              map.panTo(new L.LatLng({{ latitude }}, {{ longitude }}));
-          }
-      {% endwith %}
-  </script>
+  <script src="{% static "js/detail_map.js" %}"></script>
   <script src="{% static "js/expandable_listgroup.js" %}"></script>
 {% endblock %}

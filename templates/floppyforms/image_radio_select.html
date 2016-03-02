@@ -1,0 +1,9 @@
+{% load avatar staticfiles let_me_escort %}
+{% for group_name, choices in optgroups %}
+    {% for choice in choices %}
+      <label class="img-check uncheck">
+        <input type="radio" id="{{ attrs.id }}_{{ forloop.counter }}" name="{{ name }}" {% if choice.0 in value %} checked{% endif %} value="{{ choice.0 }}">
+        <img src="{% static choice.0|as_status:COOLNESS_IMAGES %}" class="list-pic img-responsive img-thumbnail">
+      </label>
+    {% endfor %}
+{% endfor %}

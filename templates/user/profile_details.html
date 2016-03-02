@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% load staticfiles let_me_escort i18n avatar %}
+
+{% block page_title %}
+  {% blocktrans %}User {{object}} details{% endblocktrans %}
+{% endblock %}
+
+{% block extra_head %}
+  <link href="{% static "css/profile_details.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block breadcrumbs %}
+  <ol class="breadcrumb">
+    <li><a href="{% url "home" %}">{% trans "Home" %}</a></li>
+    <li class="active">{% trans "User profile" %}</li>
+  </ol>
+{% endblock %}
+
+{% block main %}
+  <div class="row">
+    <div class="col-md-2 col-lg-2 " align="center"> <img alt="User Pic" src="{{object|avatar_url}}" class="img-circle img-responsive"> </div>
+
+    <div class=" col-md-10 col-lg-10 ">
+      <table class="table table-user-information">
+        <tbody>
+          <tr>
+            <td>{% trans "Email" %}:</td>
+            <td><a href="mailto:{{object.email}}">{{object.email}}</td>
+          </tr>
+          <tr> <td>{% trans "First name" %}:</td> <td>{{object.first_name}}</td> </tr>
+          <tr> <td>{% trans "Last name" %}:</td> <td>{{object.last_name}}</td> </tr>
+          <tr>
+            <td>{% trans "Cell phone" %}:</td>
+            <td>
+              <a href="tel:{{object.cell_phone}}"> +{{object.cell_phone}}</a>
+              {% if object.cell_phone %}
+                  {% if object.cell_phone_is_valid %}
+                    <a href="#" data-toggle="tooltip" title="{% trans 'Phone number was confirmed.' %}">
+                      <span class="glyphicon glyphicon-ok-circle" style="color: green;"></span>
+                    </a>
+                  {% else %}
+                    <a href="#" data-toggle="modal" data-toggle="tooltip" title="{% trans 'Phone number was not confirmed. Please click me to confirm via sms' %}" data-target="#smallModal" data-generateurl="{% url 'let_me_auth:generate_confirmation_code' %}" data-formurl="{% url 'let_me_auth:check_confirmation_code' %}">
+                        <span class="glyphicon glyphicon-ban-circle"></span>
+                    </a>
+                  {% endif %}
+              {% endif %}
+            </td> </tr>
+          <tr> <td>{% trans "Sex" %}:</td> <td>{{ object.sex|as_status:USER_SEX.CHOICES }}</td> </tr>
+          </tr>
+        </tbody>
+      </table>
+      <a href="{% url 'let_me_auth:update_profile'%}" class="btn btn-primary">{% trans "Update profile" %}</a>
+    </div>
+  </div>
+
+{% include "user/modals/confirm_phone_number.html" %}
+{% endblock %}
+
+{% block extra_scripts %}
+  <script src="{% static "js/confirmation_modal.js" %}"></script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+  </script>
+{% endblock %}

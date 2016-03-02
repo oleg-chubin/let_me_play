@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% block page_title %}{% with request.user as user %}{% blocktrans %}Visit indexes for {{user}}{% endblocktrans %}{% endwith %}{% endblock %}
+
+{% load staticfiles let_me_escort leaflet_tags %}
+
+{% block extra_head %}
+    <link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
+    <link href="{% static "css/morris.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li><a href="{% url "home" %}">{% trans "Home" %}</a></li>
+  <li class="active">{% trans "Indexes charts" %}</li>
+</ol>
+{% endblock %}
+
+{% block main %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      {% trans "Indexes charts" %}
+    </h3>
+  </div>
+  <ul class="list-group">
+    {% for param, param_set in param_groups %}
+        <li class="list-group-item">
+          <div class="row toggle" id="dropdown-detail-4" data-toggle="chart-{{forloop.counter}}">
+            <div class="col-xs-10"> <h4>{{param.1}}</h4> </div>
+            <div class="col-xs-2"><span class="glyphicon glyphicon-menu-down pull-right toggle-icon"></span>
+                <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
+          </div>
+          <div id="chart-{{forloop.counter}}" class="charts-div">
+            <table class="table">
+            <thead>
+            <tr><th>{% trans "date" %}</th><th>{% trans "value" %}</th></tr>
+            </thead>
+            <tbody>
+            {% for visit_index in param_set %}
+              <tr>
+                <td>{{ visit_index.visit__event__start_at|date:"Y-m-d H:i:s"}}</td>
+                <td>{{ visit_index.value }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+          </div>
+        </li>
+    {% endfor %}
+  </ul>
+</div>
+
+
+{% endblock %}
+
+{% block extra_scripts %}
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.2/raphael-min.js"></script>
+  <script type="text/javascript" src="{% static "js/morris.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/charts.js" %}"></script>
+{% endblock %}
