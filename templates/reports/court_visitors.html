@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% load let_me_chat staticfiles i18n show_me_utils let_me_escort %}
+
+{% block extra_head %}
+<link href="{% static "css/table_cells.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li><a href="#">{% trans "Home" %}</a></li>
+  <li class="active">{% trans "Courts report" %}</li>
+</ol>
+{% endblock %}
+
+{% block main %}
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>  </th>
+      {% for event in events %}
+        <th> {{event.start_at|date}} </th>
+      {% endfor %}
+    <tr>
+  </thead>
+  <tbody>
+  {% for user, row in users|zip:visit_table %}
+    <tr>
+        <th>{{ user }}</th>
+        {% for visit in row %}
+            {% if visit %}
+              <td class="{{visit.status|as_status:VISIT_STATUSES.CHOICES|lower}}">
+                {{visit.receipt.price}}
+              </td>
+            {% else %}
+              <td >- </td>
+            {% endif %}
+        {% endfor %}
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

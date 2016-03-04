@@ -1,0 +1,16 @@
+thead th {
+    writing-mode: vertical-lr;
+}
+
+td.declined{
+    background-color: lightgrey;
+}
+td.canceled{
+    background-color: lightpink;
+}
+td.missed{
+    background-color: lightsalmon;
+}
+td.completed{
+    background-color: lightgreen;
+}

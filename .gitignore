@@ -59,6 +59,7 @@ target/
 venv/
 local_settings.py
 *.pyc
+*.swp
 let_me_play/static
 let_me_play/media/*
 let_me_app/static/css/bootstrap.css

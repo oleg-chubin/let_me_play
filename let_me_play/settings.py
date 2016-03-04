@@ -60,6 +60,7 @@ INSTALLED_APPS += (
     'social.apps.django_app.default',
 
     'let_me_app',
+    'show_me_app',
     'let_me_escort',
 
     'floppyforms',
