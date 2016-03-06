@@ -18,15 +18,18 @@
   <thead>
     <tr>
       <th>  </th>
+      <th>{% trans "Payment" %}</th>
       {% for event in events %}
         <th> {{event.start_at|date}} </th>
       {% endfor %}
     <tr>
   </thead>
   <tbody>
-  {% for user, row in users|zip:visit_table %}
+  {% for user_row, payment in users|zip:visit_table|zip:total_payment %}
+   {% with user=user_row.0 row=user_row.1 %}
     <tr>
         <th>{{ user }}</th>
+        <td class="{%if payment > 0%}completed{%else%}{%if payment < 0%}missed{%endif%}{%endif%}">{{ payment }}</td>
         {% for visit in row %}
             {% if visit %}
               <td class="{{visit.status|as_status:VISIT_STATUSES.CHOICES|lower}}">
@@ -37,6 +40,7 @@
             {% endif %}
         {% endfor %}
     </tr>
+    {% endwith %}
   {% endfor %}
   </tbody>
 </table>

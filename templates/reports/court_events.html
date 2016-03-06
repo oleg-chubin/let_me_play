@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load let_me_chat staticfiles i18n %}
+{% load let_me_chat staticfiles i18n show_me_utils %}
 
 {% block extra_head %}
 <link href="{% static "css/timeline.css" %}" rel="stylesheet">
@@ -17,20 +17,22 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th> {% trans "Event" %} </th>
       <th> {% trans "Event date" %} </th>
-      <th> {% trans "Visitor count" %} </th>
+      <th> {% trans "attendees count" %} </th>
+      <th> {% trans "visitors count" %} </th>
       <th> {% trans "Inconig payment" %} </th>
     <tr>
   </thead>
   <tbody>
-  {% for object in object_list %}
+  {% for obj_pay, visit_count in object_list|zip:payment|zip:visitors %}
+  {% with object=obj_pay.0 pay=obj_pay.1 %}
     <tr>
-      <td> <a href="{% url "let_me_app:view_event" pk=object.id %}">{{ object.name }}</a> </td>
-      <td> {{ object.start_at }} </td>
-      <td> <a href="{% url "let_me_app:view_event" pk=object.id %}">{{ object.visitors_count }} </a></td>
-      <td> {{ object.visitors_payment }} </td>
+      <td> <a href="{% url "let_me_app:view_event" pk=object.id %}">{{ object.start_at }}</a> </td>
+      <td> <a href="{% url "let_me_app:view_event" pk=object.id %}">{{ object.attendees_count }} </a></td>
+      <td> <a href="{% url "let_me_app:view_event" pk=object.id %}">{{ visit_count }} </a></td>
+      <td> {{ pay }} </td>
     </tr>
+  {% endwith %}
   {% endfor %}
   </tbody>
 </table>

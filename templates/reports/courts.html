@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load let_me_chat staticfiles i18n %}
+{% load let_me_chat staticfiles i18n show_me_utils %}
 
 {% block extra_head %}
 <link href="{% static "css/timeline.css" %}" rel="stylesheet">
@@ -19,19 +19,21 @@
     <tr>
       <th> {% trans "Site" %} </th>
       <th> {% trans "Court" %} </th>
-      <th> {% trans "All Events count" %} </th>
+      <th> {% trans "All Events Count" %} </th>
+      <th> {% trans "All Visitors Count" %} </th>
       <th> {% trans "First event" %} </th>
       <th> {% trans "Last event" %} </th>
     <tr>
   </thead>
   <tbody>
-  {% for object in object_list %}
+  {% for object, user_count in object_list|zip:visitors_count %}
     <tr>
       <td> <a href="{% url "let_me_app:view_site" pk=object.site.id %}">{{ object.site.name }}</a> </td>
       <td> <a href="{% url "let_me_app:view_court" pk=object.id %}">{{ object.description }} </a></td>
       <td> <a href="{% url "show_me_app:court_events_view" pk=object.id %}">{{ object.events_count }} </a></td>
-      <td> {{ object.first_event }} </td>
-      <td> {{ object.last_event }} </td>
+      <td> <a href="{% url "show_me_app:court_visitors_view" pk=object.id %}">{{user_count}} </a></td>
+      <td> {{ object.first_event|date }} </td>
+      <td> {{ object.last_event|date }} </td>
     </tr>
   {% endfor %}
   </tbody>
