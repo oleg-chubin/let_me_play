@@ -12,4 +12,6 @@ urlpatterns = patterns('',
         views.CourtEventsView.as_view(), name='court_events_view'),
     url(r'^court/(?P<pk>[0-9]+)/visitors/$',
         views.CourtVisitorsView.as_view(), name='court_visitors_view'),
+    url(r'^my/visits/$',
+        views.UserVisitsView.as_view(), name='user_visit_view'),
 )

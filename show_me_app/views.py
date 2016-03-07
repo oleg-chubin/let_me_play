@@ -141,3 +141,59 @@ class CourtVisitorsView(ListView):
         result = super(CourtVisitorsView, self).get_queryset()
         result = result.filter(event__court_id=self.kwargs['pk'])
         return result
+
+
+
+class UserVisitsView(ListView):
+    model = models.Visit
+    template_name = 'reports/user_visits.html'
+
+    def get_context_data(self, *args, **kwargs):
+        result = super(UserVisitsView, self).get_context_data(*args, **kwargs)
+        table_visits = result['object_list'].select_related('event', 'receipt')
+        table_visits = table_visits.order_by('event__court_id', 'event__start_at')
+        grouped_visits = itertools.groupby(
+            table_visits, key=lambda x: x.event.court_id)
+
+        courts = models.Court.objects.filter(
+            event__visit__user=self.request.user).distinct().order_by('followable_ptr_id')
+        iter_courts = iter(courts)
+        user_events = models.Event.objects.filter(
+            visit__user=self.request.user).order_by('start_at')
+        import ipdb; ipdb.set_trace()
+        court = next(iter_courts, None)
+        result_table = []
+        for court_id, visit_list in grouped_visits:
+            result_row = []
+            result_table.append(result_row)
+            while court and court_id > court.followable_ptr_id:
+                court = next(iter_courts, None)
+
+            visit = next(visit_list, None)
+            for event in user_events:
+                visit_to_store = None
+                if court and court.followable_ptr_id == court_id:
+                    while visit and visit.event.start_at < event.start_at:
+                        visit = next(visit_list, None)
+                    if visit and visit.event.start_at == event.start_at:
+                        visit_to_store = visit
+                result_row.append(visit_to_store)
+        result['visit_table'] = result_table
+        result['events'] = user_events
+        result['courts'] = courts
+
+        payments = result['object_list'].filter(status=models.VisitStatuses.COMPLETED)
+        payments = payments.exclude(receipt__price=None)
+        payments = payments.values('event__court_id')
+        payments = payments.annotate(paid=Sum('receipt__price'), debt=Sum('event__preliminary_price'))
+        total_payment = {v['event__court_id']: v for v in payments}
+        payment_data = []
+        for user in courts:
+            payment_info = total_payment.get(user.followable_ptr_id, {'paid': 0, 'debt': 0})
+            payment_data.append(payment_info['paid'] - payment_info ['debt'])
+        result['total_payment'] = payment_data
+        return result
+
+    def get_queryset(self):
+        result = super(UserVisitsView, self).get_queryset()
+        return result.filter(user_id=self.request.user.id)

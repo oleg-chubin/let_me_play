@@ -79,7 +79,7 @@
                       </li>
                     {% endif %}
                     <li class="divider"></li>
-                    <li><a href="#">{% trans "User stats" %}</a></li>
+                    <li><a href="{% url "show_me_app:user_visit_view" %}">{% trans "Visit Report" %}</a></li>
                     <li class="divider"></li>
                     <li>
                       <a href="{% url 'let_me_app:chat_list' %}">
