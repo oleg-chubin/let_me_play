@@ -160,7 +160,6 @@ class UserVisitsView(ListView):
         iter_courts = iter(courts)
         user_events = models.Event.objects.filter(
             visit__user=self.request.user).order_by('start_at')
-        import ipdb; ipdb.set_trace()
         court = next(iter_courts, None)
         result_table = []
         for court_id, visit_list in grouped_visits:
