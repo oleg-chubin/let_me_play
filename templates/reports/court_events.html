@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% load let_me_chat staticfiles i18n show_me_utils %}
+
+{% block extra_head %}
+<link href="{% static "css/timeline.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li><a href="#">{% trans "Home" %}</a></li>
+  <li class="active">{% trans "Courts report" %}</li>
+</ol>
+{% endblock %}
+
+{% block main %}
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th> {% trans "Event date" %} </th>
+      <th> {% trans "attendees count" %} </th>
+      <th> {% trans "visitors count" %} </th>
+      <th> {% trans "Inconig payment" %} </th>
+    <tr>
+  </thead>
+  <tbody>
+  {% for obj_pay, visit_count in object_list|zip:payment|zip:visitors %}
+  {% with object=obj_pay.0 pay=obj_pay.1 %}
+    <tr>
+      <td> <a href="{% url "let_me_app:view_event" pk=object.id %}">{{ object.start_at }}</a> </td>
+      <td> <a href="{% url "let_me_app:view_event" pk=object.id %}">{{ object.attendees_count }} </a></td>
+      <td> <a href="{% url "let_me_app:view_event" pk=object.id %}">{{ visit_count }} </a></td>
+      <td> {{ pay }} </td>
+    </tr>
+  {% endwith %}
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
