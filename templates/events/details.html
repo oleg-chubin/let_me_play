@@ -178,7 +178,7 @@
             {% for application in active_applications %}
               <li>
                 <img src="{{application.user|avatar_url}}" class="list-pic img-responsive img-thumbnail" data-toggle="popover" data-popover_url="{% url 'let_me_help:rate-user' user_id=application.user.id %}">
-                {{ application.user.get_full_name }} ({{ application.comment|truncatewords_html:4 }})
+                {{ application.user.get_full_name }} ({{ application.comment }})
                 {% if object.status == EVENT_STATUSES.PENDING %}
                     <div class="ui-group-buttons marginBottom10">
                       {% with application.user as applicant %}
