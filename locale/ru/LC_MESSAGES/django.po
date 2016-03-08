@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-07 07:50+0000\n"
+"POT-Creation-Date: 2016-03-08 12:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -223,7 +223,11 @@ msgstr "Платежка"
 msgid "units"
 msgstr "единицы измерения"
 
-#: let_me_auth/forms.py:99
+#: let_me_auth/forms.py:40 let_me_auth/models.py:105
+msgid "language"
+msgstr "язык"
+
+#: let_me_auth/forms.py:133
 msgid "Phone number should have international format without + sign"
 msgstr "Телефон должен быть в международном формате без знака +"
 
@@ -286,27 +290,40 @@ msgid "users"
 msgstr "пользователи"
 
 #: let_me_auth/models.py:90
+msgid "Sms Notifications Enabled"
+msgstr "Использовать СМС уведомления"
+
+#: let_me_auth/models.py:91
+msgid "Sms Notifications Disabled"
+msgstr "Не использовать СМС уведомления"
+
+#: let_me_auth/models.py:95
+msgid "Email Notifications Enabled"
+msgstr "Использовать email уведомления"
+
+#: let_me_auth/models.py:96
+msgid "Email Notifications Disabled"
+msgstr "Не использовать email уведомления"
+
+#: let_me_auth/models.py:100
 msgid "Use sms for notifications"
 msgstr "Использовать СМС уведомления"
 
-#: let_me_auth/models.py:92
+#: let_me_auth/models.py:103
 msgid "Use email for notifications"
 msgstr "Использовать email уведомления"
 
-#: let_me_auth/models.py:93 let_me_play/forms.py:21
-msgid "language"
-msgstr "язык"
-
-#: let_me_auth/models.py:99
+#: let_me_auth/models.py:111
 msgid "confirmation code"
 msgstr "код подтверждения"
 
-#: let_me_auth/views.py:120
+#: let_me_auth/views.py:113
 #, python-format
 msgid "Confirmation code is %(phone)s."
 msgstr "Ваш код подтверждение %(phone)s."
 
 #: templates/charts/recommendations.html:5
+#, python-format
 msgid "Recomendation for %(user)s"
 msgstr "Рекомендации для %(user)s"
 
@@ -344,6 +361,7 @@ msgid " %(coach)s recommendation (%(start_at)s)"
 msgstr " Рекомендация тренера %(coach)s (%(start_at)s)"
 
 #: templates/charts/visit_indexes.html:5
+#, python-format
 msgid "Visit indexes for %(user)s"
 msgstr "Показатели Посещений для %(user)s"
 
@@ -455,8 +473,6 @@ msgid "Add User"
 msgstr "Добавить пользователя"
 
 #: templates/courts/search.html:6
-#, fuzzy
-#| msgid "Search Courts"
 msgid "Search courts"
 msgstr "Поиск секций"
 
@@ -729,6 +745,7 @@ msgid "Create new event"
 msgstr "Создать событие"
 
 #: templates/events/create_staff.html:7
+#, python-format
 msgid "Create staff for event at %(start_at)s"
 msgstr "Управление персоналом события %(start_at)s."
 
@@ -1184,48 +1201,39 @@ msgstr ""
 "  "
 
 #: templates/notifications/sms/accept_application.html:2
-#, fuzzy, python-format
-#| msgid ""
-#| "Application for the event at %(event.start_at)s was accepted by %(user)s."
 msgid ""
 "Application for the event at %(event_start_at)s was accepted by %(user)s."
 msgstr ""
 "Заявка на посещение (%(event_start_at)s) принята пользователем %(user)s."
 
 #: templates/notifications/sms/cancel_event.html:1
-#, fuzzy, python-format
-#| msgid "Event at %(event.start_at)s was cancelled."
 msgid "Event at %(event_start_at)s was cancelled."
 msgstr "Событие (%(event_start_at)s) не состоится"
 
 #: templates/notifications/sms/cancel_visit.html:1
-#, fuzzy, python-format
-#| msgid ""
-#| "User %(user)s cancelled his visit for the event at %(event.start_at)s."
 msgid "User %(user)s cancelled his visit for the event at %(event_start_at)s."
 msgstr "Пользователь %(user)s не прийдет на событие (%(event_start_at)s)."
 
 #: templates/notifications/sms/create_event.html:1
-#, fuzzy, python-format
-#| msgid "There is new event (%(court.activity_type)s) at %(event.start_at)s."
 msgid "There is new event (%(court_activity_type)s) at %(event_start_at)s."
 msgstr "Появилось событие (%(court_activity_type)s) %(event_start_at)s."
 
 #: templates/notifications/sms/create_proposal.html:1
-#, fuzzy, python-format
-#| msgid "You have been proposed to visit event at %(event.start_at)s."
 msgid "You have been proposed to visit event at %(event_start_at)s."
 msgstr "Вас приглашают на событие %(event_start_at)s."
 
 #: templates/notifications/sms/create_visit.html:1
+#, python-format
 msgid "You have been add as a visitor for the event at %(event_start_at)s."
 msgstr "Вас жаждут видеть на событии (%(event_start_at)s)."
 
 #: templates/notifications/sms/decline_application.html:1
+#, python-format
 msgid "Your application for the event at %(event_start_at)s has been declined."
 msgstr "Ваша заявка на событие (%(event_start_at)s) отклонена."
 
 #: templates/notifications/sms/decline_visit.html:1
+#, python-format
 msgid "Your visit for the event at %(event_start_at)s has been declined."
 msgstr "Посещение события (%(event_start_at)s) не состоится."
 
@@ -1337,8 +1345,6 @@ msgid "Update profile"
 msgstr "Обновить профиль"
 
 #: templates/user/settings.html:6
-#, fuzzy
-#| msgid "User settings"
 msgid "Edit user settings"
 msgstr "Редактировать настройки пользователя"
 
@@ -1347,8 +1353,10 @@ msgid "Localization"
 msgstr "Переводы"
 
 #: templates/visits/annotate_visit.html:7
+#, python-format
 msgid "Annotate user %(user)s visit at %(event_start_at)s"
-msgstr "Добавить рекомендацию пользователю %(user)s на событие (%(event_start_at)s)."
+msgstr ""
+"Добавить рекомендацию пользователю %(user)s на событие (%(event_start_at)s)."
 
 #: templates/visits/annotate_visit.html:53
 msgid "Recommendations"

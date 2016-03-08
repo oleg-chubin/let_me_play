@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings
 from let_me_auth.views import (EditUserView, ProfileDetailsView,
-    CreateConfirmationCodeView, CheckConfirmationCodeView)
+    CreateConfirmationCodeView, CheckConfirmationCodeView, SettingsView)
 from django.contrib.auth.decorators import login_required
 
 urlpatterns = patterns('let_me_auth.views',
@@ -26,5 +26,8 @@ urlpatterns = patterns('let_me_auth.views',
     url(r'^confirmationcode/check/$',
         login_required(login_url='/login/')(CheckConfirmationCodeView.as_view()),
         name='check_confirmation_code'),
+
+    url('my/settings/',
+        login_required(SettingsView.as_view()), name="user_settings"),
 
 )

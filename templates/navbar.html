@@ -64,7 +64,7 @@
                     <span class="caret"></span>
                   </a>
                   <ul class="dropdown-menu" role="menu">
-                    <li><a href="{% url 'user_settings' %}">{% trans "Settings" %}</a></li>
+                    <li><a href="{% url 'let_me_auth:user_settings' %}">{% trans "Settings" %}</a></li>
                     {% if user %}
                       <li><a href="{% url 'let_me_auth:profile_details' %}">{% trans "Profile" %}</a></li>
                       <li>
