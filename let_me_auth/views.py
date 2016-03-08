@@ -18,6 +18,8 @@ from django.views.generic.base import TemplateView
 from django.http.response import HttpResponse, HttpResponseRedirect
 from let_me_app.integration.rocketsms import RocketLauncher
 import random
+from datetime import datetime
+from django.utils import timezone
 
 
 def context(**extra):
@@ -105,12 +107,21 @@ class CreateConfirmationCodeView(TemplateView):
     def post(self, request, *args, **kwargs):
         confirmation, created = models.ConfirmationCodes.objects.get_or_create(
             user=request.user)
-        confirmation.code = ''.join(
+        if not created and confirmation.created_at > timezone.now()-settings.SMS_CONFIRMATION_COOLDOWN:
+            return HttpResponse()
+
+        if not created:
+            confirmation.delete()
+            confirmation = models.ConfirmationCodes(user=request.user)
+        confirmation.code=''.join(
             [str(i) for i in random.sample(range(1, 10), 5)])
         confirmation.save()
         sms_sender = RocketLauncher(**settings.ROCKET_SMS_CONFIG)
         sms_text = _(
-            "Confirmation code is %(phone)s.") % {'phone': confirmation.code}
+            "Confirmation code %(phone)s. Is valid for %(x)s minutes") % {
+                'phone': confirmation.code,
+                'x': settings.SMS_CONFIRMATION_COOLDOWN.seconds/60
+            }
         sms_sender.send_sms(request.user.cell_phone, sms_text)
         return HttpResponse()
 
