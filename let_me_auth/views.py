@@ -1,20 +1,20 @@
 from django.shortcuts import redirect, render
 from django.conf import settings
+from django import http
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 # from django.template.context import RequestContext
 from annoying.decorators import render_to
-from django.template.context import RequestContext
 from django.utils.translation import gettext as _
-from django.contrib.auth.forms import SetPasswordForm
-from django import forms
 from let_me_auth.models import User
-from django.views.generic.edit import UpdateView, BaseUpdateView, BaseCreateView
+from django.views.generic.edit import UpdateView, BaseUpdateView
+from django.utils.translation import (check_for_language,
+    get_language_from_request, LANGUAGE_SESSION_KEY)
 from let_me_auth.forms import UserDetailsForm
-from let_me_auth import models
+from let_me_auth import models, forms
 from django.views.generic.detail import DetailView
-from django.views.generic.base import TemplateView, View
+from django.views.generic.base import TemplateView
 from django.http.response import HttpResponse, HttpResponseRedirect
 from let_me_app.integration.rocketsms import RocketLauncher
 import random
@@ -50,14 +50,6 @@ def validation_sent(request):
     )
 
 
-class CustomSetPasswordForm(SetPasswordForm):
-    verification_code = forms.CharField(widget=forms.HiddenInput)
-
-    def save(self, commit=True):
-        self.user.is_active = True
-        return super(CustomSetPasswordForm, self).save(commit=commit)
-
-
 @render_to('registration/login.html')
 def set_password(request):
     post_reset_redirect = "/"
@@ -69,12 +61,13 @@ def set_password(request):
         user = user[0]
 
     if request.method == 'POST':
-        form = CustomSetPasswordForm(user, request.POST)
+        form = forms.CustomSetPasswordForm(user, request.POST)
         if form.is_valid():
             form.save()
             return redirect(post_reset_redirect)
     else:
-        form = CustomSetPasswordForm(user, initial={'verification_code': code})
+        form = forms.CustomSetPasswordForm(
+            user, initial={'verification_code': code})
     return {'form': form, 'initial_password': True}
 
 
@@ -130,4 +123,39 @@ class CheckConfirmationCodeView(BaseUpdateView):
             self.request.user.cell_phone_is_valid = True
             self.request.user.save()
         return HttpResponseRedirect(reverse('let_me_auth:profile_details'))
+
+
+class SettingsView(TemplateView):
+    template_name = 'user/settings.html'
+
+    def get_context_data(self, *args, **kwargs):
+        result = super(SettingsView, self).get_context_data(*args, **kwargs)
+        instance, _ = models.NotificationSettings.objects.get_or_create(
+            user_id=self.request.user.id,
+            defaults={
+                'sms_notifications': False,
+                'email_notifications': False,
+                'lang': get_language_from_request(self.request)})
+        result['language_form'] = forms.NotificationSettingsForm(
+            prefix='notifications', instance=instance, data=kwargs.get('data'))
+        return result
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(data=request.POST)
+        language_form = context['language_form']
+        response = http.HttpResponseRedirect(
+            reverse('let_me_auth:user_settings'))
+        import ipdb; ipdb.set_trace()
+        if language_form.is_valid():
+            lang_code = language_form.cleaned_data['lang']
+            if lang_code and check_for_language(lang_code):
+                if hasattr(request, 'session'):
+                    request.session[LANGUAGE_SESSION_KEY] = lang_code
+                else:
+                    response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang_code,
+                                        max_age=settings.LANGUAGE_COOKIE_AGE,
+                                        path=settings.LANGUAGE_COOKIE_PATH,
+                                        domain=settings.LANGUAGE_COOKIE_DOMAIN)
+            language_form.save()
+        return response
 

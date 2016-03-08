@@ -86,10 +86,22 @@ def change_handler(sender, **kwargs):
 
 
 class NotificationSettings(models.Model):
+    SMS_NOTIFICATION_CHOICES = [
+        (True, _("Sms Notifications Enabled")),
+        (False, _("Sms Notifications Disabled"))
+    ]
+
+    EMAIL_NOTIFICATION_CHOICES = [
+        (True, _("Email Notifications Enabled")),
+        (False, _("Email Notifications Disabled"))
+    ]
+
     sms_notifications = models.BooleanField(
-        _("Use sms for notifications"), default=False)
+        _("Use sms for notifications"),
+        choices=SMS_NOTIFICATION_CHOICES, default=False)
     email_notifications = models.BooleanField(
-        _("Use email for notifications"), default=False)
+        _("Use email for notifications"),
+        choices=EMAIL_NOTIFICATION_CHOICES, default=False)
     lang = models.CharField(_('language'), max_length=18)
     user = models.OneToOneField(User, primary_key=True)
 

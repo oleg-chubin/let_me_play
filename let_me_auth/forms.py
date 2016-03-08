@@ -15,6 +15,7 @@ from floppyforms import widgets as floppyforms_widgets
 from let_me_auth import models
 from django.forms.models import BaseInlineFormSet
 from django.forms.formsets import DELETION_FIELD_NAME
+from django.contrib.auth.forms import SetPasswordForm
 
 from django.conf import settings
 from django.utils.safestring import mark_safe
@@ -27,6 +28,39 @@ from django.core.validators import RegexValidator
 UPLOAD_IMG_ID="new-img-file"
 
 
+class BootstrapChoiceWidget(forms.Select):
+    def build_attrs(self, *args, **kwargs):
+        attrs = super(BootstrapChoiceWidget, self).build_attrs(*args, **kwargs)
+        attrs['class'] = attrs.get('class', '') + ' form-control'
+        return attrs
+
+
+class NotificationSettingsForm(forms.ModelForm):
+    lang = forms.ChoiceField(
+        label=_('language'),
+        choices=settings.LANGUAGES,
+        widget=BootstrapChoiceWidget()
+    )
+    sms_notifications = forms.BooleanField(
+        required=False,
+        widget=floppyforms_widgets.Select(
+            choices=models.NotificationSettings.SMS_NOTIFICATION_CHOICES))
+    email_notifications = forms.BooleanField(
+        required=False,
+        widget=floppyforms_widgets.Select(
+            choices=models.NotificationSettings.EMAIL_NOTIFICATION_CHOICES))
+
+    class Meta:
+        model = models.NotificationSettings
+        fields = ('sms_notifications', 'email_notifications', 'lang')
+
+
+class CustomSetPasswordForm(SetPasswordForm):
+    verification_code = forms.CharField(widget=forms.HiddenInput)
+
+    def save(self, commit=True):
+        self.user.is_active = True
+        return super(CustomSetPasswordForm, self).save(commit=commit)
 
 
 class JcropWidget(floppyforms_widgets.FileInput):

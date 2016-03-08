@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings
-from let_me_play.views import SettingsView
+
 
 urlpatterns = patterns('',
     # Examples:
@@ -18,7 +18,6 @@ urlpatterns = patterns('',
     url('^let/me/', include('let_me_app.urls.urls', namespace='let_me_app')),
     url('^help/me/', include('let_me_app.urls.ajax_urls', namespace='let_me_help')),
     url('', include('let_me_app.urls.autocomplete_urls')),
-    url('my/settings/', SettingsView.as_view(), name="user_settings"),
 
     url('^escort/', include('let_me_escort.urls', namespace='let_me_escort')),
 #     url('^autocomplete/', include('autocomplete_light.urls')),
