@@ -109,3 +109,4 @@ class NotificationSettings(models.Model):
 class ConfirmationCodes(models.Model):
     user = models.OneToOneField(User, primary_key=True)
     code = models.CharField(_('confirmation code'), max_length=8)
+    created_at = models.DateTimeField(auto_now_add=True)

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-08 12:53+0000\n"
+"POT-Creation-Date: 2016-03-08 14:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -317,10 +317,9 @@ msgstr "Использовать email уведомления"
 msgid "confirmation code"
 msgstr "код подтверждения"
 
-#: let_me_auth/views.py:113
-#, python-format
-msgid "Confirmation code is %(phone)s."
-msgstr "Ваш код подтверждение %(phone)s."
+#: let_me_auth/views.py:121
+msgid "Confirmation code %(phone)s. Is valid for %(x)s minutes"
+msgstr "Ваш код подтверждение %(phone)s неизменен %(x)s минут"
 
 #: templates/charts/recommendations.html:5
 #, python-format
@@ -1201,24 +1200,29 @@ msgstr ""
 "  "
 
 #: templates/notifications/sms/accept_application.html:2
+#, python-format
 msgid ""
 "Application for the event at %(event_start_at)s was accepted by %(user)s."
 msgstr ""
 "Заявка на посещение (%(event_start_at)s) принята пользователем %(user)s."
 
 #: templates/notifications/sms/cancel_event.html:1
+#, python-format
 msgid "Event at %(event_start_at)s was cancelled."
 msgstr "Событие (%(event_start_at)s) не состоится"
 
 #: templates/notifications/sms/cancel_visit.html:1
+#, python-format
 msgid "User %(user)s cancelled his visit for the event at %(event_start_at)s."
 msgstr "Пользователь %(user)s не прийдет на событие (%(event_start_at)s)."
 
 #: templates/notifications/sms/create_event.html:1
+#, python-format
 msgid "There is new event (%(court_activity_type)s) at %(event_start_at)s."
 msgstr "Появилось событие (%(court_activity_type)s) %(event_start_at)s."
 
 #: templates/notifications/sms/create_proposal.html:1
+#, python-format
 msgid "You have been proposed to visit event at %(event_start_at)s."
 msgstr "Вас приглашают на событие %(event_start_at)s."
 
@@ -1295,11 +1299,19 @@ msgid "User settings"
 msgstr "Настройки пользователя"
 
 #: templates/user/modals/confirm_phone_number.html:12
-#: templates/user/modals/confirm_phone_number.html:17
+#: templates/user/modals/confirm_phone_number.html:18
 msgid "Confirm phone number"
 msgstr "Подтвердите номер телефона"
 
 #: templates/user/modals/confirm_phone_number.html:14
+msgid ""
+"Sms with confirmation code was sent on your cell phone. If You have will not "
+"got any please confirm phone number later"
+msgstr ""
+"Смс с кодом подтверждения ушло на указанный вами телефон, "
+"если в ближайшее время не дойдет, попробуйте подтвердить номер позже."
+
+#: templates/user/modals/confirm_phone_number.html:15
 msgid "Confirmation code"
 msgstr "Код подтверждения"
 

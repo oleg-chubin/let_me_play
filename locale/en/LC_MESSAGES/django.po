@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-08 12:53+0000\n"
+"POT-Creation-Date: 2016-03-08 14:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -315,9 +315,9 @@ msgstr ""
 msgid "confirmation code"
 msgstr ""
 
-#: let_me_auth/views.py:113
+#: let_me_auth/views.py:121
 #, python-format
-msgid "Confirmation code is %(phone)s."
+msgid "Confirmation code %(phone)s. Is valid for %(x)s minutes"
 msgstr ""
 
 #: templates/charts/recommendations.html:5
@@ -1224,11 +1224,17 @@ msgid "User settings"
 msgstr ""
 
 #: templates/user/modals/confirm_phone_number.html:12
-#: templates/user/modals/confirm_phone_number.html:17
+#: templates/user/modals/confirm_phone_number.html:18
 msgid "Confirm phone number"
 msgstr ""
 
 #: templates/user/modals/confirm_phone_number.html:14
+msgid ""
+"Sms with confirmation code was sent on your cell phone. If You have will not "
+"got any please confirm phone number later"
+msgstr ""
+
+#: templates/user/modals/confirm_phone_number.html:15
 msgid "Confirmation code"
 msgstr ""
 
