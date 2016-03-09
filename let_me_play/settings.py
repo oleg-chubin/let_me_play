@@ -66,6 +66,7 @@ INSTALLED_APPS += (
     'let_me_escort',
 
     'floppyforms',
+    'embed_video',
 
 )
 

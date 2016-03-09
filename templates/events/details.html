@@ -14,6 +14,7 @@
   <link href="{% static 'css/group_buttons.css' %}" rel="stylesheet">
   <link href="{% static 'css/info_panel.css' %}" rel="stylesheet">
   <link href="{% static 'css/sidebar_chat.css' %}" rel="stylesheet">
+  <link href="{% static 'css/carousel.css' %}" rel="stylesheet">
   <link href="{% static "css/chat.css" %}" rel="stylesheet">
 {% endblock %}
 
@@ -64,6 +65,7 @@
                     <li> {% include "events/buttons/cancel_event.html" %}</li>
                 {% endif %}
                 <li> {% include "events/buttons/clone_event.html" %}</li>
+                <li> {% include "events/buttons/update_event_gallery.html" %}</li>
               </ul>
           </div>
         </div>
@@ -95,6 +97,9 @@
           <strong>{% trans "Description" %}</strong>
           {{ object.description|linebreaksbr }}
         </p>
+        {% if gallery_objects %}
+          {% include "gallery/carousel.html" %}
+        {% endif %}
       </div>
     </li>
     <li class="list-group-item">
@@ -268,6 +273,7 @@
   {{inventory_form.media}}
   {{proposal_form.media}}
   <script src="{% static "js/detail_map.js" %}"></script>
+  <script src="{% static "js/carousel.js" %}"></script>
   <script src="{% static "js/expandable_listgroup.js" %}"></script>
   <script src="{% static "js/modal.js" %}"></script>
   <script src="{% static "js/sidebar_chat.js" %}"></script>

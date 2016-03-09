@@ -1,0 +1,17 @@
+{% load i18n %}
+
+<div class="input-group image-preview" {%if value.url %} data-content="<img src='{{ value.url }}' style='width: 250px; height: 200px;'/>" {% endif %}>
+    <input type="text" class="form-control image-preview-filename" disabled="disabled" value="{{ value }}"> <!-- don't give a name === doesn't send on POST/GET -->
+    <span class="input-group-btn">
+        <!-- image-preview-clear button -->
+        <button type="button" class="btn btn-default image-preview-clear" style="display:none;">
+            <span class="glyphicon glyphicon-remove"></span> Clear
+        </button>
+        <!-- image-preview-input -->
+        <div class="btn btn-default image-preview-input">
+            <span class="glyphicon glyphicon-folder-open"></span>
+            <span class="image-preview-input-title">Browse</span>
+            <input type="{{ type }}" name="{{ name }}" {% include "floppyforms/attrs.html" %}>
+        </div>
+    </span>
+</div><!-- /input-group image-preview [TO HERE]-->

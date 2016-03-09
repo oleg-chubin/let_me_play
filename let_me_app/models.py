@@ -9,6 +9,7 @@ from django.utils import timezone
 from django.conf import settings
 from osm_field.fields import LatitudeField, LongitudeField, OSMField
 from django.contrib.gis.db import models as gismodels
+from embed_video.fields import EmbedVideoField
 
 UserModel = settings.AUTH_USER_MODEL
 
@@ -122,6 +123,12 @@ class GalleryImage(models.Model):
     note = models.CharField(_('note'), max_length=128, default="just a picture")
 
     THUMBNAIL_HEIGHT = 100
+
+
+class GalleryVideo(models.Model):
+    followable = models.ForeignKey(Followable)
+    video = EmbedVideoField()
+    note = models.CharField(_('note'), max_length=128, default="just a picture")
 
 
 class ChatParticipant(models.Model):

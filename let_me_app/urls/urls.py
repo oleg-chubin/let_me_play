@@ -94,10 +94,6 @@ urlpatterns = patterns('',
         views.SiteDetailView.as_view(),
         name='view_site'),
 
-    url(r'^nominate/staff/for/event/(?P<pk>[0-9]+)/$',
-        views.CreateStaffView.as_view(),
-        name='nominate_staff'),
-
     url(r'^create/new/event/$',
         views.CreateEventView.as_view(),
         name='create_new_event'),
@@ -107,6 +103,10 @@ urlpatterns = patterns('',
     url(r'^create/new/event/for/sites/(?P<site>[0-9]+)/court/(?P<court>[0-9]+)$',
         views.CreateCourtEventView.as_view(),
         name='create_court_event'),
+
+    url(r'^update/event/(?P<event>[0-9]+)/gallery/$',
+        views.UpdateGalleryView.as_view(),
+        name='update_event_gallery'),
 
     url(r'^clone/event/(?P<event>[0-9]+)/$',
         views.CloneEventView.as_view(),

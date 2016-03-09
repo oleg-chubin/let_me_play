@@ -239,12 +239,32 @@ class EventView(DetailView):
                 result['my_active_visit']
             )
 
+        result.update(self._get_gallery_info(event))
+
         chats = models.InternalMessage.objects.filter(
             subject=event, chatparticipant__user=self.request.user)[:1]
         if chats:
             result['chat'] = chats[0]
 
         return result
+
+    def _get_gallery_info(self, event):
+        images = (
+            {'obj': i, 'type': 'image'}
+            for i in models.GalleryImage.objects.filter(followable=event)
+        )
+        video = (
+            {'obj': i, 'type': 'video'}
+            for i in models.GalleryVideo.objects.filter(followable=event)
+        )
+
+        gallery_objects = [
+            [j[1] for j in i[1]] for i in groupby(
+                enumerate(itertools.chain(video, images)),
+                key=lambda x: x[0] // 4)
+        ]
+
+        return {'gallery_objects': gallery_objects}
 
 
 class UserEventListView(TemplateView):
@@ -1074,41 +1094,6 @@ class CreateCourtEventView(CreateEventView):
                 | set(view_forms['proposals'].cleaned_data['known_users']))
 
 
-class CreateStaffView(TemplateView):
-    template_name = 'events/create_staff.html'
-
-    def get_context_data(self, **kwargs):
-        event = get_object_or_404(models.Event, pk=kwargs['pk'])
-        formset = forms.EventStaffFormSet(
-                instance=event,
-                data=kwargs.get('data'),
-                queryset=models.Visit.objects.filter(
-                    id__in=models.VisitRole.objects.values_list('visit_id', flat=True)))
-        result = {
-            'event': event,
-            'staff_formset': formset}
-
-        return result
-
-    def check_permissions(self, request, court):
-        return (court.admin_group.user_set.filter(id=request.user.id).exists()
-            or self.request.user.is_staff)
-
-    @transaction.atomic
-    def post(self, request, *args, **kwargs):
-        context = self.get_context_data(data=request.POST, **kwargs)
-        formset = context['staff_formset']
-        if formset.is_valid():
-            formset.save()
-            return http.HttpResponseRedirect(
-                reverse(
-                    'let_me_app:view_event',
-                    kwargs={'pk': context['event'].id}
-                )
-            )
-        return self.render_to_response(context)
-
-
 class IndexCharts(ListView):
     template_name = 'charts/visit_indexes.html'
     model = models.VisitIndex
@@ -1358,3 +1343,40 @@ class CompleteEventView(TemplateView):
             )
         return self.render_to_response(context)
 
+
+class UpdateGalleryView(TemplateView):
+    template_name = 'gallery/update_form.html'
+
+    def get_context_data(self, **kwargs):
+        event = get_object_or_404(models.Event, pk=kwargs['event'])
+        images_formset = forms.GalleryImagesFormset(
+            instance=event, data=kwargs.get('data'), files=kwargs.get('files'))
+        video_formset = forms.GalleryVideoFormset(
+            instance=event, data=kwargs.get('data'), files=kwargs.get('files'))
+        result = {
+            'event': event,
+            'images_formset': images_formset,
+            'video_formset': video_formset
+        }
+        return result
+
+    def check_permissions(self, request, court):
+        return (court.admin_group.user_set.filter(id=request.user.id).exists()
+            or self.request.user.is_staff)
+
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        import ipdb; ipdb.set_trace()
+        context = self.get_context_data(
+            data=request.POST, files=request.FILES, **kwargs)
+        formsets = [context[i] for i in ['video_formset', 'images_formset']]
+        if all([f.is_valid() for f in formsets]):
+            for formset in formsets:
+                formset.save()
+            return http.HttpResponseRedirect(
+                reverse(
+                    'let_me_app:view_event',
+                    kwargs={'pk': context['event'].id}
+                )
+            )
+        return self.render_to_response(context)

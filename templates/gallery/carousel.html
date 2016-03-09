@@ -1,0 +1,34 @@
+{% load embed_video_tags %}
+
+<div id="Carousel" class="carousel slide">
+
+    <ol class="carousel-indicators">
+        {% for _ in gallery_objects %}
+        <li data-target="#Carousel" data-slide-to="{{forloop.counter0}}" {% if forloop.first %} class="active" {% endif %}></li>
+        {% endfor %}
+    </ol>
+
+    <!-- Carousel items -->
+    <div class="carousel-inner">
+
+    {% for gallery_group in gallery_objects %}
+        <div class="item{% if forloop.first %} active{% endif %}">
+            <div class="row">
+            {% for obj in gallery_group %}
+              <div class="col-md-3">
+                  {% if obj.type == "image" %}
+                    <a href="#" class="thumbnail"><img src="{{obj.obj.image.url}}" alt="{{obj.obj.note}}" style="max-width:100%;"></a>
+                  {% endif %}
+                  {% if obj.type == "video" %}
+                    {% video obj.obj.video '100% x 50%' %}
+                  {% endif %}
+              </div>
+            {% endfor %}
+            </div><!--.row-->
+        </div><!--.item-->
+    {% endfor %}
+
+    </div><!--.carousel-inner-->
+    <a data-slide="prev" href="#Carousel" class="left carousel-control">‹</a>
+    <a data-slide="next" href="#Carousel" class="right carousel-control">›</a>
+</div><!--.Carousel-->
