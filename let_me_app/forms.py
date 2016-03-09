@@ -18,6 +18,7 @@ from django.forms.formsets import DELETION_FIELD_NAME
 import slugify
 from let_me_auth.models import User
 from let_me_auth.pipeline import ABSENT_MAIL_HOST
+from embed_video.fields import EmbedVideoFormField
 
 
 class BootstrapMultipleChoiceWidget(autocomplete.ModelSelect2Multiple):
@@ -67,6 +68,15 @@ class CheckboxUserSelectMultiple(floppyforms_widgets.CheckboxSelectMultiple):
             'all': ('css/imaged_checkboxes.css',)
         }
         js = ('js/imaged_checkboxes.js',)
+
+
+class CustomImageInput(floppyforms_widgets.ClearableFileInput):
+    template_name = "floppyforms/image_input.html"
+    class Media:
+        css = {
+            'all': ('css/image_input.css',)
+        }
+        js = ('js/image_input.js',)
 
 
 class ChatMessageForm(forms.Form):
@@ -231,22 +241,26 @@ class EventVisitRoleForm(forms.Form):
         widget=BootstrapMultipleChoiceWidget(url='staffrole-autocomplete'))
 
 
-class EventStaffForm(forms.ModelForm):
-    role = forms.ModelChoiceField(
-        queryset=models.StaffRole.objects.all(),
-        widget=BootstrapChoiceWidget(url='staffrole-autocomplete'))
-
+class GalleryImagesForm(forms.ModelForm):
     class Meta:
-        model = models.Visit
-        fields = ('user', 'event', 'role')
+        model = models.GalleryImage
+        fields = ('image', 'note')
         widgets = {
-            'user': BootstrapChoiceWidget(url='user-autocomplete'),
-            'event': floppyforms_widgets.HiddenInput(),
+            'note': floppyforms_widgets.Textarea(attrs={'rows': 2}),
+            'image': CustomImageInput(),
         }
 
-    def __init__(self, *args, **kwargs):
-        super(EventStaffForm, self).__init__(*args, **kwargs)
-        self.fields['role'].widget.is_required = False
+
+class GalleryVideoForm(forms.ModelForm):
+    video = EmbedVideoFormField(
+        required=False, widget=floppyforms_widgets.URLInput())
+
+    class Meta:
+        model = models.GalleryVideo
+        fields = ('video', 'note')
+        widgets = {
+            'note': floppyforms_widgets.Textarea(attrs={'rows': 2}),
+        }
 
 
 class CustomInlineFormset(BaseInlineFormSet):
@@ -257,9 +271,14 @@ class CustomInlineFormset(BaseInlineFormSet):
                 label=_('Delete'), required=False, widget=TrashCheckboxInput)
 
 
-EventStaffFormSet = forms.inlineformset_factory(
-    models.Event, models.Visit, formset=CustomInlineFormset,
-    form=EventStaffForm, extra=2
+GalleryImagesFormset = forms.inlineformset_factory(
+    models.Event, models.GalleryImage, formset=CustomInlineFormset,
+    form=GalleryImagesForm, extra=2
+)
+
+GalleryVideoFormset = forms.inlineformset_factory(
+    models.Event, models.GalleryVideo, formset=CustomInlineFormset,
+    form=GalleryVideoForm, extra=2
 )
 
 

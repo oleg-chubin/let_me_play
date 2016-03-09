@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-08 14:00+0000\n"
+"POT-Creation-Date: 2016-03-09 22:21+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,143 +17,143 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: let_me_app/forms.py:148 let_me_app/forms.py:164
+#: let_me_app/forms.py:158 let_me_app/forms.py:174
 msgid "radius"
 msgstr ""
 
-#: let_me_app/forms.py:150 let_me_app/forms.py:166
+#: let_me_app/forms.py:160 let_me_app/forms.py:176
 msgid "activity type"
 msgstr ""
 
-#: let_me_app/forms.py:157
+#: let_me_app/forms.py:167
 msgid "start date"
 msgstr ""
 
-#: let_me_app/forms.py:160
+#: let_me_app/forms.py:170
 msgid "end date"
 msgstr ""
 
-#: let_me_app/forms.py:257
+#: let_me_app/forms.py:271
 #: venv/lib/python3.4/site-packages/django/forms/formsets.py:372
 msgid "Delete"
 msgstr ""
 
-#: let_me_app/forms.py:268
+#: let_me_app/forms.py:287
 msgid "Income"
 msgstr ""
 
-#: let_me_app/forms.py:270
+#: let_me_app/forms.py:289
 msgid "Visit was payed"
 msgstr ""
 
-#: let_me_app/forms.py:299 let_me_app/forms.py:317 let_me_app/models.py:393
+#: let_me_app/forms.py:318 let_me_app/forms.py:336 let_me_app/models.py:400
 #: templates/events/panels/my_visit.html:56
 msgid "Value"
 msgstr ""
 
-#: let_me_app/forms.py:301
+#: let_me_app/forms.py:320
 msgid "Parametr"
 msgstr ""
 
-#: let_me_app/models.py:26
+#: let_me_app/models.py:27
 msgid "New"
 msgstr ""
 
-#: let_me_app/models.py:27
+#: let_me_app/models.py:28
 msgid "Paid"
 msgstr ""
 
-#: let_me_app/models.py:28
+#: let_me_app/models.py:29
 msgid "Not paid"
 msgstr ""
 
-#: let_me_app/models.py:39 let_me_app/models.py:68
+#: let_me_app/models.py:40 let_me_app/models.py:69
 msgid "Active"
 msgstr ""
 
-#: let_me_app/models.py:40
+#: let_me_app/models.py:41
 msgid "Accepted"
 msgstr ""
 
-#: let_me_app/models.py:41 let_me_app/models.py:56 let_me_app/models.py:70
-#: let_me_app/models.py:106
+#: let_me_app/models.py:42 let_me_app/models.py:57 let_me_app/models.py:71
+#: let_me_app/models.py:107
 msgid "Canceled"
 msgstr ""
 
-#: let_me_app/models.py:42 let_me_app/models.py:57
+#: let_me_app/models.py:43 let_me_app/models.py:58
 msgid "Declined"
 msgstr ""
 
-#: let_me_app/models.py:54 let_me_app/models.py:104
+#: let_me_app/models.py:55 let_me_app/models.py:105
 msgid "Pending"
 msgstr ""
 
-#: let_me_app/models.py:55 let_me_app/models.py:105
+#: let_me_app/models.py:56 let_me_app/models.py:106
 msgid "Completed"
 msgstr ""
 
-#: let_me_app/models.py:58
+#: let_me_app/models.py:59
 msgid "Missed"
 msgstr ""
 
-#: let_me_app/models.py:69
+#: let_me_app/models.py:70
 msgid "Outdated"
 msgstr ""
 
-#: let_me_app/models.py:82
+#: let_me_app/models.py:83
 msgid "weaker"
 msgstr ""
 
-#: let_me_app/models.py:83
+#: let_me_app/models.py:84
 msgid "bit_weaker"
 msgstr ""
 
-#: let_me_app/models.py:84
+#: let_me_app/models.py:85
 msgid "same"
 msgstr ""
 
-#: let_me_app/models.py:85
+#: let_me_app/models.py:86
 msgid "bit_stronger"
 msgstr ""
 
-#: let_me_app/models.py:86
+#: let_me_app/models.py:87
 msgid "stronger"
 msgstr ""
 
-#: let_me_app/models.py:120 let_me_app/models.py:208 let_me_auth/models.py:39
+#: let_me_app/models.py:121 let_me_app/models.py:215 let_me_auth/models.py:39
 msgid "image"
 msgstr ""
 
-#: let_me_app/models.py:121
+#: let_me_app/models.py:122
 msgid "thumbnail"
 msgstr ""
 
-#: let_me_app/models.py:122
+#: let_me_app/models.py:123 let_me_app/models.py:131
 msgid "note"
 msgstr ""
 
-#: let_me_app/models.py:137 let_me_app/models.py:173 let_me_app/models.py:179
+#: let_me_app/models.py:144 let_me_app/models.py:180 let_me_app/models.py:186
 msgid "date created"
 msgstr ""
 
-#: let_me_app/models.py:140 let_me_app/models.py:174 let_me_app/models.py:180
+#: let_me_app/models.py:147 let_me_app/models.py:181 let_me_app/models.py:187
 msgid "text"
 msgstr ""
 
-#: let_me_app/models.py:187
+#: let_me_app/models.py:194
 msgid "Geo point"
 msgstr ""
 
-#: let_me_app/models.py:189
+#: let_me_app/models.py:196
 msgid "Geo line"
 msgstr ""
 
-#: let_me_app/models.py:190 templates/details_blocks/site.html:21
+#: let_me_app/models.py:197 templates/details_blocks/site.html:21
 msgid "Address"
 msgstr ""
 
-#: let_me_app/models.py:191 let_me_app/models.py:201 let_me_app/models.py:271
-#: let_me_app/models.py:295 let_me_app/models.py:374
+#: let_me_app/models.py:198 let_me_app/models.py:208 let_me_app/models.py:278
+#: let_me_app/models.py:302 let_me_app/models.py:381
 #: venv/lib/python3.4/site-packages/djcelery/admin.py:81
 #: venv/lib/python3.4/site-packages/djcelery/models.py:211
 #: venv/lib/python3.4/site-packages/djcelery/models.py:339
@@ -161,63 +161,63 @@ msgstr ""
 msgid "name"
 msgstr ""
 
-#: let_me_app/models.py:192 let_me_app/models.py:220 let_me_app/models.py:279
-#: let_me_app/models.py:383 templates/details_blocks/court.html:15
-#: templates/details_blocks/site.html:17 templates/events/details.html:95
+#: let_me_app/models.py:199 let_me_app/models.py:227 let_me_app/models.py:286
+#: let_me_app/models.py:390 templates/details_blocks/court.html:15
+#: templates/details_blocks/site.html:17 templates/events/details.html:97
 msgid "Description"
 msgstr ""
 
-#: let_me_app/models.py:209
+#: let_me_app/models.py:216
 msgid "title"
 msgstr ""
 
-#: let_me_app/models.py:247 let_me_app/models.py:278
+#: let_me_app/models.py:254 let_me_app/models.py:285
 msgid "date started"
 msgstr ""
 
-#: let_me_app/models.py:248
+#: let_me_app/models.py:255
 msgid "duration (minutes)"
 msgstr ""
 
-#: let_me_app/models.py:249
+#: let_me_app/models.py:256
 msgid "period (hours)"
 msgstr ""
 
-#: let_me_app/models.py:256
+#: let_me_app/models.py:263
 msgid "registration start within period"
 msgstr ""
 
-#: let_me_app/models.py:257
+#: let_me_app/models.py:264
 msgid "estimated price"
 msgstr ""
 
-#: let_me_app/models.py:283 templates/events/details.html:91
+#: let_me_app/models.py:290 templates/events/details.html:93
 msgid "Preliminary price"
 msgstr ""
 
-#: let_me_app/models.py:303
+#: let_me_app/models.py:310
 msgid "amount"
 msgstr ""
 
-#: let_me_app/models.py:311 let_me_app/models.py:324
+#: let_me_app/models.py:318 let_me_app/models.py:331
 msgid "comment"
 msgstr ""
 
-#: let_me_app/models.py:363
+#: let_me_app/models.py:370
 #: templates/dashboard/messages/let_me_app.visit.html:7
 #: templates/visits/annotate_visit.html:23
 msgid "Visit"
 msgstr ""
 
-#: let_me_app/models.py:364
+#: let_me_app/models.py:371
 msgid "role"
 msgstr ""
 
-#: let_me_app/models.py:366
+#: let_me_app/models.py:373
 msgid "invoice"
 msgstr ""
 
-#: let_me_app/models.py:375
+#: let_me_app/models.py:382
 msgid "units"
 msgstr ""
 
@@ -334,10 +334,10 @@ msgstr ""
 #: templates/events/complete_event.html:19
 #: templates/events/create_for_court.html:19
 #: templates/events/create_for_site.html:19
-#: templates/events/create_new.html:17 templates/events/create_staff.html:19
-#: templates/events/details.html:22 templates/events/search.html:18
-#: templates/events/user_events.html:17
+#: templates/events/create_new.html:17 templates/events/details.html:23
+#: templates/events/search.html:18 templates/events/user_events.html:17
 #: templates/events/user_proposals.html:17
+#: templates/gallery/update_form.html:19
 #: templates/reports/court_events.html:11
 #: templates/reports/court_visitors.html:11 templates/reports/courts.html:11
 #: templates/reports/user_visits.html:11 templates/sites/details.html:20
@@ -431,10 +431,9 @@ msgstr ""
 #: templates/events/create_for_court.html:20
 #: templates/events/create_for_court.html:33
 #: templates/events/create_for_site.html:20
-#: templates/events/create_for_site.html:32
-#: templates/events/create_staff.html:20 templates/events/details.html:23
-#: templates/reports/courts.html:20 templates/sites/details.html:21
-#: templates/visits/annotate_visit.html:20
+#: templates/events/create_for_site.html:32 templates/events/details.html:24
+#: templates/gallery/update_form.html:20 templates/reports/courts.html:20
+#: templates/sites/details.html:21 templates/visits/annotate_visit.html:20
 msgid "Site"
 msgstr ""
 
@@ -444,8 +443,8 @@ msgstr ""
 #: templates/events/clone_event.html:43
 #: templates/events/complete_event.html:21
 #: templates/events/create_for_court.html:21
-#: templates/events/create_for_court.html:43
-#: templates/events/create_staff.html:21 templates/events/details.html:24
+#: templates/events/create_for_court.html:43 templates/events/details.html:25
+#: templates/gallery/update_form.html:21 templates/gallery/update_form.html:22
 #: templates/reports/courts.html:21 templates/visits/annotate_visit.html:21
 msgid "Court"
 msgstr ""
@@ -560,10 +559,8 @@ msgstr ""
 #: templates/events/complete_event.html:32
 #: templates/events/create_for_court.html:22
 #: templates/events/create_for_court.html:47
-#: templates/events/create_for_site.html:21
-#: templates/events/create_staff.html:22 templates/events/create_staff.html:32
-#: templates/events/details.html:25 templates/events/details.html.py:81
-#: templates/visits/annotate_visit.html:22
+#: templates/events/create_for_site.html:21 templates/events/details.html:26
+#: templates/events/details.html.py:83 templates/visits/annotate_visit.html:22
 #: templates/visits/annotate_visit.html:30
 msgid "Event"
 msgstr ""
@@ -662,7 +659,7 @@ msgstr ""
 #: templates/events/complete_event.html:54
 #: templates/events/create_for_court.html:63
 #: templates/events/create_for_site.html:52
-#: templates/events/create_new.html:33 templates/events/create_staff.html:52
+#: templates/events/create_new.html:33 templates/gallery/update_form.html:43
 #: templates/visits/annotate_visit.html:60
 msgid "Cancel"
 msgstr ""
@@ -690,6 +687,10 @@ msgstr ""
 msgid "Decline proposal"
 msgstr ""
 
+#: templates/events/buttons/update_event_gallery.html:3
+msgid "Update gallery"
+msgstr ""
+
 #: templates/events/clone_event.html:7
 #, python-format
 msgid "Clone event started at %(start_at)s"
@@ -699,7 +700,7 @@ msgstr ""
 #: templates/events/complete_event.html:52
 #: templates/events/create_for_court.html:61
 #: templates/events/create_for_site.html:50
-#: templates/events/create_new.html:31 templates/events/create_staff.html:50
+#: templates/events/create_new.html:31 templates/gallery/update_form.html:41
 #: templates/helpers/rate_popup.html:18 templates/user/details_form.html:31
 #: templates/user/settings.html:30 templates/visits/annotate_visit.html:58
 msgid "Save"
@@ -711,7 +712,7 @@ msgid "Complete event started at %(start_at)s"
 msgstr ""
 
 #: templates/events/complete_event.html:46
-#: templates/events/create_for_court.html:52 templates/events/details.html:138
+#: templates/events/create_for_court.html:52 templates/events/details.html:143
 msgid "Visitors"
 msgstr ""
 
@@ -720,7 +721,7 @@ msgstr ""
 msgid "Create event for %(activity_type)s court \"%(name)s\" details"
 msgstr ""
 
-#: templates/events/create_for_court.html:56 templates/events/details.html:198
+#: templates/events/create_for_court.html:56 templates/events/details.html:203
 #: templates/navbar.html:96
 msgid "Proposals"
 msgstr ""
@@ -739,36 +740,27 @@ msgstr ""
 msgid "Create new event"
 msgstr ""
 
-#: templates/events/create_staff.html:7
-#, python-format
-msgid "Create staff for event at %(start_at)s"
-msgstr ""
-
-#: templates/events/create_staff.html:45
-msgid "Staff"
-msgstr ""
-
 #: templates/events/details.html:7
 #, python-format
 msgid "Details of event %(start_at)s"
 msgstr ""
 
-#: templates/events/details.html:87
+#: templates/events/details.html:89
 msgid "Start at"
 msgstr ""
 
-#: templates/events/details.html:102
+#: templates/events/details.html:107
 #: templates/events/panels/my_application.html:11
 #: templates/events/panels/my_visit.html:15
 msgid "Inventory"
 msgstr ""
 
-#: templates/events/details.html:151
+#: templates/events/details.html:156
 #, python-format
 msgid "There are %(visit_count)s visitors "
 msgstr ""
 
-#: templates/events/details.html:172 templates/navbar.html:116
+#: templates/events/details.html:177 templates/navbar.html:116
 msgid "Applications"
 msgstr ""
 
@@ -862,6 +854,19 @@ msgstr ""
 
 #: templates/events/user_proposals.html:59
 msgid "Inactive"
+msgstr ""
+
+#: templates/gallery/update_form.html:7
+#, python-format
+msgid "Update gallery for event at %(start_at)s"
+msgstr ""
+
+#: templates/gallery/update_form.html:23
+msgid "Gallery"
+msgstr ""
+
+#: templates/gallery/update_form.html:30 templates/gallery/update_form.html:35
+msgid "Images"
 msgstr ""
 
 #: templates/helpers/rate_popup.html:12
@@ -2779,6 +2784,14 @@ msgstr ""
 
 #: venv/lib/python3.4/site-packages/djcelery/models.py:363
 msgid "tasks"
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/embed_video/fields.py:51
+msgid "URL could not be recognized."
+msgstr ""
+
+#: venv/lib/python3.4/site-packages/embed_video/fields.py:53
+msgid "ID of this video could not be recognized."
 msgstr ""
 
 #: venv/lib/python3.4/site-packages/floppyforms/templates/floppyforms/clearable_input.html:1

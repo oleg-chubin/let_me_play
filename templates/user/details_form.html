@@ -18,7 +18,7 @@
 {% endblock %}
 
 {% block main %}
-    <form method="post" enctype="multipart/form-data" method="post">
+    <form enctype="multipart/form-data" method="post">
         {% csrf_token %}
         {% with form as form %}
           {% if form_name != 'site' %}
