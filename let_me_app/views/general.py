@@ -1366,7 +1366,6 @@ class UpdateGalleryView(TemplateView):
 
     @transaction.atomic
     def post(self, request, *args, **kwargs):
-        import ipdb; ipdb.set_trace()
         context = self.get_context_data(
             data=request.POST, files=request.FILES, **kwargs)
         formsets = [context[i] for i in ['video_formset', 'images_formset']]
