@@ -32,7 +32,7 @@
     {% for form in images_formset.forms %}
       {% include "form.html" %}
     {% endfor %}
-    <legend>{% trans "Images" %}</legend>
+    <legend>{% trans "Video" %}</legend>
     {% include "form.html" with form=video_formset.management_form %}
     {% for form in video_formset.forms %}
       {% include "form.html" %}
