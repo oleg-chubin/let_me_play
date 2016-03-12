@@ -71,16 +71,35 @@
                   {% followdropdown group_user "escort/follow_menu.html" %}
                     {{ group_user.get_full_name }}
                   {% endfollowdropdown %}
-                   <div class="ui-group-buttons">
-                     {% with user=group_user %}
-                       {% include "courts/buttons/remove_from_admin.html" %}
-                     {% endwith %}
-                   </div>
                 </li>
               {% endfor %}
             </ul>
-            <div class="ui-group-buttons">
-                {% include "courts/buttons/add_to_admin_group.html" %}
+            <div class="ui-group-buttons" >
+                {% include "courts/buttons/add_to_admin_group.html" with group=object.admin_group %}
+            </div>
+          </div>
+        </li><li class="list-group-item">
+          <div class="row toggle" id="dropdown-detail-6" data-toggle="detail-6">
+            <div class="col-xs-10"> <h4>{% trans "Court groups" %}</h4> </div>
+            <div class="col-xs-2"><span class="glyphicon glyphicon-menu-down pull-right toggle-icon"></span>
+                <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
+          </div>
+          <div id="detail-6">
+            <ul class="user-list">
+              {% for group in court_groups %}
+                <li>
+                  {{ group.name }}
+                  {% if group.id == object.admin_group_id%}
+                    ({% trans "Admin group" %})
+                  {% endif %}
+                  <div class="ui-group-buttons" >
+                    {% include "courts/buttons/add_to_admin_group.html" %}
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+            <div class="ui-group-buttons" >
+                {% include "courts/buttons/add_court_group.html" %}
             </div>
           </div>
         </li>
@@ -105,5 +124,7 @@
   {{group_admin_form.media}}
   {% leaflet_js %}
   <script src="{% static "js/detail_map.js" %}"></script>
+  <script src="{% static "js/group_modal.js" %}"></script>
+  <script src="{% static "js/modal.js" %}"></script>
   <script src="{% static "js/expandable_listgroup.js" %}"></script>
 {% endblock %}

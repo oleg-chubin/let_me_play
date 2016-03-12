@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, Group
 from django.utils.translation import ugettext as _
 from django.db import models
 from django.utils.http import urlquote
@@ -110,3 +110,7 @@ class ConfirmationCodes(models.Model):
     user = models.OneToOneField(User, primary_key=True)
     code = models.CharField(_('confirmation code'), max_length=8)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class FollowerGroup(Group):
+    followable = models.ForeignKey(Followable)

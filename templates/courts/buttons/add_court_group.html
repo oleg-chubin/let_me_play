@@ -1,0 +1,7 @@
+{% load i18n %}
+<form method="post" action="{% url 'let_me_app:add_court_group' court=object.id %}">
+{% csrf_token %}
+<button type="submit" class="btn btn-link"  data-confirmation="{% trans 'Are You sure?'%}">
+<span class="glyphicon glyphicon-plus"></span>
+</button>
+</form>

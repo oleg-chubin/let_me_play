@@ -22,7 +22,7 @@ from let_me_app import persistence, forms, models
 from django.db import transaction
 from let_me_app.models import VisitStatuses, ApplicationStatuses,\
     ProposalStatuses
-from let_me_auth.models import User
+from let_me_auth.models import User, FollowerGroup
 import itertools
 from django.db.models.aggregates import Count
 from django.db.models.query import Prefetch
@@ -784,7 +784,8 @@ class CourtDetailView(DetailView):
             email=self.request.user.email).exists() or self.request.user.is_staff
 
         result['is_admin'] = is_admin
-        result['group_admin_form'] = forms.GroupAdminForm()
+        result['group_admin_form'] = forms.GroupForm()
+        result['court_groups'] = FollowerGroup.objects.filter(followable=court)
         return result
 
 
@@ -920,7 +921,7 @@ class CourtSearchView(ListView):
         return result
 
 
-class AddUserToAdminGroupView(BaseView):
+class AddCourtGroupView(BaseView):
     @transaction.atomic
     def post(self, request, *args, **kwargs):
         if request.user.is_anonymous():
@@ -934,11 +935,7 @@ class AddUserToAdminGroupView(BaseView):
                 or self.request.user.is_staff):
             return http.HttpResponseForbidden()
 
-        form = forms.GroupAdminForm(data=request.POST)
-
-        if form.is_valid():
-            if form.cleaned_data['users']:
-                courts[0].admin_group.user_set.add(*form.cleaned_data['users'])
+        FollowerGroup.objects.create(followable=courts[0])
 
         return http.HttpResponseRedirect(
             reverse('let_me_app:view_court', kwargs={'pk': kwargs['court']})

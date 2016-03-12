@@ -1,23 +1,23 @@
 {% extends "base_modal.html" %}
 
-{% load i18n %} 
+{% load i18n %}
+
+{% block modal_class %} {{ block.super }} group-modal{% endblock %}
 
 {% block modal_id %}modalAddToAdminGroup{% endblock %}
 {% block modal_labelledby %}modalAddToAdminGroup{% endblock %}
 
 {% block modal_content %}
-  <form method="post" enctype="multipart/form-data" action="{% url 'let_me_app:add_user_to_admin_group' court=object.id %}">
-    {% csrf_token %}
-    {{ block.super }}
-</form>
-  {% endblock %}
+  <form method="post"> {{ block.super }} </form>
+{% endblock %}
 
-{% block modal_title %} {% trans "Add User to admin group" %} {% endblock %}
 {% block modal_body %}
-  <div class="form-group">
-    {{ group_admin_form.users }}
+  <div class="form-content">
   </div>
 {% endblock %}
+
+{% block modal_title %} {% trans "Add User to admin group" %} {% endblock %}
+
 {% block modal_footer %}
-    <button type="submit" class="btn btn-primary">{% trans "Add User" %}</button>
+    <button type="submit" class="btn btn-primary">{% trans "Save" %}</button>
 {% endblock %}
