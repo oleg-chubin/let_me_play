@@ -8,6 +8,13 @@ from django.utils import timezone
 from let_me_app.tasks import send_notification
 
 
+def filter_event_for_user(queryset, user):
+    user_groups = user.groups.values_list('id', flat=True)
+    return (
+        queryset.filter(target_groups__in=user_groups)
+        | queryset.filter(target_groups__name='anyone'))
+
+
 def save_event_and_related_things(event, user, visitors=(), invitees=()):
     event.save()
     models.InternalMessage.objects.create(subject=event)

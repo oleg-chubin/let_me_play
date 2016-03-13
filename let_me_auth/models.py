@@ -7,7 +7,6 @@ from django.utils import timezone
 
 from let_me_app.models import Followable
 from .managers import UserManager
-from django.db.models.signals import pre_save
 from django.db.models import signals
 from django.dispatch.dispatcher import receiver
 
@@ -113,4 +112,7 @@ class ConfirmationCodes(models.Model):
 
 
 class FollowerGroup(Group):
-    followable = models.ForeignKey(Followable)
+    followable = models.ForeignKey(
+        Followable, null=True, related_name='group_owners')
+    verbose_name = models.CharField(_('verbose name'), max_length=80)
+    targets = models.ManyToManyField(Followable, related_name='target_groups')

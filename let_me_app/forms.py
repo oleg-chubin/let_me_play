@@ -16,10 +16,9 @@ from let_me_auth import models as auth_models
 from django.forms.models import BaseInlineFormSet
 from django.forms.formsets import DELETION_FIELD_NAME
 import slugify
-from let_me_auth.models import User
+from let_me_auth.models import User, FollowerGroup
 from let_me_auth.pipeline import ABSENT_MAIL_HOST
 from embed_video.fields import EmbedVideoFormField
-from django.contrib.auth.models import Group
 
 
 class BootstrapMultipleChoiceWidget(autocomplete.ModelSelect2Multiple):
@@ -148,10 +147,10 @@ class GroupForm(forms.ModelForm):
         widget=BootstrapMultipleChoiceWidget(url='user-autocomplete'))
 
     class Meta:
-        model = Group
-        fields = ('users', 'name')
+        model = FollowerGroup
+        fields = ('users', 'verbose_name')
         widgets = {
-            'name': floppyforms_widgets.TextInput(),
+            'verbose_name': floppyforms_widgets.TextInput(),
         }
 
     def __init__(self, *args, **kwargs):

@@ -46,7 +46,13 @@
   {% endif %}
 </div>
 
-
+{% if not following_groups %}
+<div class="alert alert-warning" role="alert">
+  {% blocktrans %}
+    This event is not published. Noone can see it !
+  {% endblocktrans %}
+</div>
+{% endif %}
 <div class="panel panel-default">
   <div class="panel-heading">
     <h3 class="panel-title">
@@ -54,6 +60,14 @@
         <img src="{{object.court.activity_type.image.url}}" class="img-rounded"/>{{object.start_at}}
       {% endfollowdropdown %}
       {% if is_admin %}
+        {% for following_group in following_groups %}
+
+        <span class="label label-info">
+            <span class="glyphicon glyphicon-flag"></span>
+            {{following_group.verbose_name}}
+        </span>
+
+        {% endfor %}
         <div class="pull-right action-buttons">
           <div class="btn-group pull-right">
               <button type="button" class="btn btn-lg dropdown-toggle" data-toggle="dropdown">

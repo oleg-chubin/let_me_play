@@ -42,7 +42,7 @@
       </div>
       <div id="detail-4">
         <ul class="court-list">
-          {% for event in object.event_set.all %}
+          {% for event in court_events %}
             <li>
               <img src="{{object.activity_type.image.url}}" class="list-pic img-responsive img-thumbnail">
               {% followdropdown event "escort/follow_menu.html" %}

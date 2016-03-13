@@ -27,6 +27,7 @@ import itertools
 from django.db.models.aggregates import Count
 from django.db.models.query import Prefetch
 from let_me_app.tasks import send_notification
+from let_me_app.persistence import filter_event_for_user
 
 
 NUMBER_OF_KNOWN_VISITS = 10
@@ -130,6 +131,9 @@ class EventView(DetailView):
 
     def get_queryset(self):
         queryset = super(EventView, self).get_queryset()
+
+        queryset  = filter_event_for_user(queryset, self.request.user)
+
         queryset = queryset.select_related(
             'inventory_list', 'court', 'court__site', 'court__activity_type')
         queryset = queryset.prefetch_related('inventory_list__inventory_set__equipment')
@@ -195,6 +199,8 @@ class EventView(DetailView):
 
         result['active_proposals'] = event.proposal_set.all().select_related('user').order_by('id')
         result['user_inventory'] = self._get_user_inventory(event, active_visits)
+
+        result['following_groups'] = FollowerGroup.objects.filter(targets=event)
 
         result['is_event_staff'] = any(
             self.request.user.id == i.user_id for i in result['staff_list'])
@@ -369,6 +375,8 @@ class CreateApplicationView(BaseView):
             return http.HttpResponseForbidden()
 
         events = models.Event.objects.filter(id=kwargs['event'])
+        events = filter_event_for_user(events, self.request.user)
+
         if not events:
             return http.HttpResponseNotFound()
 
@@ -784,6 +792,8 @@ class CourtDetailView(DetailView):
             email=self.request.user.email).exists() or self.request.user.is_staff
 
         result['is_admin'] = is_admin
+        result['court_events'] = filter_event_for_user(
+            court.event_set.all(), self.request.user)
         result['group_admin_form'] = forms.GroupForm()
         result['court_groups'] = FollowerGroup.objects.filter(followable=court)
         return result
@@ -814,6 +824,8 @@ class EventSearchView(ListView):
 
         queryset = queryset.select_related(
             'inventory_list', 'court', 'court__site', 'court__activity_type')
+
+        queryset = filter_event_for_user(queryset, self.request.user)
 
         queryset = queryset.prefetch_related(
             'visit_set',

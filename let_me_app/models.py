@@ -244,10 +244,12 @@ def admin_group_creator(sender, **kwargs):
 
 @receiver(post_save, sender=Court)
 def admin_group_updater(sender, **kwargs):
+    from let_me_auth.models import FollowerGroup
     if kwargs['created']:
-        kwargs['instance'].admin_group.name = "court_admin_group_%s" % kwargs['instance'].id
-        kwargs['instance'].admin_group.save()
-
+        court = kwargs['instance']
+        f_g = FollowerGroup(group_ptr=court.admin_group, followable=court)
+        f_g.name = "admin group"
+        f_g.save()
 
 
 class Occasion(models.Model):
@@ -297,6 +299,16 @@ class Event(Followable):
         if len(description) > 20:
             description = description[:16] + '...'
         return "{} ({})".format(description, self.start_at)
+
+
+@receiver(post_save, sender=Event)
+def admin_group_targets_updater(sender, **kwargs):
+    if kwargs['created']:
+        event = kwargs['instance']
+        following_group = event.court.admin_group.followergroup
+        following_group.targets.add(event.id)
+        following_group.save()
+
 
 class Equipment(models.Model):
     name = models.CharField(_("name"), max_length=256)
