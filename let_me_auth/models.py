@@ -116,3 +116,6 @@ class FollowerGroup(Group):
         Followable, null=True, related_name='group_owners')
     verbose_name = models.CharField(_('verbose name'), max_length=80)
     targets = models.ManyToManyField(Followable, related_name='target_groups')
+
+    def __str__(self):
+        return "{} ({})".format(self.verbose_name, self.name)

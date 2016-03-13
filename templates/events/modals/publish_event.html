@@ -1,0 +1,26 @@
+{% extends "base_modal.html" %}
+
+{% load i18n %}
+
+{% block modal_id %}modalPublishEvent{% endblock %}
+{% block modal_labelledby %}modalPublishEvent{% endblock %}
+
+{% block modal_class %} {{ block.super }} ajax-form-modal{% endblock %}
+
+{% block modal_content %}
+  <form method="post" enctype="multipart/form-data" action="{% url 'let_me_app:publish_event' event=object.id %}">
+    {% csrf_token %}
+    {{ block.super }}
+</form>
+  {% endblock %}
+
+{% block modal_title %}{% trans "Publish event" %}{% endblock %}
+
+{% block modal_body %}
+  <div class="form-content">
+  </div>
+{% endblock %}
+
+{% block modal_footer %}
+    <button type="submit" class="btn btn-primary">{% trans "Publish event" %}</button>
+{% endblock %}

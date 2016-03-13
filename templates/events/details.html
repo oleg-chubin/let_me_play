@@ -78,6 +78,7 @@
                     <li> {% include "events/buttons/complete_event.html" %}</li>
                     <li> {% include "events/buttons/cancel_event.html" %}</li>
                 {% endif %}
+                <li> {% include "events/buttons/publish_event.html" %}</li>
                 <li> {% include "events/buttons/clone_event.html" %}</li>
                 <li> {% include "events/buttons/update_event_gallery.html" %}</li>
               </ul>
@@ -277,6 +278,7 @@
 {% include "events/modals/apply_for_event.html" %}
 {% include "events/modals/propose_event.html" %}
 {% include "events/modals/create_visit.html" %}
+{% include "events/modals/publish_event.html" %}
 {% include "events/modals/update_visit.html" %}
 
 {% endblock %}
@@ -290,6 +292,7 @@
   <script src="{% static "js/carousel.js" %}"></script>
   <script src="{% static "js/expandable_listgroup.js" %}"></script>
   <script src="{% static "js/modal.js" %}"></script>
+  <script src="{% static "js/ajax-form-modal.js" %}"></script>
   <script src="{% static "js/sidebar_chat.js" %}"></script>
   <script src="{% static "js/rateable_avatars.js" %}"></script>
   <script src="{% static "js/imaged_radiobuttons.js" %}"></script>

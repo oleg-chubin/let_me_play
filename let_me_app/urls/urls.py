@@ -113,6 +113,10 @@ urlpatterns = patterns('',
         views.CloneEventView.as_view(),
         name='clone_event'),
 
+    url(r'^publish/event/(?P<event>[0-9]+)/$',
+        views.CloneEventView.as_view(),
+        name='publish_event'),
+
     url(r'^annotate/visit/(?P<visit_id>[0-9]+)/$',
         views.AnnotateVisitView.as_view(),
         name='annotate_visit'),

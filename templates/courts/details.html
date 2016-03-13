@@ -88,7 +88,7 @@
             <ul class="user-list">
               {% for group in court_groups %}
                 <li>
-                  {{ group.name }}
+                  {{ group.verbose_name }}
                   {% if group.id == object.admin_group_id%}
                     ({% trans "Admin group" %})
                   {% endif %}
@@ -124,7 +124,7 @@
   {{group_admin_form.media}}
   {% leaflet_js %}
   <script src="{% static "js/detail_map.js" %}"></script>
-  <script src="{% static "js/group_modal.js" %}"></script>
+  <script src="{% static "js/ajax-form-modal.js" %}"></script>
   <script src="{% static "js/modal.js" %}"></script>
   <script src="{% static "js/expandable_listgroup.js" %}"></script>
 {% endblock %}

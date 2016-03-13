@@ -1,0 +1,5 @@
+{% load i18n %}
+
+<a href="#" data-toggle="modal" data-target="#modalPublishEvent" data-formurl="{% url 'let_me_help:publish-event' pk=object.id %}">
+  <span class="glyphicon glyphicon glyphicon-send"></span> {% trans "Publish" %}
+</a>

@@ -121,6 +121,37 @@ class GroupAdminForm(forms.Form):
         widget=BootstrapMultipleChoiceWidget(url='user-autocomplete'))
 
 
+class PublishEventForm(forms.ModelForm):
+    target_groups = forms.ModelMultipleChoiceField(
+        queryset=auth_models.FollowerGroup.objects.filter(name="anyone"),
+        widget=floppyforms_widgets.CheckboxSelectMultiple)
+
+    class Meta:
+        model = models.Event
+        fields = ('target_groups', )
+
+    def __init__(self, *args, **kwargs):
+        instance = kwargs.get('instance', None)
+        if instance is not None:
+            initial = kwargs.get('initial', {})
+            initial['target_groups'] = instance.target_groups.all()
+            kwargs['initial'] = initial
+        super(PublishEventForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        event = super(PublishEventForm, self).save(commit=commit)
+
+        if commit:
+            event.target_groups = self.cleaned_data['target_groups']
+        else:
+            old_save_m2m = self.save_m2m
+            def new_save_m2m():
+                old_save_m2m()
+                event.target_groups = self.cleaned_data['users']
+            self.save_m2m = new_save_m2m
+        return event
+
+
 class SiteAdminForm(forms.ModelForm):
     class Meta:
         model = models.Site

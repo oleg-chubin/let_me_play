@@ -1,5 +1,5 @@
 $(function(){
-    $('.group-modal').on('show.bs.modal', function(){
+    $('.ajax-form-modal').on('show.bs.modal', function(){
       var form_self = $(this).find('form');
       var form_url = form_self.attr('action');
       $.get(form_url, function(data){
@@ -18,7 +18,7 @@ $(function(){
       });
 
     });
-    $('.group-modal').on('hidden.bs.modal', function(){
+    $('.ajax-form-modal').on('hidden.bs.modal', function(){
         $(this).find('form .form-content').html('');
     });
 })

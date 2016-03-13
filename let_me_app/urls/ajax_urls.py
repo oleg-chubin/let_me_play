@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from let_me_app.views.ajax import RateUserView, ManageGroup
+from let_me_app.views.ajax import RateUserView, ManageGroup, PublishEventView
 
 
 urlpatterns = [
@@ -10,5 +10,9 @@ urlpatterns = [
     url(
         'update/group/(?P<pk>[0-9]+)/$',
         ManageGroup.as_view(), name='update-group',
+    ),
+    url(
+        'publish/event/(?P<pk>[0-9]+)/$',
+        PublishEventView.as_view(), name='publish-event',
     ),
 ]
