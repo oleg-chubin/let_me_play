@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, Group
 from django.utils.translation import ugettext as _
 from django.db import models
 from django.utils.http import urlquote
@@ -7,7 +7,6 @@ from django.utils import timezone
 
 from let_me_app.models import Followable
 from .managers import UserManager
-from django.db.models.signals import pre_save
 from django.db.models import signals
 from django.dispatch.dispatcher import receiver
 
@@ -110,3 +109,13 @@ class ConfirmationCodes(models.Model):
     user = models.OneToOneField(User, primary_key=True)
     code = models.CharField(_('confirmation code'), max_length=8)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class FollowerGroup(Group):
+    followable = models.ForeignKey(
+        Followable, null=True, related_name='group_owners')
+    verbose_name = models.CharField(_('verbose name'), max_length=80)
+    targets = models.ManyToManyField(Followable, related_name='target_groups')
+
+    def __str__(self):
+        return "{} ({})".format(self.verbose_name, self.name)

@@ -22,11 +22,12 @@ from let_me_app import persistence, forms, models
 from django.db import transaction
 from let_me_app.models import VisitStatuses, ApplicationStatuses,\
     ProposalStatuses
-from let_me_auth.models import User
+from let_me_auth.models import User, FollowerGroup
 import itertools
 from django.db.models.aggregates import Count
 from django.db.models.query import Prefetch
 from let_me_app.tasks import send_notification
+from let_me_app.persistence import filter_event_for_user
 
 
 NUMBER_OF_KNOWN_VISITS = 10
@@ -130,6 +131,9 @@ class EventView(DetailView):
 
     def get_queryset(self):
         queryset = super(EventView, self).get_queryset()
+
+        queryset  = filter_event_for_user(queryset, self.request.user)
+
         queryset = queryset.select_related(
             'inventory_list', 'court', 'court__site', 'court__activity_type')
         queryset = queryset.prefetch_related('inventory_list__inventory_set__equipment')
@@ -195,6 +199,8 @@ class EventView(DetailView):
 
         result['active_proposals'] = event.proposal_set.all().select_related('user').order_by('id')
         result['user_inventory'] = self._get_user_inventory(event, active_visits)
+
+        result['following_groups'] = FollowerGroup.objects.filter(targets=event)
 
         result['is_event_staff'] = any(
             self.request.user.id == i.user_id for i in result['staff_list'])
@@ -369,6 +375,8 @@ class CreateApplicationView(BaseView):
             return http.HttpResponseForbidden()
 
         events = models.Event.objects.filter(id=kwargs['event'])
+        events = filter_event_for_user(events, self.request.user)
+
         if not events:
             return http.HttpResponseNotFound()
 
@@ -784,7 +792,10 @@ class CourtDetailView(DetailView):
             email=self.request.user.email).exists() or self.request.user.is_staff
 
         result['is_admin'] = is_admin
-        result['group_admin_form'] = forms.GroupAdminForm()
+        result['court_events'] = filter_event_for_user(
+            court.event_set.all(), self.request.user)
+        result['group_admin_form'] = forms.GroupForm()
+        result['court_groups'] = FollowerGroup.objects.filter(followable=court)
         return result
 
 
@@ -813,6 +824,8 @@ class EventSearchView(ListView):
 
         queryset = queryset.select_related(
             'inventory_list', 'court', 'court__site', 'court__activity_type')
+
+        queryset = filter_event_for_user(queryset, self.request.user)
 
         queryset = queryset.prefetch_related(
             'visit_set',
@@ -920,7 +933,7 @@ class CourtSearchView(ListView):
         return result
 
 
-class AddUserToAdminGroupView(BaseView):
+class AddCourtGroupView(BaseView):
     @transaction.atomic
     def post(self, request, *args, **kwargs):
         if request.user.is_anonymous():
@@ -934,11 +947,7 @@ class AddUserToAdminGroupView(BaseView):
                 or self.request.user.is_staff):
             return http.HttpResponseForbidden()
 
-        form = forms.GroupAdminForm(data=request.POST)
-
-        if form.is_valid():
-            if form.cleaned_data['users']:
-                courts[0].admin_group.user_set.add(*form.cleaned_data['users'])
+        FollowerGroup.objects.create(followable=courts[0])
 
         return http.HttpResponseRedirect(
             reverse('let_me_app:view_court', kwargs={'pk': kwargs['court']})
@@ -948,30 +957,37 @@ class AddUserToAdminGroupView(BaseView):
 class CreateEventView(TemplateView):
     template_name = 'events/create_new.html'
 
-    def get_visitors_form(self, data, files, **kwargs):
+    def get_visitors_form(self, **kwargs):
         suffix = kwargs.get('suffix', '')
-        form = forms.EventVisitForm(
-            data=data,
-            prefix='event' + suffix,
-            initial={'users': kwargs.get('users', [])}
-        )
-        return form
+        kw = {
+            'prefix': 'event' + suffix,
+            'initial': {'users': kwargs.get('users', [])}
+        }
+        if 'data' in kwargs:
+            kw['data'] = kwargs['data']
+        return forms.EventVisitForm(**kw)
 
-    def get_forms(self, data, files, **kwargs):
+    def get_event_form(self, **kwargs):
+        kw = {'prefix': 'event'}
+        for key in ['data', 'files']:
+            if key in kwargs:
+                kw[key] = kwargs[key]
+        return forms.EventForm(**kw)
+
+    def get_forms(self, **kwargs):
         data_forms = OrderedDict()
         for entity, form_class in [('site', forms.SiteForm), ('court', forms.CourtForm)]:
             if not entity in kwargs:
                 kw = {'prefix': entity}
-                if data:
-                    kw['data'] = data
-                    kw['files'] = files
+                for key in ['data', 'files']:
+                    if key in kwargs:
+                        kw[key] = kwargs[key]
                 data_forms[entity] = form_class(**kw)
-        data_forms['event'] = forms.EventForm(
-            data=data, files=files, prefix='event')
+        data_forms['event'] = self.get_event_form(**kwargs)
         data_forms['visitors'] = self.get_visitors_form(
-            data, files, suffix="visitors", uesrs=[self.request.user], **kwargs)
+            suffix="visitors", uesrs=[self.request.user], **kwargs)
         data_forms['proposals'] = self.get_visitors_form(
-            data, files, suffix="proposals", **kwargs)
+            suffix="proposals", **kwargs)
         return data_forms
 
     def get_instances(self, view_forms, **kwargs):
@@ -985,7 +1001,7 @@ class CreateEventView(TemplateView):
         return instances
 
     def get_context_data(self, **kwargs):
-        view_forms = kwargs.get('forms') or self.get_forms(None, None, **kwargs)
+        view_forms = kwargs.get('forms') or self.get_forms(**kwargs)
         return {'forms': view_forms}
 
     def check_permissions(self, request, court):
@@ -1001,7 +1017,8 @@ class CreateEventView(TemplateView):
 
     @transaction.atomic
     def post(self, request, *args, **kwargs):
-        view_forms = self.get_forms(request.POST, request.FILES, **kwargs)
+        view_forms = self.get_forms(
+            data=request.POST, files=request.FILES, **kwargs)
         validation_result = True
         for form in view_forms.values():
             validation_result = validation_result and form.is_valid()
@@ -1060,13 +1077,22 @@ class CreateSiteEventView(CreateEventView):
 class CreateCourtEventView(CreateEventView):
     template_name = 'events/create_for_court.html'
 
-    def get_visitors_form(self, data, files, **kwargs):
+    def get_event_form(self, **kwargs):
+        form = super(CreateCourtEventView, self).get_event_form(**kwargs)
+        form.fields['target_groups'].queryset = FollowerGroup.objects.filter(
+            followable=kwargs['court']) |  FollowerGroup.objects.filter(name="anyone")
+        return form
+
+    def get_visitors_form(self, **kwargs):
         suffix = kwargs.get('suffix', '')
-        form = forms.ExtendedEventVisitForm(
-            data=data,
-            prefix='event' + suffix,
-            initial={'users': kwargs.get('users', [])}
-        )
+
+        kw = {
+            'prefix': 'event' + suffix,
+            'initial': {'users': kwargs.get('users', [])}
+        }
+        if 'data' in kwargs:
+            kw['data'] = kwargs['data']
+        form = forms.ExtendedEventVisitForm(**kw)
         checkbox_field = form.fields['known_users']
         queryset = User.objects.filter(
             visit__event__court__id=self.kwargs['court'])
@@ -1201,8 +1227,20 @@ class AnnotateVisitView(TemplateView):
 class CloneEventView(TemplateView):
     template_name = 'events/clone_event.html'
 
+    def get_event_form(self, **kwargs):
+        kw = {'prefix': 'event'}
+        for key in ['data', 'files']:
+            if key in kwargs:
+                kw[key] = kwargs[key]
+        form = forms.EventForm(**kw)
+        queryset = FollowerGroup.objects.filter(
+            followable__court__event=kwargs['event'])
+        queryset = queryset |  FollowerGroup.objects.filter(name="anyone")
+        form.fields['target_groups'].queryset = queryset
+        return form
+
     def get_context_data(self, **kwargs):
-        view_forms = kwargs.get('forms') or self.get_forms(None, None, **kwargs)
+        view_forms = kwargs.get('forms') or self.get_forms(**kwargs)
         result = {'forms': view_forms}
         result['event'] = (kwargs.get('source_event') or
             get_object_or_404(models.Event, pk=kwargs['event']))
@@ -1212,13 +1250,15 @@ class CloneEventView(TemplateView):
         return (court.admin_group.user_set.filter(id=request.user.id).exists()
             or self.request.user.is_staff)
 
-    def get_visitors_form(self, data, files, **kwargs):
+    def get_visitors_form(self, **kwargs):
         suffix = kwargs.get('suffix', '')
-        form = forms.ExtendedEventVisitForm(
-            data=data,
-            prefix='event' + suffix,
-            initial={'users': kwargs.get('users', [])}
-        )
+        kw = {
+            'prefix': 'event' + suffix,
+            'initial': {'users': kwargs.get('users', [])}
+        }
+        if 'data' in kwargs:
+            kw['data'] = kwargs['data']
+        form = forms.ExtendedEventVisitForm(**kw)
         checkbox_field = form.fields['known_users']
         queryset = User.objects.filter(
             visit__event__court__event__id=self.kwargs['event'])
@@ -1228,29 +1268,26 @@ class CloneEventView(TemplateView):
             (checkbox_field.prepare_value(i), i) for i in queryset]
         return form
 
-    def get_forms(self, data, files, **kwargs):
+    def get_forms(self, **kwargs):
         data_forms = OrderedDict()
-        data_forms['event'] = forms.EventForm(
-            data=self.request.POST, files=self.request.FILES, prefix='event')
-
+        data_forms['event'] = self.get_event_form(**kwargs)
         data_forms['visitors'] = self.get_visitors_form(
-            data=data, files=files, prefix='event', suffix="visitors",
-            users=[self.request.user]
+            prefix='event', suffix="visitors", users=[self.request.user], **kwargs
         )
         visits = models.Visit.objects.filter(
             event=kwargs['event'],
             status__in=[VisitStatuses.COMPLETED, VisitStatuses.PENDING] )
         visits = visits.exclude(user=self.request.user).values('user_id')
         data_forms['proposals'] = self.get_visitors_form(
-            data=data, files=files, prefix='event', suffix="proposals",
-            users=User.objects.filter(id__in=visits)
+            prefix='event', suffix="proposals",
+            users=User.objects.filter(id__in=visits), **kwargs
         )
         return data_forms
 
     @transaction.atomic
     def post(self, request, *args, **kwargs):
         source_event = get_object_or_404(models.Event, pk=kwargs['event'])
-        view_forms = self.get_forms(request.POST, request.FILES, **kwargs)
+        view_forms = self.get_forms(data=request.POST, files=request.FILES, **kwargs)
         validation_result = True
         for form in view_forms.values():
             validation_result = validation_result and form.is_valid()

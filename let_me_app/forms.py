@@ -16,7 +16,7 @@ from let_me_auth import models as auth_models
 from django.forms.models import BaseInlineFormSet
 from django.forms.formsets import DELETION_FIELD_NAME
 import slugify
-from let_me_auth.models import User
+from let_me_auth.models import User, FollowerGroup
 from let_me_auth.pipeline import ABSENT_MAIL_HOST
 from embed_video.fields import EmbedVideoFormField
 
@@ -121,6 +121,38 @@ class GroupAdminForm(forms.Form):
         widget=BootstrapMultipleChoiceWidget(url='user-autocomplete'))
 
 
+class PublishEventForm(forms.ModelForm):
+    target_groups = forms.ModelMultipleChoiceField(
+        required=False,
+        queryset=auth_models.FollowerGroup.objects.filter(name="anyone"),
+        widget=floppyforms_widgets.CheckboxSelectMultiple)
+
+    class Meta:
+        model = models.Event
+        fields = ('target_groups', )
+
+    def __init__(self, *args, **kwargs):
+        instance = kwargs.get('instance', None)
+        if instance is not None:
+            initial = kwargs.get('initial', {})
+            initial['target_groups'] = instance.target_groups.all()
+            kwargs['initial'] = initial
+        super(PublishEventForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        event = super(PublishEventForm, self).save(commit=commit)
+
+        if commit:
+            event.target_groups = self.cleaned_data['target_groups']
+        else:
+            old_save_m2m = self.save_m2m
+            def new_save_m2m():
+                old_save_m2m()
+                event.target_groups = self.cleaned_data['target_groups']
+            self.save_m2m = new_save_m2m
+        return event
+
+
 class SiteAdminForm(forms.ModelForm):
     class Meta:
         model = models.Site
@@ -139,6 +171,40 @@ class SiteForm(forms.ModelForm):
             'address': floppyforms_widgets.Textarea(),
             'geo_line': LeafletWidget()
         }
+
+
+class GroupForm(forms.ModelForm):
+    users = forms.ModelMultipleChoiceField(
+        queryset=auth_models.User.objects.all(),
+        widget=BootstrapMultipleChoiceWidget(url='user-autocomplete'))
+
+    class Meta:
+        model = FollowerGroup
+        fields = ('users', 'verbose_name')
+        widgets = {
+            'verbose_name': floppyforms_widgets.TextInput(),
+        }
+
+    def __init__(self, *args, **kwargs):
+        instance = kwargs.get('instance', None)
+        if instance is not None:
+            initial = kwargs.get('initial', {})
+            initial['users'] = instance.user_set.all()
+            kwargs['initial'] = initial
+        super(GroupForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        group = super(GroupForm, self).save(commit=commit)
+
+        if commit:
+            group.user_set = self.cleaned_data['users']
+        else:
+            old_save_m2m = self.save_m2m
+            def new_save_m2m():
+                old_save_m2m()
+                group.user_set = self.cleaned_data['users']
+            self.save_m2m = new_save_m2m
+        return group
 
 
 class CourtForm(forms.ModelForm):
@@ -184,7 +250,7 @@ class EventSearchForm(forms.Form):
         js = ('js/moment.js', 'js/bootstrap-datetimepicker.js', 'js/forms.js')
 
 
-class EventForm(forms.ModelForm):
+class EventForm(PublishEventForm):
     class Meta:
         model = models.Event
         exclude = ('court', 'invoice', 'inventory_list', 'staff', 'status')

@@ -46,7 +46,13 @@
   {% endif %}
 </div>
 
-
+{% if not following_groups %}
+<div class="alert alert-warning" role="alert">
+  {% blocktrans %}
+    This event is not published. Noone can see it !
+  {% endblocktrans %}
+</div>
+{% endif %}
 <div class="panel panel-default">
   <div class="panel-heading">
     <h3 class="panel-title">
@@ -54,6 +60,14 @@
         <img src="{{object.court.activity_type.image.url}}" class="img-rounded"/>{{object.start_at}}
       {% endfollowdropdown %}
       {% if is_admin %}
+        {% for following_group in following_groups %}
+
+        <span class="label label-info">
+            <span class="glyphicon glyphicon-flag"></span>
+            {{following_group.verbose_name}}
+        </span>
+
+        {% endfor %}
         <div class="pull-right action-buttons">
           <div class="btn-group pull-right">
               <button type="button" class="btn btn-lg dropdown-toggle" data-toggle="dropdown">
@@ -64,6 +78,7 @@
                     <li> {% include "events/buttons/complete_event.html" %}</li>
                     <li> {% include "events/buttons/cancel_event.html" %}</li>
                 {% endif %}
+                <li> {% include "events/buttons/publish_event.html" %}</li>
                 <li> {% include "events/buttons/clone_event.html" %}</li>
                 <li> {% include "events/buttons/update_event_gallery.html" %}</li>
               </ul>
@@ -263,6 +278,7 @@
 {% include "events/modals/apply_for_event.html" %}
 {% include "events/modals/propose_event.html" %}
 {% include "events/modals/create_visit.html" %}
+{% include "events/modals/publish_event.html" %}
 {% include "events/modals/update_visit.html" %}
 
 {% endblock %}
@@ -276,6 +292,7 @@
   <script src="{% static "js/carousel.js" %}"></script>
   <script src="{% static "js/expandable_listgroup.js" %}"></script>
   <script src="{% static "js/modal.js" %}"></script>
+  <script src="{% static "js/ajax-form-modal.js" %}"></script>
   <script src="{% static "js/sidebar_chat.js" %}"></script>
   <script src="{% static "js/rateable_avatars.js" %}"></script>
   <script src="{% static "js/imaged_radiobuttons.js" %}"></script>
