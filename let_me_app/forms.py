@@ -123,6 +123,7 @@ class GroupAdminForm(forms.Form):
 
 class PublishEventForm(forms.ModelForm):
     target_groups = forms.ModelMultipleChoiceField(
+        required=False,
         queryset=auth_models.FollowerGroup.objects.filter(name="anyone"),
         widget=floppyforms_widgets.CheckboxSelectMultiple)
 
@@ -147,7 +148,7 @@ class PublishEventForm(forms.ModelForm):
             old_save_m2m = self.save_m2m
             def new_save_m2m():
                 old_save_m2m()
-                event.target_groups = self.cleaned_data['users']
+                event.target_groups = self.cleaned_data['target_groups']
             self.save_m2m = new_save_m2m
         return event
 
@@ -249,7 +250,7 @@ class EventSearchForm(forms.Form):
         js = ('js/moment.js', 'js/bootstrap-datetimepicker.js', 'js/forms.js')
 
 
-class EventForm(forms.ModelForm):
+class EventForm(PublishEventForm):
     class Meta:
         model = models.Event
         exclude = ('court', 'invoice', 'inventory_list', 'staff', 'status')
