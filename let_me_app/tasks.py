@@ -273,7 +273,7 @@ class MailNotificator:
 
     def accept_application(self,  notification_context):
         application_ids = notification_context['object_ids']
-        applications = models.Visit.objects.filter(
+        applications = models.Application.objects.filter(
             id__in=application_ids).select_related('user', 'event')
 
         mail_info = []
