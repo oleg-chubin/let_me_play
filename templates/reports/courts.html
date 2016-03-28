@@ -29,7 +29,7 @@
   {% for object, user_count in object_list|zip:visitors_count %}
     <tr>
       <td> <a href="{% url "let_me_app:view_site" pk=object.site.id %}">{{ object.site.name }}</a> </td>
-      <td> <a href="{% url "let_me_app:view_court" pk=object.id %}">{{ object.description }} </a></td>
+      <td> <a href="{% url "let_me_app:view_court" pk=object.id %}">{{ object.name }} </a></td>
       <td> <a href="{% url "show_me_app:court_events_view" pk=object.id %}">{{ object.events_count }} </a></td>
       <td> <a href="{% url "show_me_app:court_visitors_view" pk=object.id %}">{{user_count}} </a></td>
       <td> {{ object.first_event|date }} </td>

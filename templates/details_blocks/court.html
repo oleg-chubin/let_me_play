@@ -8,6 +8,10 @@
       </div>
       <div id="detail-2">
         <p>
+          <strong>{% trans "Name" %}</strong>
+          {{ object.court.name }}
+        </p>
+        <p>
           <strong>{% trans "Type" %}</strong>
           {{ object.court.activity_type.title }}
         </p>

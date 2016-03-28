@@ -11,6 +11,7 @@
 {% block extra_head %}
 <link href="{% static "css/event.css" %}" rel="stylesheet">
 <link href="{% static "css/group_buttons.css" %}" rel="stylesheet">
+<link href="{% static "css/info_cards.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -22,51 +23,41 @@
 
 {% block main %}
   {% for object in object_list %}
-    <div class="well">
-        <div class="media">
-          <span class="pull-left" href="#">
-            <a href="{% url "let_me_app:view_court" pk=object.id %}">
-              <img class="media-object" src="{{object.activity_type.image.url}}">
-            </a>
-          </span>
-          <div class="media-body">
-            <p class="text-right">[some text]</p>
+    <a href="{% url 'let_me_app:view_court' pk=object.id %}">
+        <div class="[ col-md-6 col-sm-12 ]" style="padding: 20px;">
+            <div class="panel animated slideInDown">
+            <img class="media-object" src="{{object.activity_type.image.url}}">
+            <h3>{{ object.name }}</h3>
             <p>{{ object.description|linebreaksbr }}</p>
-            <ul class="list-inline list-unstyled">
-              <li><span><i class="glyphicon glyphicon-calendar"></i> {{ object.start_at }} </span></li>
-              <li>|</li>
-              <li>
-                <span>
-                {% for visit in object.visit_set.all %}
-                   {% if visit.status == VISIT_STATUSES.PENDING or visit.status == VISIT_STATUSES.COMPLETED %}
-                     <i class="glyphicon glyphicon-user"></i>
-                   {% endif %}
-                {% endfor %}
-                </span>
-              </li>
-              <li>|</li>
-              <li>
-                <span>
-                {% for visit in object.proposal_set.all %}
-                   {% if visit.status == PROPOSAL_STATUSES.ACTIVE %}
-                     <i class="glyphicon glyphicon-question-sign"></i>
-                   {% endif %}
-                {% endfor %}
-                </span>
-              </li>
-              <li>|</li>
-              <li>
-                <span>
-                  {% for visit in object.application_set.all %}
-                    {% if visit.status == APPLICATION_STATUSES.ACTIVE %}
-                      <i class="glyphicon glyphicon-exclamation-sign"></i>
-                    {% endif %}
-                  {% endfor %}
-                </span>
-              </li>
+            <div class="slide">
+              <ul>
+                <li><i class="fa fa-check"></i> {% trans "Events total"%}: {{object.event_set.all|length}}</li>
+                {% if object.active_event_set %}
+                <li><i class="fa fa-check"></i> {% trans "Pending events"%}
+                    <ul>
+                        {% for event in object.active_event_set %}
+                            <li> <i class="fa fa-check"></i>
+                                {{ event.start_at }}
+                                <ul>
+                                    <li> {% trans "visible for" %}:
+                                      {% for group in event.target_groups.all %}
+                                        {{group.verbose_name}}
+                                        {% if not forloop.last %},{% endif %}
+                                      {% endfor %}
+                                    </li>
+                                    <li>{% trans "Visits count" %}: {{event.active_visit_set|length}}</li>
+                                    <li>{% trans "Applications count" %}: {{event.active_application_set|length}}</li>
+                                    <li>{% trans "Proposal count" %}: {{event.active_proposal_set|length}}</li>
+                                </ul>
+                            </li>
+                        {% endfor %}
+                    </ul
+                </li>
+                {% endif %}
               </ul>
-         </div>
+            </div>
+        </div>
       </div>
-    </div>
+  </a>
   {% endfor %}
 {% endblock %}

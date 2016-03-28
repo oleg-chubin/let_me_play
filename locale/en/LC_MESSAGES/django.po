@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-23 21:29+0000\n"
+"POT-Creation-Date: 2016-03-27 19:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,41 +17,41 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: let_me_app/forms.py:224 let_me_app/forms.py:240
+#: let_me_app/forms.py:225 let_me_app/forms.py:241
 msgid "radius"
 msgstr ""
 
-#: let_me_app/forms.py:226 let_me_app/forms.py:242
+#: let_me_app/forms.py:227 let_me_app/forms.py:243
 msgid "activity type"
 msgstr ""
 
-#: let_me_app/forms.py:233
+#: let_me_app/forms.py:234
 msgid "start date"
 msgstr ""
 
-#: let_me_app/forms.py:236
+#: let_me_app/forms.py:237
 msgid "end date"
 msgstr ""
 
-#: let_me_app/forms.py:337
+#: let_me_app/forms.py:338
 #: venv/lib/python3.4/site-packages/django/forms/formsets.py:372
 msgid "Delete"
 msgstr ""
 
-#: let_me_app/forms.py:353
+#: let_me_app/forms.py:354
 msgid "Income"
 msgstr ""
 
-#: let_me_app/forms.py:355
+#: let_me_app/forms.py:356
 msgid "Visit was payed"
 msgstr ""
 
-#: let_me_app/forms.py:384 let_me_app/forms.py:402 let_me_app/models.py:412
+#: let_me_app/forms.py:385 let_me_app/forms.py:403 let_me_app/models.py:413
 #: templates/events/panels/my_visit.html:56
 msgid "Value"
 msgstr ""
 
-#: let_me_app/forms.py:386
+#: let_me_app/forms.py:387
 msgid "Parametr"
 msgstr ""
 
@@ -152,8 +152,8 @@ msgstr ""
 msgid "Address"
 msgstr ""
 
-#: let_me_app/models.py:198 let_me_app/models.py:208 let_me_app/models.py:280
-#: let_me_app/models.py:314 let_me_app/models.py:393
+#: let_me_app/models.py:198 let_me_app/models.py:208 let_me_app/models.py:281
+#: let_me_app/models.py:315 let_me_app/models.py:394
 #: venv/lib/python3.4/site-packages/djcelery/admin.py:81
 #: venv/lib/python3.4/site-packages/djcelery/models.py:211
 #: venv/lib/python3.4/site-packages/djcelery/models.py:339
@@ -161,8 +161,8 @@ msgstr ""
 msgid "name"
 msgstr ""
 
-#: let_me_app/models.py:199 let_me_app/models.py:227 let_me_app/models.py:288
-#: let_me_app/models.py:402 templates/details_blocks/court.html:15
+#: let_me_app/models.py:199 let_me_app/models.py:228 let_me_app/models.py:289
+#: let_me_app/models.py:403 templates/details_blocks/court.html:19
 #: templates/details_blocks/site.html:17 templates/events/details.html:112
 msgid "Description"
 msgstr ""
@@ -171,53 +171,53 @@ msgstr ""
 msgid "title"
 msgstr ""
 
-#: let_me_app/models.py:256 let_me_app/models.py:287
+#: let_me_app/models.py:257 let_me_app/models.py:288
 msgid "date started"
 msgstr ""
 
-#: let_me_app/models.py:257
+#: let_me_app/models.py:258
 msgid "duration (minutes)"
 msgstr ""
 
-#: let_me_app/models.py:258
+#: let_me_app/models.py:259
 msgid "period (hours)"
 msgstr ""
 
-#: let_me_app/models.py:265
+#: let_me_app/models.py:266
 msgid "registration start within period"
 msgstr ""
 
-#: let_me_app/models.py:266
+#: let_me_app/models.py:267
 msgid "estimated price"
 msgstr ""
 
-#: let_me_app/models.py:292 templates/events/details.html:108
+#: let_me_app/models.py:293 templates/events/details.html:108
 msgid "Preliminary price"
 msgstr ""
 
-#: let_me_app/models.py:322
+#: let_me_app/models.py:323
 msgid "amount"
 msgstr ""
 
-#: let_me_app/models.py:330 let_me_app/models.py:343
+#: let_me_app/models.py:331 let_me_app/models.py:344
 msgid "comment"
 msgstr ""
 
-#: let_me_app/models.py:382
+#: let_me_app/models.py:383
 #: templates/dashboard/messages/let_me_app.visit.html:7
 #: templates/visits/annotate_visit.html:23
 msgid "Visit"
 msgstr ""
 
-#: let_me_app/models.py:383
+#: let_me_app/models.py:384
 msgid "role"
 msgstr ""
 
-#: let_me_app/models.py:385
+#: let_me_app/models.py:386
 msgid "invoice"
 msgstr ""
 
-#: let_me_app/models.py:394
+#: let_me_app/models.py:395
 msgid "units"
 msgstr ""
 
@@ -333,7 +333,7 @@ msgstr ""
 #: templates/charts/visit_indexes.html:16 templates/chat/details.html:15
 #: templates/chat/list.html:14 templates/courts/details.html:19
 #: templates/courts/search.html:18
-#: templates/courts/user_managed_courts.html:18
+#: templates/courts/user_managed_courts.html:19
 #: templates/dashboard/list.html:19 templates/events/clone_event.html:19
 #: templates/events/complete_event.html:19
 #: templates/events/create_for_court.html:19
@@ -512,8 +512,32 @@ msgstr ""
 msgid "Courts managed by %(user)s"
 msgstr ""
 
-#: templates/courts/user_managed_courts.html:19
+#: templates/courts/user_managed_courts.html:20
 msgid "Managed events"
+msgstr ""
+
+#: templates/courts/user_managed_courts.html:34
+msgid "Events total"
+msgstr ""
+
+#: templates/courts/user_managed_courts.html:36
+msgid "Pending events"
+msgstr ""
+
+#: templates/courts/user_managed_courts.html:42
+msgid "visible for"
+msgstr ""
+
+#: templates/courts/user_managed_courts.html:48
+msgid "Visits count"
+msgstr ""
+
+#: templates/courts/user_managed_courts.html:49
+msgid "Applications count"
+msgstr ""
+
+#: templates/courts/user_managed_courts.html:50
+msgid "Proposal count"
 msgstr ""
 
 #: templates/dashboard/list.html:20
@@ -636,12 +660,13 @@ msgid "visit for event"
 msgstr ""
 
 #: templates/details_blocks/court.html:11
-msgid "Type"
-msgstr ""
-
 #: templates/details_blocks/site.html:13
 #: templates/events/panels/my_visit.html:55
 msgid "Name"
+msgstr ""
+
+#: templates/details_blocks/court.html:15
+msgid "Type"
 msgstr ""
 
 #: templates/details_blocks/site.html:28 templates/details_blocks/site.html:36

@@ -1,0 +1,107 @@
+.container .panel {
+  position: relative;
+  overflow: hidden;
+  float: left;
+  width: 100%;
+  min-height: 300px;
+  text-align: center;
+  background: #F1F1F1;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.container .panel img {
+  display: block;
+  margin: 20px auto;
+  text-align: center;
+}
+.container .panel h3 {
+  display: block;
+  margin-bottom: 15px;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  text-shadow: 0 2px 1px #FFF;
+}
+.container .panel p {
+  font-size: 14px;
+  text-shadow: 0 1px 1px #FFF;
+}
+.container .panel .slide {
+  left: 0px;
+  bottom: 0px;
+  z-index: 100;
+  padding: 20px;
+  display: none;
+  width: 100%;
+  text-align: left;
+  box-sizing: border-box;
+}
+.container .panel .slide h4 {
+  margin-bottom: 20px;
+  text-align: left;
+  text-shadow: none;
+  font-size: 18px;
+  font-weight: 600;
+}
+.container .panel .slide ul li {
+  padding: 5px 5px 5px 8px;
+  line-height: 24px;
+  font-size: 13px;
+}
+.container .panel .slide ul li:last-child {
+  border: 0;
+}
+.container .panel .slide ul li .fa {
+  padding-right: 5px;
+}
+
+.panel:hover .slide {
+  left: 0;
+  display: block;
+  height:100%
+  cursor: pointer;
+}
+
+.animated {
+  animation-duration: 500ms;
+  animation-fill-mode: both;
+  animation-delay: 1s;
+}
+
+@keyframes slideInDown {
+  0% {
+    -webkit-transform: scaleY(0%);
+    -ms-transform: scaleY(0%);
+    transform: scaleY(0%);
+    visibility: hidden;
+  }
+  1% {
+    -webkit-transform: scaleY(10%);
+    -ms-transform: scaleY(10%);
+    transform: scaleY(10%);
+    visibility: visible;
+  }
+  100% {
+    -webkit-transform: scaleY(100%);
+    -ms-transform: scaleY(100%);
+    transform: scaleY(100%);
+    visibility: visible;
+  }
+}
+.slideInDown {
+  -webkit-animation-name: slideInDown;
+  animation-name: slideInDown;
+}
+
+p.title {
+  margin: 0 auto;
+  padding: 0;
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 400;
+  height: 36px;
+  width: 890px;
+  background: #013d47;
+  text-align: center;
+  border-radius: 5px;
+}

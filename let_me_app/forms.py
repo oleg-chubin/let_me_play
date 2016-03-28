@@ -212,6 +212,7 @@ class CourtForm(forms.ModelForm):
         model = models.Court
         exclude = ('site', 'admin_group')
         widgets = {
+            'name': floppyforms_widgets.TextInput(),
             'description': floppyforms_widgets.Textarea(),
             'activity_type': floppyforms_widgets.Select(),
         }
