@@ -308,9 +308,47 @@ class UserManagedCourtsListView(ListView):
     template_name = "courts/user_managed_courts.html"
 
     def get_queryset(self, **kwargs):
-        result = super(UserManagedCourtsListView, self).get_queryset(**kwargs)
-        return result.filter(
+        queryset = super(UserManagedCourtsListView, self).get_queryset(**kwargs)
+        queryset = queryset.filter(
             admin_group__user=self.request.user).order_by('site__name')
+        queryset = queryset.select_related('activity_type')
+        queryset = queryset.prefetch_related('event_set')
+
+        fetch_queryset = models.Event.objects.filter(
+            status=models.EventStatuses.PENDING).order_by('start_at')
+        fetch_queryset = fetch_queryset.prefetch_related('target_groups')
+        fetch_queryset = fetch_queryset.prefetch_related(
+            'visit_set',
+            Prefetch(
+                'visit_set',
+                queryset=models.Visit.objects.filter(status=VisitStatuses.PENDING),
+                to_attr='active_visit_set'
+            )
+        )
+        fetch_queryset = fetch_queryset.prefetch_related(
+            'proposal_set',
+            Prefetch(
+                'proposal_set',
+                queryset=models.Proposal.objects.filter(status=ProposalStatuses.ACTIVE),
+                to_attr='active_proposal_set'
+            )
+        )
+        fetch_queryset = fetch_queryset.prefetch_related(
+            'application_set',
+            Prefetch(
+                'application_set',
+                queryset=models.Application.objects.filter(status=ApplicationStatuses.ACTIVE),
+                to_attr='active_application_set'
+            )
+        )
+
+        queryset = queryset.prefetch_related(
+            'event_set',
+            Prefetch(
+                'event_set', queryset=fetch_queryset, to_attr='active_event_set'
+            )
+        )
+        return queryset
 
 
 class EventActionMixin(object):
@@ -793,7 +831,7 @@ class CourtDetailView(DetailView):
 
         result['is_admin'] = is_admin
         result['court_events'] = filter_event_for_user(
-            court.event_set.all(), self.request.user)
+            court.event_set.order_by('-start_at'), self.request.user)
         result['group_admin_form'] = forms.GroupForm()
         result['court_groups'] = FollowerGroup.objects.filter(followable=court)
         return result

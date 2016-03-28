@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-23 21:29+0000\n"
+"POT-Creation-Date: 2016-03-27 19:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,41 +19,41 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: let_me_app/forms.py:224 let_me_app/forms.py:240
+#: let_me_app/forms.py:225 let_me_app/forms.py:241
 msgid "radius"
 msgstr "радиус"
 
-#: let_me_app/forms.py:226 let_me_app/forms.py:242
+#: let_me_app/forms.py:227 let_me_app/forms.py:243
 msgid "activity type"
 msgstr "тип активности"
 
-#: let_me_app/forms.py:233
+#: let_me_app/forms.py:234
 msgid "start date"
 msgstr "начальная дата"
 
-#: let_me_app/forms.py:236
+#: let_me_app/forms.py:237
 msgid "end date"
 msgstr "конечная дата"
 
-#: let_me_app/forms.py:337
+#: let_me_app/forms.py:338
 #: venv/lib/python3.4/site-packages/django/forms/formsets.py:372
 msgid "Delete"
 msgstr "Удалить"
 
-#: let_me_app/forms.py:353
+#: let_me_app/forms.py:354
 msgid "Income"
 msgstr "Платеж"
 
-#: let_me_app/forms.py:355
+#: let_me_app/forms.py:356
 msgid "Visit was payed"
 msgstr "Посещение оплачено"
 
-#: let_me_app/forms.py:384 let_me_app/forms.py:402 let_me_app/models.py:412
+#: let_me_app/forms.py:385 let_me_app/forms.py:403 let_me_app/models.py:413
 #: templates/events/panels/my_visit.html:56
 msgid "Value"
 msgstr "Значение"
 
-#: let_me_app/forms.py:386
+#: let_me_app/forms.py:387
 msgid "Parametr"
 msgstr "Параметр"
 
@@ -154,8 +154,8 @@ msgstr "Гео линия"
 msgid "Address"
 msgstr "Адрес"
 
-#: let_me_app/models.py:198 let_me_app/models.py:208 let_me_app/models.py:280
-#: let_me_app/models.py:314 let_me_app/models.py:393
+#: let_me_app/models.py:198 let_me_app/models.py:208 let_me_app/models.py:281
+#: let_me_app/models.py:315 let_me_app/models.py:394
 #: venv/lib/python3.4/site-packages/djcelery/admin.py:81
 #: venv/lib/python3.4/site-packages/djcelery/models.py:211
 #: venv/lib/python3.4/site-packages/djcelery/models.py:339
@@ -163,8 +163,8 @@ msgstr "Адрес"
 msgid "name"
 msgstr "Имя"
 
-#: let_me_app/models.py:199 let_me_app/models.py:227 let_me_app/models.py:288
-#: let_me_app/models.py:402 templates/details_blocks/court.html:15
+#: let_me_app/models.py:199 let_me_app/models.py:228 let_me_app/models.py:289
+#: let_me_app/models.py:403 templates/details_blocks/court.html:19
 #: templates/details_blocks/site.html:17 templates/events/details.html:112
 msgid "Description"
 msgstr "описание"
@@ -173,53 +173,53 @@ msgstr "описание"
 msgid "title"
 msgstr "название"
 
-#: let_me_app/models.py:256 let_me_app/models.py:287
+#: let_me_app/models.py:257 let_me_app/models.py:288
 msgid "date started"
 msgstr "Дата начала"
 
-#: let_me_app/models.py:257
+#: let_me_app/models.py:258
 msgid "duration (minutes)"
 msgstr "продолжительность (мин)"
 
-#: let_me_app/models.py:258
+#: let_me_app/models.py:259
 msgid "period (hours)"
 msgstr "период (часы)"
 
-#: let_me_app/models.py:265
+#: let_me_app/models.py:266
 msgid "registration start within period"
 msgstr "старт регистрации"
 
-#: let_me_app/models.py:266
+#: let_me_app/models.py:267
 msgid "estimated price"
 msgstr "приблизительная стоимость"
 
-#: let_me_app/models.py:292 templates/events/details.html:108
+#: let_me_app/models.py:293 templates/events/details.html:108
 msgid "Preliminary price"
 msgstr "Приблизительная стоимость"
 
-#: let_me_app/models.py:322
+#: let_me_app/models.py:323
 msgid "amount"
 msgstr "количество"
 
-#: let_me_app/models.py:330 let_me_app/models.py:343
+#: let_me_app/models.py:331 let_me_app/models.py:344
 msgid "comment"
 msgstr "Комментарий"
 
-#: let_me_app/models.py:382
+#: let_me_app/models.py:383
 #: templates/dashboard/messages/let_me_app.visit.html:7
 #: templates/visits/annotate_visit.html:23
 msgid "Visit"
 msgstr "Посещение"
 
-#: let_me_app/models.py:383
+#: let_me_app/models.py:384
 msgid "role"
 msgstr "Роль"
 
-#: let_me_app/models.py:385
+#: let_me_app/models.py:386
 msgid "invoice"
 msgstr "Платежка"
 
-#: let_me_app/models.py:394
+#: let_me_app/models.py:395
 msgid "units"
 msgstr "единицы измерения"
 
@@ -335,7 +335,7 @@ msgstr "Рекомендации для %(user)s"
 #: templates/charts/visit_indexes.html:16 templates/chat/details.html:15
 #: templates/chat/list.html:14 templates/courts/details.html:19
 #: templates/courts/search.html:18
-#: templates/courts/user_managed_courts.html:18
+#: templates/courts/user_managed_courts.html:19
 #: templates/dashboard/list.html:19 templates/events/clone_event.html:19
 #: templates/events/complete_event.html:19
 #: templates/events/create_for_court.html:19
@@ -517,9 +517,33 @@ msgstr "результатов найдено"
 msgid "Courts managed by %(user)s"
 msgstr "Подопечные площадки пользователя %(user)s"
 
-#: templates/courts/user_managed_courts.html:19
+#: templates/courts/user_managed_courts.html:20
 msgid "Managed events"
 msgstr "Управляемые события"
+
+#: templates/courts/user_managed_courts.html:34
+msgid "Events total"
+msgstr "Всего событий"
+
+#: templates/courts/user_managed_courts.html:36
+msgid "Pending events"
+msgstr "Запланированые события"
+
+#: templates/courts/user_managed_courts.html:42
+msgid "visible for"
+msgstr "видимо для"
+
+#: templates/courts/user_managed_courts.html:48
+msgid "Visits count"
+msgstr "Количество пришельцев"
+
+#: templates/courts/user_managed_courts.html:49
+msgid "Applications count"
+msgstr "Количество заявок"
+
+#: templates/courts/user_managed_courts.html:50
+msgid "Proposal count"
+msgstr "Количество предложений"
 
 #: templates/dashboard/list.html:20
 msgid "Dashboard"
@@ -641,13 +665,14 @@ msgid "visit for event"
 msgstr "посещения события"
 
 #: templates/details_blocks/court.html:11
-msgid "Type"
-msgstr "Тип"
-
 #: templates/details_blocks/site.html:13
 #: templates/events/panels/my_visit.html:55
 msgid "Name"
 msgstr "Имя"
+
+#: templates/details_blocks/court.html:15
+msgid "Type"
+msgstr "Тип"
 
 #: templates/details_blocks/site.html:28 templates/details_blocks/site.html:36
 #: templates/details_blocks/site.html:61
@@ -980,6 +1005,7 @@ msgid " Application accepted"
 msgstr "Заявкa принята"
 
 #: templates/notifications/email/accept_application.html:9
+#, python-format
 msgid ""
 "Your application for the <a href=\"%(event_url)s\">%(event)s</a> was accepted"
 msgstr ""
@@ -1239,6 +1265,7 @@ msgstr ""
 "  "
 
 #: templates/notifications/sms/accept_application.html:2
+#, python-format
 msgid "Your application for the event at %(event_start_at)s was accepted."
 msgstr "Ваша заявка на событие (%(event_start_at)s) принята."
 

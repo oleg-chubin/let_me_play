@@ -221,6 +221,7 @@ class ActivityType(models.Model):
 
 
 class Court(Followable):
+    name = models.CharField(max_length=128)
     site = models.ForeignKey(Site, related_name='court_set')
     activity_type = models.ForeignKey(ActivityType)
     admin_group = models.ForeignKey(Group, blank=True, null=True)
