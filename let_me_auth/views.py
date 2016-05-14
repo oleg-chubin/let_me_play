@@ -156,7 +156,6 @@ class SettingsView(TemplateView):
         language_form = context['language_form']
         response = http.HttpResponseRedirect(
             reverse('let_me_auth:user_settings'))
-        import ipdb; ipdb.set_trace()
         if language_form.is_valid():
             lang_code = language_form.cleaned_data['lang']
             if lang_code and check_for_language(lang_code):
