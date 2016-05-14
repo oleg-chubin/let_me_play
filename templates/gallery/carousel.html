@@ -1,10 +1,10 @@
 {% load embed_video_tags %}
 
-<div id="Carousel" class="carousel slide">
+<div id="carousel{{carousel_id}}" class="carousel slide">
 
     <ol class="carousel-indicators">
         {% for _ in gallery_objects %}
-        <li data-target="#Carousel" data-slide-to="{{forloop.counter0}}" {% if forloop.first %} class="active" {% endif %}></li>
+        <li data-target="#carousel{{carousel_id}}" data-slide-to="{{forloop.counter0}}" {% if forloop.first %} class="active" {% endif %}></li>
         {% endfor %}
     </ol>
 
@@ -29,6 +29,6 @@
     {% endfor %}
 
     </div><!--.carousel-inner-->
-    <a data-slide="prev" href="#Carousel" class="left carousel-control">‹</a>
-    <a data-slide="next" href="#Carousel" class="right carousel-control">›</a>
+    <a data-slide="prev" href="#carousel{{carousel_id}}" class="left carousel-control">‹</a>
+    <a data-slide="next" href="#carousel{{carousel_id}}" class="right carousel-control">›</a>
 </div><!--.Carousel-->

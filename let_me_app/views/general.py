@@ -1,3 +1,4 @@
+from datetime import datetime
 from xml.dom import minidom
 from itertools import groupby
 
@@ -31,6 +32,7 @@ from let_me_app.persistence import filter_event_for_user
 
 
 NUMBER_OF_KNOWN_VISITS = 10
+NULL_DATE = datetime(1900, 1, 1).date()
 
 
 class OccasionInline(InlineFormSet):
@@ -271,6 +273,83 @@ class EventView(DetailView):
         ]
 
         return {'gallery_objects': gallery_objects}
+
+
+class UserGalleryListView(TemplateView):
+    template_name = "gallery/user_gallery.html"
+
+    def apply_gallery_filter(self, queryset, user_id):
+        event_queryset = models.Event.objects.filter(
+            visit__user_id=user_id,
+            visit__status=VisitStatuses.COMPLETED).values_list('id', flat=True)
+        queryset = queryset.filter(followable__in=event_queryset)
+        queryset = queryset.select_related('followable__event__start_at')
+        return queryset.order_by('followable__event__start_at')
+
+    def get_context_data(self, **kwargs):
+        user_id = kwargs['user']
+        image_gallery = self.apply_gallery_filter(
+            models.GalleryImage.objects.all(), user_id)
+        video_gallery = self.apply_gallery_filter(
+            models.GalleryVideo.objects.all(), user_id)
+
+        image_gallery_groupped = itertools.groupby(
+            image_gallery, key=lambda x: x.followable.event.start_at.date())
+        video_gallery_groupped = itertools.groupby(
+            video_gallery, key=lambda x: x.followable.event.start_at.date())
+
+
+        initial_date = NULL_DATE
+        image_date, images = next(image_gallery_groupped, (NULL_DATE, ()))
+        video_date, videos = next(video_gallery_groupped, (NULL_DATE, ()))
+        result = []
+        while True:
+            process_objects = []
+            if image_date == video_date:
+                if image_date > initial_date:
+                    process_objects.extend(('image', 'video'))
+                    initial_date = image_date
+            elif image_date < video_date:
+                if image_date > initial_date:
+                    initial_date = image_date
+                    process_objects.append('image')
+                elif video_date > initial_date:
+                    initial_date = video_date
+                    process_objects.append('video')
+            else:
+                if video_date > initial_date:
+                    initial_date = video_date
+                    process_objects.append('video')
+                elif image_date > initial_date:
+                    initial_date = image_date
+                    process_objects.append('image')
+
+            if not process_objects:
+                break
+
+            images_gen = video_gen = ()
+            if 'image' in process_objects:
+                images_gen = [{'obj': i, 'type': 'image'} for i in images]
+                image_date, images = next(image_gallery_groupped, (NULL_DATE, ()))
+            if 'video' in process_objects:
+                video_gen = [{'obj': i, 'type': 'video'} for i in videos]
+                video_date, videos = next(video_gallery_groupped, (NULL_DATE, ()))
+
+            gallery_objects = [
+                [j[1] for j in i[1]] for i in groupby(
+                    enumerate(itertools.chain(video_gen, images_gen)),
+                    key=lambda x: x[0] // 4)
+            ]
+            result.append([initial_date, gallery_objects])
+
+        return {'user_gallery_objects': result}
+
+        result = super(UserEventListView, self).get_context_data(**kwargs)
+        object_list = persistence.get_user_visit_applications_and_proposals(
+            self.request.user)
+        grouped_objects = groupby(object_list, lambda x: x.event.start_at.date())
+        result['grouped_objects'] = [(i, [j for j in g]) for i, g in grouped_objects]
+        return result
 
 
 class UserEventListView(TemplateView):
