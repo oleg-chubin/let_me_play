@@ -25,6 +25,7 @@ class UserManager(BaseUserManager):
                           date_joined=now, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
+
         UserSocialAuth = get_model('default', 'UserSocialAuth')
         UserSocialAuth.objects.create(user=user, uid=email, provider='email')
         return user

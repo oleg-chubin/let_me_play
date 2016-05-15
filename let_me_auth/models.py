@@ -84,6 +84,17 @@ def change_handler(sender, **kwargs):
         instance.cell_phone_is_valid = False
 
 
+@receiver(signals.post_save, sender=User)
+def create_notification_settings(sender, **kwargs):
+    instance = kwargs['instance']
+    if kwargs.get('created'):
+        NotificationSettings.objects.get_or_create(
+            user=instance,
+            defaults=dict(
+                sms_notifications=True, email_notifications=True, lang='ru')
+        )
+
+
 class NotificationSettings(models.Model):
     SMS_NOTIFICATION_CHOICES = [
         (True, _("Sms Notifications Enabled")),
