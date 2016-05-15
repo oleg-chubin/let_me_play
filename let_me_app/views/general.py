@@ -287,7 +287,7 @@ class UserGalleryListView(TemplateView):
         return queryset.order_by('followable__event__start_at')
 
     def get_context_data(self, **kwargs):
-        user_id = kwargs['user']
+        user_id = kwargs.get('user', self.request.user.id)
         image_gallery = self.apply_gallery_filter(
             models.GalleryImage.objects.all(), user_id)
         video_gallery = self.apply_gallery_filter(
@@ -342,7 +342,13 @@ class UserGalleryListView(TemplateView):
             ]
             result.append([initial_date, gallery_objects])
 
-        return {'user_gallery_objects': result}
+        return {
+            'user_gallery_objects': result,
+            "user": get_object_or_404(User, id=user_id),
+            "public_link": self.request.build_absolute_uri(
+                reverse('let_me_app:user_gallery', kwargs={'user':user_id})
+            )
+        }
 
         result = super(UserEventListView, self).get_context_data(**kwargs)
         object_list = persistence.get_user_visit_applications_and_proposals(

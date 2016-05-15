@@ -24,7 +24,13 @@
 {% block main %}
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title"> {{object.start_at}} </h3>
+    <h3 class="panel-title">
+      {{user}}
+    </h3>
+      <small>
+        <span class="glyphicon glyphicon-link small"></span>
+        {{public_link}}
+      </small>
   </div>
   <ul class="list-group">
     {% for date, gallery in user_gallery_objects %}
