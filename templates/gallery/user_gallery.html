@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% load staticfiles let_me_escort leaflet_tags i18n avatar %}
+
+{% block page_title %}
+  {% with start_at=event.start_at %}
+    {% blocktrans %}Details of event {{start_at}}{% endblocktrans %}
+  {% endwith %}
+{% endblock %}
+
+{% block extra_head %}
+  {% leaflet_css %}
+  <link href="{% static 'css/info_panel.css' %}" rel="stylesheet">
+  <link href="{% static 'css/carousel.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block breadcrumbs %}
+  <ol class="breadcrumb">
+    <li><a href="{% url "home" %}">{% trans "Home" %}</a></li>
+    <li class="active">{% trans "User gallery" %}</li>
+  </ol>
+{% endblock %}
+
+{% block main %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      {{user}}
+    </h3>
+      <small>
+        <span class="glyphicon glyphicon-link small"></span>
+        {{public_link}}
+      </small>
+  </div>
+  <ul class="list-group">
+    {% for date, gallery in user_gallery_objects %}
+        <li class="list-group-item">
+          <div class="row toggle" id="dropdown-detail-{{forloop.counter}}" data-toggle="detail-{{forloop.counter}}">
+            <div class="col-xs-10"> <h4>{{date}}</h4> </div>
+            <div class="col-xs-2"><span class="glyphicon glyphicon-menu-down pull-right toggle-icon"></span>
+                <span class="glyphicon glyphicon-menu-up pull-right toggle-icon" style="display: none;"></span></div>
+          </div>
+          <div id="detail-{{forloop.counter}}">
+              {% include "gallery/carousel.html" with gallery_objects=gallery carousel_id=forloop.counter %}
+          </div>
+        </li>
+      </ul>
+  {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+  <script src="{% static "js/carousel.js" %}"></script>
+  <script src="{% static "js/expandable_listgroup.js" %}"></script>
+{% endblock %}
+

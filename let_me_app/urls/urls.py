@@ -53,6 +53,13 @@ urlpatterns = patterns('',
         views.DismissVisitorEventView.as_view(),
         name="dismiss_visit"),
 
+    url(r'^view/user/(?P<user>[0-9]+)/gallery/$',
+        views.UserGalleryListView.as_view(),
+        name="user_gallery"),
+    url(r'^view/my/gallery/$',
+        views.UserGalleryListView.as_view(),
+        name="my_gallery"),
+
     url(r'^remove/visitor/role/(?P<role>[0-9]+)/for/event/(?P<event>[0-9]+)/$',
         views.RemoveVisitRoleEventView.as_view(),
         name="remove_role"),

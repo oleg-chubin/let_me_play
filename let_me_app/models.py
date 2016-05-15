@@ -124,11 +124,17 @@ class GalleryImage(models.Model):
 
     THUMBNAIL_HEIGHT = 100
 
+    def __str__(self):
+        return "%s (%s)" % (self.note, self.id)
+
 
 class GalleryVideo(models.Model):
     followable = models.ForeignKey(Followable)
     video = EmbedVideoField()
     note = models.CharField(_('note'), max_length=128, default="just a picture")
+
+    def __str__(self):
+        return "%s (%s)" % (self.note, self.id)
 
 
 class ChatParticipant(models.Model):

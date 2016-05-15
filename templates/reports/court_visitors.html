@@ -28,7 +28,14 @@
   {% for user_row, payment in users|zip:visit_table|zip:total_payment %}
    {% with user=user_row.0 row=user_row.1 %}
     <tr>
-        <th>{{ user }}</th>
+        <th>
+          {{ user }}
+            {% if user.cell_phone %}
+              <span class="label {% if user.cell_phone_is_valid%}label-info{%else%}label-warning{%endif%}" data-toggle="tooltip" data-placement="right" title="{{user.cell_phone}}">
+                <span class="glyphicon glyphicon-phone"></span>
+              </span>
+            {% endif %}
+        </th>
         <td class="{%if payment > 0%}completed{%else%}{%if payment < 0%}missed{%endif%}{%endif%}">{{ payment }}</td>
         {% for visit in row %}
             {% if visit %}
