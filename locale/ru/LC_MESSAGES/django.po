@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-27 19:38+0000\n"
+"POT-Creation-Date: 2016-05-15 11:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,7 +48,7 @@ msgstr "Платеж"
 msgid "Visit was payed"
 msgstr "Посещение оплачено"
 
-#: let_me_app/forms.py:385 let_me_app/forms.py:403 let_me_app/models.py:413
+#: let_me_app/forms.py:385 let_me_app/forms.py:403 let_me_app/models.py:419
 #: templates/events/panels/my_visit.html:56
 msgid "Value"
 msgstr "Значение"
@@ -122,7 +122,7 @@ msgstr "чуть сильнее"
 msgid "stronger"
 msgstr "сильнее"
 
-#: let_me_app/models.py:121 let_me_app/models.py:215 let_me_auth/models.py:38
+#: let_me_app/models.py:121 let_me_app/models.py:221 let_me_auth/models.py:38
 msgid "image"
 msgstr "Изображение"
 
@@ -130,32 +130,32 @@ msgstr "Изображение"
 msgid "thumbnail"
 msgstr "пример изображения"
 
-#: let_me_app/models.py:123 let_me_app/models.py:131
+#: let_me_app/models.py:123 let_me_app/models.py:134
 msgid "note"
 msgstr "замечание"
 
-#: let_me_app/models.py:144 let_me_app/models.py:180 let_me_app/models.py:186
+#: let_me_app/models.py:150 let_me_app/models.py:186 let_me_app/models.py:192
 msgid "date created"
 msgstr "дата создания"
 
-#: let_me_app/models.py:147 let_me_app/models.py:181 let_me_app/models.py:187
+#: let_me_app/models.py:153 let_me_app/models.py:187 let_me_app/models.py:193
 msgid "text"
 msgstr "техт"
 
-#: let_me_app/models.py:194
+#: let_me_app/models.py:200
 msgid "Geo point"
 msgstr "Гео точка"
 
-#: let_me_app/models.py:196
+#: let_me_app/models.py:202
 msgid "Geo line"
 msgstr "Гео линия"
 
-#: let_me_app/models.py:197 templates/details_blocks/site.html:21
+#: let_me_app/models.py:203 templates/details_blocks/site.html:21
 msgid "Address"
 msgstr "Адрес"
 
-#: let_me_app/models.py:198 let_me_app/models.py:208 let_me_app/models.py:281
-#: let_me_app/models.py:315 let_me_app/models.py:394
+#: let_me_app/models.py:204 let_me_app/models.py:214 let_me_app/models.py:287
+#: let_me_app/models.py:321 let_me_app/models.py:400
 #: venv/lib/python3.4/site-packages/djcelery/admin.py:81
 #: venv/lib/python3.4/site-packages/djcelery/models.py:211
 #: venv/lib/python3.4/site-packages/djcelery/models.py:339
@@ -163,63 +163,63 @@ msgstr "Адрес"
 msgid "name"
 msgstr "Имя"
 
-#: let_me_app/models.py:199 let_me_app/models.py:228 let_me_app/models.py:289
-#: let_me_app/models.py:403 templates/details_blocks/court.html:19
+#: let_me_app/models.py:205 let_me_app/models.py:234 let_me_app/models.py:295
+#: let_me_app/models.py:409 templates/details_blocks/court.html:19
 #: templates/details_blocks/site.html:17 templates/events/details.html:112
 msgid "Description"
 msgstr "описание"
 
-#: let_me_app/models.py:216
+#: let_me_app/models.py:222
 msgid "title"
 msgstr "название"
 
-#: let_me_app/models.py:257 let_me_app/models.py:288
+#: let_me_app/models.py:263 let_me_app/models.py:294
 msgid "date started"
 msgstr "Дата начала"
 
-#: let_me_app/models.py:258
+#: let_me_app/models.py:264
 msgid "duration (minutes)"
 msgstr "продолжительность (мин)"
 
-#: let_me_app/models.py:259
+#: let_me_app/models.py:265
 msgid "period (hours)"
 msgstr "период (часы)"
 
-#: let_me_app/models.py:266
+#: let_me_app/models.py:272
 msgid "registration start within period"
 msgstr "старт регистрации"
 
-#: let_me_app/models.py:267
+#: let_me_app/models.py:273
 msgid "estimated price"
 msgstr "приблизительная стоимость"
 
-#: let_me_app/models.py:293 templates/events/details.html:108
+#: let_me_app/models.py:299 templates/events/details.html:108
 msgid "Preliminary price"
 msgstr "Приблизительная стоимость"
 
-#: let_me_app/models.py:323
+#: let_me_app/models.py:329
 msgid "amount"
 msgstr "количество"
 
-#: let_me_app/models.py:331 let_me_app/models.py:344
+#: let_me_app/models.py:337 let_me_app/models.py:350
 msgid "comment"
 msgstr "Комментарий"
 
-#: let_me_app/models.py:383
+#: let_me_app/models.py:389
 #: templates/dashboard/messages/let_me_app.visit.html:7
 #: templates/visits/annotate_visit.html:23
 msgid "Visit"
 msgstr "Посещение"
 
-#: let_me_app/models.py:384
+#: let_me_app/models.py:390
 msgid "role"
 msgstr "Роль"
 
-#: let_me_app/models.py:386
+#: let_me_app/models.py:392
 msgid "invoice"
 msgstr "Платежка"
 
-#: let_me_app/models.py:395
+#: let_me_app/models.py:401
 msgid "units"
 msgstr "единицы измерения"
 
@@ -344,6 +344,7 @@ msgstr "Рекомендации для %(user)s"
 #: templates/events/search.html:18 templates/events/user_events.html:17
 #: templates/events/user_proposals.html:17
 #: templates/gallery/update_form.html:19
+#: templates/gallery/user_gallery.html:19
 #: templates/reports/court_events.html:11
 #: templates/reports/court_visitors.html:11 templates/reports/courts.html:11
 #: templates/reports/user_visits.html:11 templates/sites/details.html:20
@@ -764,7 +765,7 @@ msgid "Create event for %(activity_type)s court \"%(name)s\" details"
 msgstr "Создать событие %(activity_type)s для секции \"%(name)s\""
 
 #: templates/events/create_for_court.html:56 templates/events/details.html:218
-#: templates/navbar.html:96
+#: templates/navbar.html:97
 msgid "Proposals"
 msgstr "Предложения"
 
@@ -782,7 +783,7 @@ msgstr "детали"
 msgid "Create new event"
 msgstr "Создать событие"
 
-#: templates/events/details.html:7
+#: templates/events/details.html:7 templates/gallery/user_gallery.html:7
 #, python-format
 msgid "Details of event %(start_at)s"
 msgstr "Событие %(start_at)s в деталях"
@@ -812,7 +813,7 @@ msgstr "Инвентарь"
 msgid "There are %(visit_count)s visitors "
 msgstr "Запланировано %(visit_count)s посетителей"
 
-#: templates/events/details.html:192 templates/navbar.html:116
+#: templates/events/details.html:192 templates/navbar.html:117
 msgid "Applications"
 msgstr "Заявки"
 
@@ -930,6 +931,10 @@ msgstr "Картинка"
 msgid "Video"
 msgstr "Видео"
 
+#: templates/gallery/user_gallery.html:20
+msgid "User gallery"
+msgstr "Галлерея пользователя"
+
 #: templates/helpers/manage_group.html:12
 #: templates/helpers/publish_event.html:12
 msgid "Group Details"
@@ -983,20 +988,24 @@ msgstr "Показатели Посещений"
 msgid "Visit Report"
 msgstr "Отчет по Посещениям"
 
-#: templates/navbar.html:86
+#: templates/navbar.html:83
+msgid "My gallery"
+msgstr "Моя галлерея"
+
+#: templates/navbar.html:87
 #: venv/lib/python3.4/site-packages/django/contrib/messages/apps.py:7
 msgid "Messages"
 msgstr "Сообщения"
 
-#: templates/navbar.html:106
+#: templates/navbar.html:107
 msgid "Visits"
 msgstr "Посещения"
 
-#: templates/navbar.html:125
+#: templates/navbar.html:126
 msgid "Logout"
 msgstr "Выйти"
 
-#: templates/navbar.html:131
+#: templates/navbar.html:132
 msgid "You are not logged in. "
 msgstr "Вы не зашли в систему"
 
