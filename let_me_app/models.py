@@ -255,7 +255,7 @@ def admin_group_updater(sender, **kwargs):
     if kwargs['created']:
         court = kwargs['instance']
         f_g = FollowerGroup(group_ptr=court.admin_group, followable=court)
-        f_g.name = "admin group"
+        f_g.name = "admin group {}".format(court.id)
         f_g.save()
 
 
