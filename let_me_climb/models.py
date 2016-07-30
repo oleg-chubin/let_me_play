@@ -67,6 +67,9 @@ class Route(models.Model):
     route_score = models.IntegerField(default=0)
     route_onsite_percent = models.IntegerField(_('onsite %'), default=10)
 
+    def get_onsite_route_score(self):
+        return int(float(self.route_score) + ((float(self.route_score)/100)*float(self.route_onsite_percent)))
+
     def __str__(self):
         return "{0} {1} {2}".format(self.route_number, self.route_color, self.route_score)
 
@@ -81,7 +84,7 @@ class Participant(models.Model):
     sport_level = models.IntegerField(choices=SportRankLevel.CHOICES,
                                       default=SportRankLevel.NOT_SPECIFIED)
     avatar = models.ImageField(_('image'), upload_to='avatars', blank=True)
-    birth_date = models.DateField(_('birth date'), default=datetime(1950, 1, 1))
+    birth_date = models.DateField(_('birth date'), default=datetime(1970, 1, 1))
     country = models.CharField(_('country'), max_length=30, default='Russia')
     city = models.CharField(_('city'), max_length=30, default='Sevastopol')
 
@@ -92,3 +95,22 @@ class Participant(models.Model):
 class ResultTable(models.Model):
     participant = models.ForeignKey(Participant)
     route = models.ManyToManyField(Route)
+    onsite = models.ManyToManyField(Route, related_name='onsite', blank=True)
+    score = models.IntegerField(default=0)
+
+    def get_current_score(self):
+        onsite_routes = self.onsite.all()
+        score = 0
+        for route in self.route.all():
+            if route in onsite_routes:
+                score = score + route.get_onsite_route_score()
+            else:
+                score = score + route.route_score
+        return score
+
+    def save(self, *args, **kwargs):
+        self.score = self.get_current_score()
+        super(ResultTable, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return "{0} {1}".format(self.participant, self.get_current_score())

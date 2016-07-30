@@ -19,7 +19,11 @@ class RouteAdmin(admin.ModelAdmin):
                     'route_score', 'route_onsite_percent',)
 
 
+class ResultTableAdmin(admin.ModelAdmin):
+    list_display = ('participant', 'score',)
+
+
 admin.site.register(Participant, ParticipantAdmin)
 admin.site.register(Route, RouteAdmin)
-admin.site.register(ResultTable)
+admin.site.register(ResultTable, ResultTableAdmin)
 
