@@ -5,7 +5,7 @@ POSTGIS_SQL=postgis.sql
 
 SYSTEM_DEPS="unzip binutils libgeos-c1 libxml2 libpq-dev build-essential"
 PYTHON_DEPS="python-software-properties python2.7-dev python-setuptools python-pip python-virtualenv"
-PG_DEPS="postgresql-9.1 postgresql-9.1-postgis postgresql-client-9.1 postgresql-contrib-9.1 postgresql-server-dev-9.1"
+PG_DEPS="postgresql-9.3 postgresql-9.3-postgis-2.2 postgresql-client-9.3 postgresql-contrib-9.3 postgresql-server-dev-9.3"
 GDAL="gdal-bin libgeos-dev libgdal1-dev libxml2-dev libxml2-dev libproj-dev"
 
 COMB="$SYSTEM_DEPS $PYTHON_DEPS $PG_DEPS $GDAL"
@@ -31,8 +31,8 @@ PS_SUDO="sudo -u postgres"
 
 if [ "$POSTGIS_TEMPLATE" -eq "0" ];then
 echo "Postgis template not found"
-      if [ -d "/usr/share/postgresql/9.4/contrib/postgis-2.1/" ];then
-POSTGIS_SQL_PATH=/usr/share/postgresql/9.4/contrib/postgis-2.1/
+      if [ -d "/usr/share/postgresql/9.3/contrib/postgis-2.2/" ];then
+POSTGIS_SQL_PATH=/usr/share/postgresql/9.3/contrib/postgis-2.2/
          GEOGRAPHY=1
       fi
 

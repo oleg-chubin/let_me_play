@@ -23,6 +23,7 @@ urlpatterns = patterns('',
 #     url('^autocomplete/', include('autocomplete_light.urls')),
 #    url(r'^email/$', 'let_me_app.views.require_email', name='require_email'),
     url('/i18n/', include('django.conf.urls.i18n')),
+    url('^climb/', include('let_me_climb.urls', namespace='let_me_climb')),
 )
 
 if settings.DEBUG:

@@ -48,8 +48,8 @@ INSTALLED_APPS = (
     'kombu.transport.django',
     'djcelery',)
 
-if DEBUG:
-    INSTALLED_APPS += ('debug_toolbar', 'template_timings_panel')
+# if DEBUG:
+#     INSTALLED_APPS += ('debug_toolbar', 'template_timings_panel')
 
 INSTALLED_APPS += (
     'annoying',
@@ -68,16 +68,17 @@ INSTALLED_APPS += (
     'floppyforms',
     'embed_video',
 
+    'let_me_climb',
 )
 
 if DEBUG:
     DEBUG_TOOLBAR_PANELS = [
-        'debug_toolbar.panels.sql.SQLPanel',
-        'template_timings_panel.panels.TemplateTimings.TemplateTimings',
+        # 'debug_toolbar.panels.sql.SQLPanel',
+        # 'template_timings_panel.panels.TemplateTimings.TemplateTimings',
     ]
-    DEBUG_TOOLBAR_CONFIG = {
-        'RESULTS_CACHE_SIZE': 100,
-    }
+    # DEBUG_TOOLBAR_CONFIG = {
+    #     'RESULTS_CACHE_SIZE': 100,
+    # }
 else:
     TEMPLATE_LOADERS = (
         (
