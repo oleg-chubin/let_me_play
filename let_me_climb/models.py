@@ -15,6 +15,7 @@ class Sex:
         (NOT_SPECIFIED, _("Not specified")),
     )
 
+
 class SportRankLevel:
     AMATEUR = 1
     SPORT_LEVEL3 = 2
@@ -37,6 +38,39 @@ class SportRankLevel:
     )
 
 
+class RouteColor:
+    RED = 1
+    ORANGE = 2
+    YELLOW = 3
+    GREEN = 4
+    BLUE = 5
+    INDIGO = 6
+    VIOLET = 7
+    NOT_SPECIFIED = 8
+
+    CHOICES = (
+        (RED, _("Red")),
+        (ORANGE, _("Orange")),
+        (YELLOW, _("Yellow")),
+        (GREEN, _("Green")),
+        (BLUE, _("Blue")),
+        (INDIGO, _("Indigo")),
+        (VIOLET, _("Violet")),
+        (NOT_SPECIFIED, _("Not specified")),
+    )
+
+
+class Route(models.Model):
+    route_number = models.IntegerField(_('route number'), default=1)
+    route_color = models.IntegerField(choices=RouteColor.CHOICES,
+                                      default=RouteColor.NOT_SPECIFIED)
+    route_score = models.IntegerField(default=0)
+    route_onsite_percent = models.IntegerField(_('onsite %'), default=10)
+
+    def __str__(self):
+        return "{0} {1} {2}".format(self.route_number, self.route_color, self.route_score)
+
+
 class Participant(models.Model):
     first_name = models.CharField(_('first name'), max_length=30, default='')
     middle_name = models.CharField(_('middle name'), max_length=30, blank=True)
@@ -53,3 +87,8 @@ class Participant(models.Model):
 
     def __str__(self):
         return "{0} {1}".format(self.first_name, self.last_name)
+
+
+class ResultTable(models.Model):
+    participant = models.ForeignKey(Participant)
+    route = models.ManyToManyField(Route)

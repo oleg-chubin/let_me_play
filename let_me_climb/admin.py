@@ -1,5 +1,5 @@
 from django.contrib import admin
-from let_me_climb.models import Participant
+from let_me_climb.models import Participant, Route, ResultTable
 
 
 class ParticipantAdmin(admin.ModelAdmin):
@@ -11,4 +11,15 @@ class ParticipantAdmin(admin.ModelAdmin):
                     'sex', 'birth_date', 'sport_level',
                     'country', 'city', 'phone')
 
+
+class RouteAdmin(admin.ModelAdmin):
+    fields = ['route_number', 'route_color',
+              'route_score', 'route_onsite_percent']
+    list_display = ('route_number', 'route_color',
+                    'route_score', 'route_onsite_percent',)
+
+
 admin.site.register(Participant, ParticipantAdmin)
+admin.site.register(Route, RouteAdmin)
+admin.site.register(ResultTable)
+
