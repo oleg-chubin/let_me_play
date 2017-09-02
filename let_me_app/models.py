@@ -270,7 +270,8 @@ class BookingPolicy(models.Model):
     court = models.ForeignKey(Court)
     group = models.ForeignKey(Group)
     early_registration = models.IntegerField(_("registration start within period"))
-    price = models.IntegerField(_("estimated price"))
+    price = models.DecimalField(
+        max_digits=8, decimal_places=2, verbose_name=_("estimated price"))
 
 
 class Invoice(models.Model):
@@ -296,7 +297,8 @@ class Event(Followable):
     court = models.ForeignKey(Court)
     invoice = models.ForeignKey(Invoice, null=True, blank=True)
     inventory_list = models.ForeignKey(InventoryList, null=True, blank=True)
-    preliminary_price = models.IntegerField(_("Preliminary price"))
+    preliminary_price = models.DecimalField(
+        max_digits=8, decimal_places=2, verbose_name=_("Preliminary price"))
     status = models.IntegerField(
         choices=EventStatuses.CHOICES, default=EventStatuses.PENDING
     )

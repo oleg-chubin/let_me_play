@@ -259,7 +259,7 @@ class EventForm(PublishEventForm):
             'start_at': floppyforms_widgets.DateTimeInput(),
             'description': floppyforms_widgets.Textarea(),
             'name': floppyforms_widgets.TextInput(),
-            'preliminary_price': floppyforms_widgets.NumberInput()
+            'preliminary_price': floppyforms_widgets.NumberInput(attrs={'step': 0.05})
         }
 
     class Media:
