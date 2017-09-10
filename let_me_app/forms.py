@@ -17,7 +17,7 @@ from django.forms.models import BaseInlineFormSet
 from django.forms.formsets import DELETION_FIELD_NAME
 import slugify
 from let_me_auth.models import User, FollowerGroup
-from let_me_auth.pipeline import ABSENT_MAIL_HOST
+from let_me_auth.social.pipeline import ABSENT_MAIL_HOST
 from embed_video.fields import EmbedVideoFormField
 
 
@@ -269,7 +269,7 @@ class EventForm(PublishEventForm):
         js = ('js/moment.js', 'js/bootstrap-datetimepicker.js', 'js/forms.js')
 
 
-class UserCreateMultipleField(autocomplete.CreateModelMultipleField):
+class UserCreateMultipleField(autocomplete.QuerySetSequenceModelMultipleField):
     def create_value(self, value):
         parts = value.split(' ', 1)
         first_name = parts[0].strip()

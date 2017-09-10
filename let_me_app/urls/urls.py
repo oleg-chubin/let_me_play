@@ -1,7 +1,7 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from let_me_app import views
 
-urlpatterns = patterns('',
+urlpatterns = (
     url(r'^view/event/(?P<pk>[0-9]+)/$',
         views.EventView.as_view(),
         name='view_event'),

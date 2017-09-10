@@ -8,12 +8,12 @@ from let_me_app import models
 from let_me_auth import models as auth_models
 from django.core.mail.message import EmailMultiAlternatives
 from let_me_app.integration.rocketsms import RocketLauncher
-from django.template.base import TemplateDoesNotExist
+from django.template.exceptions import TemplateDoesNotExist
 from django.core.urlresolvers import reverse
 from contextlib import contextmanager
 from django.utils import translation
 from functools import wraps
-from let_me_auth.pipeline import ABSENT_MAIL_HOST
+from let_me_auth.social.pipeline import ABSENT_MAIL_HOST
 logger = logging.getLogger(__name__)
 
 

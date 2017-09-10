@@ -197,6 +197,9 @@ class Changelog(models.Model):
 
 
 class Site(Followable):
+    followable = models.OneToOneField(
+        Followable, primary_key=True, db_column="followable_ptr_id",
+        parent_link=True, related_name='site_to_follow')
     geo_point = gismodels.PointField(verbose_name=_('Geo point'), null=True, blank=True)
     geo_line = gismodels.LineStringField(
         verbose_name=_('Geo line'), null=True, blank=True)
@@ -227,6 +230,9 @@ class ActivityType(models.Model):
 
 
 class Court(Followable):
+    followable = models.OneToOneField(
+        Followable, primary_key=True, db_column="followable_ptr_id",
+        parent_link=True, related_name='court_to_follow')
     name = models.CharField(max_length=128)
     site = models.ForeignKey(Site, related_name='court_set')
     activity_type = models.ForeignKey(ActivityType)
@@ -292,6 +298,9 @@ class InventoryList(models.Model):
 
 
 class Event(Followable):
+    followable = models.OneToOneField(
+        Followable, primary_key=True, db_column="followable_ptr_id",
+        parent_link=True, related_name='event_to_follow')
     start_at = models.DateTimeField(_('date started'), db_index=True)
     description = models.TextField(verbose_name=_("Description"), max_length=1024, default='')
     court = models.ForeignKey(Court)

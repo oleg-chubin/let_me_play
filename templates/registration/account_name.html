@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% load staticfiles i18n %}
+
+{% block page_title %}
+  {% blocktrans %}Edit user {{object}} details{% endblocktrans %}
+{% endblock %}
+
+{% block content %}
+      <div class="row">
+
+        <div class="col-md-6 col-md-offset-1">
+          <h2 class="for-modal-header">{% trans 'Registration' %}</h2>
+
+          <form class="form-horizontal reg-form for-modal-body" action="{% url 'social:complete' backend='account_kit' %}" method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+              <label for="inputName" class="col-sm-3 col-md-4 control-label">{% trans 'Name' %}</label>
+              <div class="col-sm-5 col-md-8">
+                  <input type="text" name="user_first_name" class="form-control" id="inputName" placeholder="Иван">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="inputLName" class="col-sm-3 col-md-4 control-label">{% trans 'Last name' %}</label>
+              <div class="col-sm-5 col-md-8">
+                  <input type="text" name="user_last_name" class="form-control" id="inputLName" placeholder="Петров">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="inputPhone" class="col-sm-3 col-md-4 control-label">{% trans 'Phone' %}</label>
+              <div class="col-sm-5 col-md-8">
+                <div class="input-group">
+                  <div class="input-group-addon">+</div>
+                  <input type="tel" class="form-control" disabled id="inputPhone" placeholder="375..." value="{{cell_phone}}">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="col-sm-offset-3 col-md-offset-4 col-sm-2">
+                <button type="submit" class="btn btn-primary">{% trans 'Next' %} &rarr;</button>
+              </div>
+            </div>
+          </form>
+
+
+        </div>
+
+        <div class="col-md-4 col-md-offset-1 reg-help">
+          <div class="for-modal-footer col-sm-offset-3 col-md-offset-4">
+              <h4 class="text-muted">{% trans 'Why phone number is needed?' %}</h4>
+              <ul>
+                <li>{% trans 'It is easier to discuss trip details via phone.' %}</li>
+                <li>{% trans 'Receive trip status changes notifications.' %}</li>
+              </ul>
+              <h4 class="text-muted">{% trans 'Should one worry?' %}</h4>
+              <ul>
+                <li>{% trans 'We will not use number for commercial purposes' %}.</li>
+                <li>{% trans 'Phone number will be displayed to tripmates only' %}.</li>
+                <li>{% trans 'Other users has validated numbers also.' %}</li>
+              </ul>
+          </div>
+        </div>
+
+      </div>
+{% endblock %}
+
+{% block extra_scripts %}
+  {{ form.media }}
+{% endblock %}

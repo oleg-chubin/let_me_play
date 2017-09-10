@@ -6,7 +6,7 @@ Created on Jul 5, 2015
 import json
 from django import http
 from let_me_app import models
-from django.db.models import get_model
+from django.apps import apps
 from django.views.generic.base import View as BaseView
 from django.views.generic.list import ListView
 from django.db import transaction
@@ -32,7 +32,11 @@ class DashboardView(ListView):
         for model_name, pks in object_by_models.items():
             if model_name in ('let_me_app.InternalMessage', ):
                 continue
-            model = get_model(model_name)
+            models = apps.get_models(model_name)
+            if models:
+                model = models[0]
+            else:
+                continue
             objects[model_name] = {i.pk: i for i in model.objects.filter(pk__in=pks).select_related()}
 
         result['decoded_list'] = []

@@ -103,7 +103,7 @@ class JcropWidget(floppyforms_widgets.FileInput):
     #              image is sent to the server without the user having
     #              to press the submit button.
     #
-    def get_context(self, name, value, attrs):
+    def get_context(self, name, value, attrs, **kwargs):
         context = super(JcropWidget, self).get_context(name, value, attrs)
         context['value'] = value and getattr(value, 'url', None)
         context['preview_height'] = self.preview_height
