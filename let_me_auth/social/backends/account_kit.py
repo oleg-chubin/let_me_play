@@ -56,7 +56,6 @@ class AccountKitAuth(LegacyAuth, AccountKitMixin):
     def auth_complete(self, *args, **kwargs):
         """Completes login process, must return user instance"""
         key, secret = self.get_key_and_secret()
-        import ipdb; ipdb.set_trace()
         access_token = self.get_access_token(key, secret, self.data['code'])
 
         cell_phone, details = self.get_account_details(secret, access_token)

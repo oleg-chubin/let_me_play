@@ -9,7 +9,7 @@ from let_me_auth.views import (home, done, signup, set_password, validation_sent
 
 urlpatterns = (
     url(r'^login/$', login_user, name='login'),
-    url(r'^home/$', home),
+    url(r'^home/$', home, name="home"),
     url(r'^done/$', done, name='done'),
     url(r'^signup/$', signup, name="signup"),
     url(r'^set_password/$', set_password, name='initial_password'),

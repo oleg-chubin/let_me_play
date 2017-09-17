@@ -14,6 +14,23 @@ AccountKit_OnInteractive = function(){
     login_span.removeClass('disabled');
 };
 
+function create_modal(){
+    var modal_fade = $('<div class="modal" tabindex="-1" role="dialog"></div>'),
+        modal_dialog = $('<div class="modal-dialog" role="document"></div>'),
+        modal_content = $('<div class="modal-content"></div>'),
+        modal_header = $('<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h3>Authorization</h3></div>'),
+        modal_body = $('<div class="modal-body"></div>'),
+        modal_footer = $('<div class="modal-footer"></div>');
+
+    modal_dialog.appendTo(modal_fade);
+    modal_content.appendTo(modal_dialog);
+    modal_header.appendTo(modal_content);
+    modal_body.appendTo(modal_content);
+    modal_footer.appendTo(modal_content);
+
+    return modal_fade;
+}
+
 function do_after_login(perform_action){
     function perform_auth_step (data, textStatus, request){
       if (request.getResponseHeader('Authentification-Scope') != 'True'){
@@ -23,24 +40,24 @@ function do_after_login(perform_action){
           perform_action();
       }
       else{
-          var content = $(data).find('.content'),
-              modal = $('#authModal');
-          modal.find('.modal-title').html(content.find('.for-modal-header').html());
-          var new_modal_body = content.find('.for-modal-body'),
+          var modal = create_modal();
+          $('body').append(modal);
+          modal.find('.modal-header').html($(data).find('.for-modal-header'));
+          modal.show();
+          var new_modal_body = $(data).find('.for-modal-body'),
               old_modal_body = modal.find('.modal-body');
-          old_modal_body.html('');
-          old_modal_body.append(new_modal_body);
+          old_modal_body.html(new_modal_body);
           new_modal_body.map(function(data){
               var form = $(this);
               form.submit(function( event ) {
                   // Stop form from submitting normally
                   event.preventDefault();
                   $.post(form.attr('action'), form.serialize(), perform_auth_step);
-                  $('#authModal').modal('hide');
+                  modal.remove();
               });
           });
-          modal.find('.modal-footer').html('')
-          modal.find('.modal-footer').append(content.find('.for-modal-footer'));
+          modal.find('.modal-footer').html('');
+          modal.find('.modal-footer').append($(data).find('.for-modal-footer'));
           $('#authModal').modal('show');
       }
     }
@@ -56,9 +73,10 @@ function getCustomLoginCallback(actionPerformer){
           var url = $('.login-link').attr('href');
           $.post(
               url,
-              data_to_send,
-              do_after_login(actionPerformer)
-          );
+              data_to_send
+          ).then(function(data, textStatus, request){
+              do_after_login(actionPerformer)(data, textStatus, request);
+          });
         }
         else if (response.status === "NOT_AUTHENTICATED") {
           // handle authentication failure
@@ -99,7 +117,7 @@ $(function(){
       });
 
       $(".login-link").on('click', function(event) {
-        var final_location = $(this).attr('href');
+        var final_location = $(this).attr('data-href');
         event.preventDefault();
         AccountKit.login(
             'PHONE',

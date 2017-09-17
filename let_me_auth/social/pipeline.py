@@ -13,6 +13,7 @@ from urllib.parse import urlencode
 from logging import getLogger
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
+from let_me_auth import forms
 
 logger = getLogger(__name__)
 
@@ -77,6 +78,7 @@ def associate_by_unique_fields(backend, details, user=None, *args, **kwargs):
         val = details.get(unique_field)
         if val:
             user = backend.strategy.storage.user.get_user(**{unique_field: val})
+            break
     if user:
         return {'user': user, 'is_new': False}
     return None
@@ -84,21 +86,32 @@ def associate_by_unique_fields(backend, details, user=None, *args, **kwargs):
 
 @partial
 def create_name(backend, request, strategy, **kwargs):
-    first_name = strategy.request_data().get('user_first_name')
-    last_name = strategy.request_data().get('user_last_name')
+    initial={}
+    if kwargs.get('user'):
+        user = kwargs['user']
+        initial={'first_name': user.first_name, 'last_name': user.last_name}
 
-    if 'user' in kwargs:
-        user = get_user_model().objects.get(cell_phone=kwargs['username'])
-        first_name = first_name or user.first_name
-        last_name = last_name or user.last_name
-
-    if not (first_name and last_name):
-        return HttpResponse(strategy.render_html(
-            tpl='registration/account_name.html',
-            context={'cell_phone': kwargs['username']}
-        ))
+    data = strategy.request_data()
+    initial.update({k: data[k] for k in data})
+    form = forms.BaseUserForm(
+        data=initial
+    )
+    if not form.is_valid():
+        response = HttpResponse(
+            strategy.render_html(
+                tpl='registration/account_name.html',
+                context={'form': form, 'cell_phone': kwargs['username']}),
+        )
+        response['Authentification-Scope'] = 'True'
+        return response
     else:
-        return {'first_name': first_name, 'last_name': last_name}
+        kwargs['details'].update(
+            {
+                'first_name': form.instance.first_name,
+                'last_name': form.instance.last_name
+            }
+        )
+        return {}
 
 
 def associate_user(backend, uid, user=None, social=None, *args, **kwargs):

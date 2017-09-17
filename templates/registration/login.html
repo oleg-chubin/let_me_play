@@ -15,7 +15,7 @@
     <a href="{% url 'social:begin' 'twitter' %}?next={{ next }}"><i id="social-tw" class="fa fa-twitter fa-3x social"></i></a>
     <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ next }}"><i id="social-gp" class="fa fa-google-plus fa-3x social"></i></a>
     <a href="{% url 'social:begin' 'vk-oauth2' %}?next={{ next }}"><i id="social-vk" class="fa fa-vk fa-3x social"></i></a>
-    <a href="{% url 'social:complete' 'account_kit' %}?next={{ next }}" class="login-link">
+    <a href="{% url 'social:complete' 'account_kit' %}?next={{ next }}" data-href="/{{next}}" class="login-link">
         <i id="social-mb" class="fa fa-mobile fa-3x social"></i>
         <input type="hidden" name="csrf_token" value="{{csrf_token}}">
         <input type="hidden" name="facebook_app_id" value="{{facebook_app_id}}">

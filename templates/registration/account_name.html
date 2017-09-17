@@ -6,7 +6,7 @@
   {% blocktrans %}Edit user {{object}} details{% endblocktrans %}
 {% endblock %}
 
-{% block content %}
+{% block main %}
       <div class="row">
 
         <div class="col-md-6 col-md-offset-1">
@@ -18,14 +18,14 @@
             <div class="form-group">
               <label for="inputName" class="col-sm-3 col-md-4 control-label">{% trans 'Name' %}</label>
               <div class="col-sm-5 col-md-8">
-                  <input type="text" name="user_first_name" class="form-control" id="inputName" placeholder="Иван">
+                  <input type="text" name="{{form.first_name.html_name}}" id="{{form.first_name.auto_id}}" class="form-control" placeholder="Иван">
               </div>
             </div>
 
             <div class="form-group">
               <label for="inputLName" class="col-sm-3 col-md-4 control-label">{% trans 'Last name' %}</label>
               <div class="col-sm-5 col-md-8">
-                  <input type="text" name="user_last_name" class="form-control" id="inputLName" placeholder="Петров">
+                  <input type="text"  name="{{form.last_name.html_name}}" id="{{form.last_name.auto_id}}"class="form-control" placeholder="Петров">
               </div>
             </div>
 

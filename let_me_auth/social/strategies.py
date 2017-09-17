@@ -11,7 +11,6 @@ class FixedDjangoStrategy(DjangoStrategy):
         try:
             template = loader.get_template(tpl)
         except TemplateDoesNotExist:
-            import ipdb; ipdb.set_trace()
             template = loader.get_template_from_string(html)
         return template.render(
             RequestContext(
