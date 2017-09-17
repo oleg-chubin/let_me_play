@@ -24,9 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = '_8i5)4a1o6%0$77$$me27mj!6y%577*)(=5%a2!%*3(4p(aebt'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-TEMPLATE_DEBUG = True
+DEBUG = TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -271,7 +269,7 @@ SOCIAL_AUTH_ACCOUNT_KIT_SECRET = os.environ.get('SOCIAL_AUTH_ACCOUNT_KIT_SECRET'
 #http://psa.matiasaguirre.net/docs/backends/vk.html#oauth2
 SOCIAL_AUTH_VK_SCOPE = ['email']  # configure how the data is labelled on SocialAuth.extra_data
 SOCIAL_AUTH_VK_EXTRA_DATA = ['email',]
-SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email']
+SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email', 'messages']
 SOCIAL_AUTH_VK_OAUTH2_EXTRA_DATA = ['email',]
 
 SOCIAL_AUTH_VK_OAUTH2_KEY = os.environ.get('SOCIAL_AUTH_VK_OAUTH2_KEY')
