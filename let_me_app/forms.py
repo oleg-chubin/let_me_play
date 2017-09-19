@@ -96,7 +96,7 @@ class EventProposalForm(forms.Form):
     users = forms.ModelMultipleChoiceField(
         queryset=auth_models.User.objects.all(),
         required=False,
-        widget=BootstrapMultipleChoiceWidget(url='user-autocomplete'))
+        widget=autocomplete.ModelSelect2Multiple(url='user-autocomplete'))
     comment = forms.CharField(
         required=False, widget=floppyforms_widgets.Textarea)
     known_users = forms.ModelMultipleChoiceField(
@@ -118,7 +118,7 @@ class InventoryForm(forms.ModelForm):
 class GroupAdminForm(forms.Form):
     users = forms.ModelMultipleChoiceField(
         queryset=auth_models.User.objects.all(),
-        widget=BootstrapMultipleChoiceWidget(url='user-autocomplete'))
+        widget=autocomplete.ModelSelect2Multiple(url='user-autocomplete'))
 
 
 class PublishEventForm(forms.ModelForm):
@@ -176,7 +176,7 @@ class SiteForm(forms.ModelForm):
 class GroupForm(forms.ModelForm):
     users = forms.ModelMultipleChoiceField(
         queryset=auth_models.User.objects.all(),
-        widget=BootstrapMultipleChoiceWidget(url='user-autocomplete'))
+        widget=autocomplete.ModelSelect2Multiple(url='user-autocomplete'))
 
     class Meta:
         model = FollowerGroup
@@ -288,14 +288,14 @@ class EventVisitForm(forms.Form):
     users = UserCreateMultipleField(
         queryset=auth_models.User.objects.all(),
         required=False,
-        widget=BootstrapMultipleChoiceWidget(url='user-autocomplete'))
+        widget=autocomplete.ModelSelect2Multiple(url='user-autocomplete'))
 
 
 class ExtendedEventVisitForm(forms.Form):
-    users = UserCreateMultipleField(
+    users = forms.ModelMultipleChoiceField(
         queryset=auth_models.User.objects.all(),
         required=False,
-        widget=BootstrapMultipleChoiceWidget(url='user-autocomplete'))
+        widget=autocomplete.ModelSelect2Multiple(url='user-autocomplete'))
     known_users = forms.ModelMultipleChoiceField(
         queryset=auth_models.User.objects.all(),
         required=False,
@@ -305,7 +305,7 @@ class ExtendedEventVisitForm(forms.Form):
 class EventVisitRoleForm(forms.Form):
     roles = forms.ModelMultipleChoiceField(
         queryset=models.StaffRole.objects.all(),
-        widget=BootstrapMultipleChoiceWidget(url='staffrole-autocomplete'))
+        widget=autocomplete.ModelSelect2Multiple(url='staffrole-autocomplete'))
 
 
 class GalleryImagesForm(forms.ModelForm):

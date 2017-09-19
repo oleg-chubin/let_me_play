@@ -283,8 +283,8 @@ class UserGalleryListView(TemplateView):
             visit__user_id=user_id,
             visit__status=VisitStatuses.COMPLETED).values_list('id', flat=True)
         queryset = queryset.filter(followable__in=event_queryset)
-        queryset = queryset.select_related('followable__event__start_at')
-        return queryset.order_by('followable__event__start_at')
+        queryset = queryset.select_related('followable__event_to_follow__start_at')
+        return queryset.order_by('followable__event_to_follow__start_at')
 
     def get_context_data(self, **kwargs):
         user_id = kwargs.get('user', self.request.user.id)
@@ -592,7 +592,8 @@ class AddEventInventoryView(DetailRelatedPostView):
 
     def save_on_success(self, event, form):
         if not event.inventory_list:
-            inventory_list = models.InventoryList.objects.create(name=event.name)
+            inventory_list = models.InventoryList.objects.create(
+                name="event_{}".format(event.id))
             event.inventory_list = inventory_list
             event.save()
         inventory = form.save(commit=False)
@@ -853,6 +854,9 @@ class CancelInventoryEventView(EventActionMixin, BaseView):
 
     def process_object(self, inventory):
         inventory.delete()
+
+    def send_notification(self, objects):
+        pass
 
 
 class CancelProposalEventView(EventActionMixin, BaseView):
@@ -1357,7 +1361,7 @@ class CloneEventView(TemplateView):
                 kw[key] = kwargs[key]
         form = forms.EventForm(**kw)
         queryset = FollowerGroup.objects.filter(
-            followable__court__event=kwargs['event'])
+            followable__court_to_follow__event=kwargs['event'])
         queryset = queryset |  FollowerGroup.objects.filter(name="anyone")
         form.fields['target_groups'].queryset = queryset
         return form

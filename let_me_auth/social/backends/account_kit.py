@@ -92,7 +92,9 @@ class AccountKitAuth(LegacyAuth, AccountKitMixin):
              'first_name': <user first name if any>,
              'last_name': <user last name if any>}
         """
-        return {'cell_phone': response['phone']['number'].strip('+')}
+        return {
+            'cell_phone': response['phone']['number'].strip('+'),
+            'cell_phone_is_valid': True}
 
     def get_json(self, url, *args, **kwargs):
         return self.request(url, *args, **kwargs).json()
