@@ -44,7 +44,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'kombu.transport.django',
-    'djcelery',)
+    )
 
 if DEBUG:
     INSTALLED_APPS += ('debug_toolbar', )
@@ -301,10 +301,57 @@ LEAFLET_CONFIG = {
     'MAX_ZOOM': 18,
 }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': { 
+        'standard': {
+            'format' : "[%(asctime)s] %(levelname)s [%(pathname)s:%(lineno)s] %(message)s",
+            'datefmt' : "%d/%b/%Y %H:%M:%S"
+        },
+    },
+    'handlers': {
+        'console': { 
+            'class': 'logging.StreamHandler',
+        },
+        'telegram_logfile': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': BASE_DIR + "/logs/telegram/messages.log",
+            'maxBytes': 500000,
+            'backupCount': 10,
+            'formatter': 'standard',
+        },
+        'python_logfile': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': BASE_DIR + "/logs/python.log",
+            'maxBytes': 500000,
+            'backupCount': 10,
+            'formatter': 'standard',
+        },
+    },    
+    'loggers': {
+        'django': {
+            'handlers': ['python_logfile'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+        'let_me_auth': {
+            'handlers': ['python_logfile'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+        'telegram': {
+            'handlers': ['telegram_logfile'],
+            'level': 'DEBUG',
+        },
+    },
+}
 
-CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
-BROKER_URL = 'django://'
-
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_TASK_SERIALIZER = 'pickle'
+RESULT_SERIALIZER = 'pickle'
+CELERY_TIMEZONE = TIME_ZONE
 
 SITE_DOMAIN = ""
 
