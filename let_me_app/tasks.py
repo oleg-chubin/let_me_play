@@ -1,4 +1,4 @@
-from celery import task
+from celery import shared_task, task
 from django.core.mail import send_mail
 from django.conf import settings
 
@@ -345,7 +345,8 @@ class MailNotificator:
 
 mail_notifier = MailNotificator()
 
-@task
+#@task(serializer='pickle')
+@shared_task
 def send_notification(notification_context):
     logger.debug("process data %s initiated", notification_context)
     mail_notifier.process_notification(notification_context)

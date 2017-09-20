@@ -15,7 +15,6 @@ app = Celery('let_me_play')
 # pickle the object when using Windows.
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
-app.conf.update(CELERY_RESULT_BACKEND=settings.CELERY_RESULT_BACKEND)
 
 
 @app.task(bind=True)

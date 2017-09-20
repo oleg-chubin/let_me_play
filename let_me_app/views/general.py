@@ -1447,7 +1447,7 @@ class CloneEventView(TemplateView):
         notification_context = {
             'reason': "create_event",
             'initiator_id': self.request.user.id,
-            'object_id': event
+            'object_id': event.id
         }
         send_notification.delay(notification_context)
 

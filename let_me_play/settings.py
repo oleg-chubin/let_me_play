@@ -304,14 +304,14 @@ LEAFLET_CONFIG = {
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'formatters': { 
+    'formatters': {
         'standard': {
             'format' : "[%(asctime)s] %(levelname)s [%(pathname)s:%(lineno)s] %(message)s",
             'datefmt' : "%d/%b/%Y %H:%M:%S"
         },
     },
     'handlers': {
-        'console': { 
+        'console': {
             'class': 'logging.StreamHandler',
         },
         'telegram_logfile': {
@@ -330,7 +330,7 @@ LOGGING = {
             'backupCount': 10,
             'formatter': 'standard',
         },
-    },    
+    },
     'loggers': {
         'django': {
             'handlers': ['python_logfile'],
@@ -347,10 +347,6 @@ LOGGING = {
     },
 }
 
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
-CELERY_TASK_SERIALIZER = 'pickle'
-RESULT_SERIALIZER = 'pickle'
 CELERY_TIMEZONE = TIME_ZONE
 
 SITE_DOMAIN = ""
