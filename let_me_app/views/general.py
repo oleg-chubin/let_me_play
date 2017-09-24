@@ -115,7 +115,7 @@ class PostChatMessage(BaseUpdateView):
             'initiator_id': self.request.user.id,
             'message_id': self.object.id
         }
-        send_notification.delay(notification_context)
+        send_notification.apply_async((notification_context,), countdown=30)
 
         return http.HttpResponseRedirect(
             reverse('let_me_app:chat_details', kwargs={'pk': self.object.id})
@@ -484,7 +484,7 @@ class CancelApplicationView(EventActionMixin, BaseView):
             'initiator_id': self.request.user.id,
             'object_ids': [i.id for i in objects]
         }
-        send_notification.delay(notification_context)
+        send_notification.apply_async((notification_context,), countdown=30)
 
     def process_object(self, application):
         application.status = models.ApplicationStatuses.CANCELED
@@ -516,7 +516,7 @@ class CreateApplicationView(BaseView):
             'initiator_id': self.request.user.id,
             'object_ids': [application.id]
         }
-        send_notification.delay(notification_context)
+        send_notification.apply_async((notification_context,), countdown=30)
 
         return http.HttpResponseRedirect(
             reverse('let_me_app:view_event', kwargs={'pk': kwargs['event']})
@@ -579,7 +579,7 @@ class CreateProposalView(DetailRelatedPostView):
             'initiator_id': self.request.user.id,
             'object_ids': [i.id for i in proposals]
         }
-        send_notification.delay(notification_context)
+        send_notification.apply_async((notification_context,), countdown=30)
 
 
 class AddEventInventoryView(DetailRelatedPostView):
@@ -667,7 +667,7 @@ class CreateVisitView(DetailRelatedPostView):
             'initiator_id': self.request.user.id,
             'object_ids': [i.id for i in visits]
         }
-        send_notification.delay(notification_context)
+        send_notification.apply_async((notification_context,), countdown=30)
 
 
 class DeclineProposalEventView(EventActionMixin, BaseView):
@@ -688,7 +688,7 @@ class DeclineProposalEventView(EventActionMixin, BaseView):
             'initiator_id': self.request.user.id,
             'object_ids': [i.id for i in objects]
         }
-        send_notification.delay(notification_context)
+        send_notification.apply_async((notification_context,), countdown=30)
 
 
 class AcceptProposalView(EventActionMixin, BaseView):
@@ -710,7 +710,7 @@ class AcceptProposalView(EventActionMixin, BaseView):
             'initiator_id': self.request.user.id,
             'object_ids': [i.id for i in objects]
         }
-        send_notification.delay(notification_context)
+        send_notification.apply_async((notification_context,), countdown=30)
 
 
 class DeclineApplicationEventView(EventActionMixin, BaseView):
@@ -735,7 +735,7 @@ class DeclineApplicationEventView(EventActionMixin, BaseView):
             'initiator_id': self.request.user.id,
             'object_ids': [i.id for i in objects]
         }
-        send_notification.delay(notification_context)
+        send_notification.apply_async((notification_context,), countdown=30)
 
 
 class AcceptApplicationView(EventActionMixin, BaseView):
@@ -766,7 +766,7 @@ class AcceptApplicationView(EventActionMixin, BaseView):
             'initiator_id': self.request.user.id,
             'object_ids': [i.id for i in objects]
         }
-        send_notification.delay(notification_context)
+        send_notification.apply_async((notification_context,), countdown=30)
 
 
 class CancelVisitView(EventActionMixin, BaseView):
@@ -787,7 +787,7 @@ class CancelVisitView(EventActionMixin, BaseView):
             'initiator_id': self.request.user.id,
             'object_ids': [i.id for i in objects]
         }
-        send_notification.delay(notification_context)
+        send_notification.apply_async((notification_context,), countdown=30)
 
 
 class DismissVisitorEventView(EventActionMixin, BaseView):
@@ -808,7 +808,7 @@ class DismissVisitorEventView(EventActionMixin, BaseView):
             'initiator_id': self.request.user.id,
             'object_ids': [i.id for i in objects]
         }
-        send_notification.delay(notification_context)
+        send_notification.apply_async((notification_context,), countdown=30)
 
 
 class RemoveVisitRoleEventView(EventActionMixin, BaseView):
@@ -881,7 +881,7 @@ class CancelProposalEventView(EventActionMixin, BaseView):
             'initiator_id': self.request.user.id,
             'object_ids': [i.id for i in objects]
         }
-        send_notification.delay(notification_context)
+        send_notification.apply_async((notification_context,), countdown=30)
 
 
 class CancelEventView(EventActionMixin, BaseView):
@@ -905,7 +905,7 @@ class CancelEventView(EventActionMixin, BaseView):
             'initiator_id': self.request.user.id,
             'object_ids': [i.id for i in objects]
         }
-        send_notification.delay(notification_context)
+        send_notification.apply_async((notification_context,), countdown=30)
 
 
 class CourtDetailView(DetailView):
@@ -1449,7 +1449,7 @@ class CloneEventView(TemplateView):
             'initiator_id': self.request.user.id,
             'object_id': event.id
         }
-        send_notification.delay(notification_context)
+        send_notification.apply_async((notification_context,), countdown=30)
 
         return http.HttpResponseRedirect(
             reverse('let_me_app:view_event', kwargs={'pk': event.id})

@@ -97,6 +97,7 @@ class MailNotificator:
 
         sms_template = "notifications/sms/{}.html".format(reason)
         sms_text = render_to_string(sms_template, context)
+        logger.info("I am going to send  %s", sms_text)
         for phone_number in phone_list:
             send_sms(phone_number, sms_text)
 
@@ -193,11 +194,17 @@ class MailNotificator:
             context = {'event': event, 'users': [a.user for a in app_list]}
             mail_info.append([user_list, context])
         return mail_info
+    
+    def get_event(self, event):
+        if not isinstance(event, models.Event):
+            event = models.Event.objects.get(pk=event)
+        return event
 
     def create_proposal(self,  notification_context):
         proposal_ids = notification_context['object_ids']
         proposals = models.Proposal.objects.filter(
             id__in=proposal_ids).select_related('user', 'event')
+        logger.info("create proposal %r %s %r", proposal_ids, notification_context, proposals) 
 
         mail_info = []
         for proposal in proposals:
