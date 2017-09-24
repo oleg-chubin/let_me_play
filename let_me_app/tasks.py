@@ -1,4 +1,4 @@
-from celery import task
+from celery import shared_task, task
 from django.core.mail import send_mail
 from django.conf import settings
 
@@ -8,12 +8,12 @@ from let_me_app import models
 from let_me_auth import models as auth_models
 from django.core.mail.message import EmailMultiAlternatives
 from let_me_app.integration.rocketsms import RocketLauncher
-from django.template.base import TemplateDoesNotExist
+from django.template.exceptions import TemplateDoesNotExist
 from django.core.urlresolvers import reverse
 from contextlib import contextmanager
 from django.utils import translation
 from functools import wraps
-from let_me_auth.pipeline import ABSENT_MAIL_HOST
+from let_me_auth.social.pipeline import ABSENT_MAIL_HOST
 logger = logging.getLogger(__name__)
 
 
@@ -97,6 +97,7 @@ class MailNotificator:
 
         sms_template = "notifications/sms/{}.html".format(reason)
         sms_text = render_to_string(sms_template, context)
+        logger.info("I am going to send  %s", sms_text)
         for phone_number in phone_list:
             send_sms(phone_number, sms_text)
 
@@ -193,11 +194,17 @@ class MailNotificator:
             context = {'event': event, 'users': [a.user for a in app_list]}
             mail_info.append([user_list, context])
         return mail_info
+    
+    def get_event(self, event):
+        if not isinstance(event, models.Event):
+            event = models.Event.objects.get(pk=event)
+        return event
 
     def create_proposal(self,  notification_context):
         proposal_ids = notification_context['object_ids']
         proposals = models.Proposal.objects.filter(
             id__in=proposal_ids).select_related('user', 'event')
+        logger.info("create proposal %r %s %r", proposal_ids, notification_context, proposals) 
 
         mail_info = []
         for proposal in proposals:
@@ -345,7 +352,8 @@ class MailNotificator:
 
 mail_notifier = MailNotificator()
 
-@task
+#@task(serializer='pickle')
+@shared_task
 def send_notification(notification_context):
     logger.debug("process data %s initiated", notification_context)
     mail_notifier.process_notification(notification_context)

@@ -37,17 +37,17 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'dal_select2',
     'dal',
-#      'dal_queryset_sequence',
+    'dal_queryset_sequence',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'kombu.transport.django',
-    'djcelery',)
+    )
 
 if DEBUG:
-    INSTALLED_APPS += ('debug_toolbar', 'template_timings_panel')
+    INSTALLED_APPS += ('debug_toolbar', )
 
 INSTALLED_APPS += (
     'annoying',
@@ -71,7 +71,6 @@ INSTALLED_APPS += (
 if DEBUG:
     DEBUG_TOOLBAR_PANELS = [
         'debug_toolbar.panels.sql.SQLPanel',
-        'template_timings_panel.panels.TemplateTimings.TemplateTimings',
     ]
     DEBUG_TOOLBAR_CONFIG = {
         'RESULTS_CACHE_SIZE': 100,
@@ -87,31 +86,15 @@ else:
         ),
     )
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
-    'django.core.context_processors.debug',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.media',
-    'django.core.context_processors.static',
-    'django.core.context_processors.tz',
-    'django.contrib.messages.context_processors.messages',
-    'social.apps.django_app.context_processors.backends',
-    'social.apps.django_app.context_processors.login_redirect',
-    'django.core.context_processors.request',
-
-    'let_me_app.context_processors.user_events',
-    'let_me_app.context_processors.oject_statuses',
-    'let_me_auth.context_processors.user_sex',
-    'let_me_app.context_processors.site_host',
-)
-
 AUTHENTICATION_BACKENDS = (
     'social.backends.facebook.FacebookOAuth2',
     'social.backends.google.GoogleOAuth2',
     'social.backends.twitter.TwitterOAuth',
     'social.backends.vk.VKOAuth2',
     'social.backends.odnoklassniki.OdnoklassnikiOAuth2',
-    'social.backends.email.EmailAuth',
+#     'social.backends.email.EmailAuth',
+    'let_me_auth.backends.AccountKitBackend',
+    'let_me_auth.social.backends.account_kit.AccountKitAuth',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -194,9 +177,33 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'templates'),
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates'),],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': (
+                'django.template.context_processors.debug',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.tz',
+                'social.apps.django_app.context_processors.backends',
+                'social.apps.django_app.context_processors.login_redirect',
+                'django.template.context_processors.request',
+
+                'let_me_app.context_processors.user_events',
+                'let_me_app.context_processors.oject_statuses',
+                'let_me_auth.context_processors.user_sex',
+                'let_me_app.context_processors.site_host',
+            ),
+        },
+    },
+]
 
 LOGIN_EXEMPT_NAMESPACES = ('social', 'let_me_auth')
 DEFAULT_VIEW_NAME = 'let_me_app:search_events'
@@ -221,18 +228,16 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.auth_allowed',
     'social.pipeline.social_auth.social_user',
     'social.pipeline.user.get_username',
-    'let_me_auth.pipeline.email_creator',
-    'let_me_auth.pipeline.get_user_from_verification_code',
-#     'social.pipeline.mail.mail_validation',
-    'social.pipeline.social_auth.associate_by_email',
+    'let_me_auth.social.pipeline.email_creator',
+    'let_me_auth.social.pipeline.associate_by_unique_fields',
+    'let_me_auth.social.pipeline.create_name',
     'social.pipeline.user.create_user',
-    'let_me_auth.pipeline.mail_validation',
-#     'let_me_auth.pipeline.user_password',
-#     'let_me_auth.pipeline.get_user_by_email',
+#     'let_me_auth.social.pipeline.mail_validation',
+#     'let_me_auth.social.pipeline.user_password',
+#     'let_me_auth.social.pipeline.get_user_by_email',
     'social.pipeline.social_auth.associate_user',
     'social.pipeline.social_auth.load_extra_data',
     'social.pipeline.user.user_details',
-    #'social.pipeline.debug.debug'
 )
 
 ### Social network secure keys
@@ -256,6 +261,9 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_SEC
 # and fill in the URL of the site (http://test1.com:8000 in our example).
 SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('SOCIAL_AUTH_FACEBOOK_KEY')
 SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('SOCIAL_AUTH_FACEBOOK_SECRET')
+
+SOCIAL_AUTH_ACCOUNT_KIT_KEY = os.environ.get('SOCIAL_AUTH_ACCOUNT_KIT_KEY')
+SOCIAL_AUTH_ACCOUNT_KIT_SECRET = os.environ.get('SOCIAL_AUTH_ACCOUNT_KIT_SECRET')
 
 #VK
 #http://psa.matiasaguirre.net/docs/backends/vk.html#oauth2
@@ -293,14 +301,57 @@ LEAFLET_CONFIG = {
     'MAX_ZOOM': 18,
 }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {
+            'format' : "[%(asctime)s] %(levelname)s [%(pathname)s:%(lineno)s] %(message)s",
+            'datefmt' : "%d/%b/%Y %H:%M:%S"
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+        'telegram_logfile': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': BASE_DIR + "/logs/telegram/messages.log",
+            'maxBytes': 500000,
+            'backupCount': 10,
+            'formatter': 'standard',
+        },
+        'python_logfile': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': BASE_DIR + "/logs/python.log",
+            'maxBytes': 500000,
+            'backupCount': 10,
+            'formatter': 'standard',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['python_logfile'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+        'let_me_auth': {
+            'handlers': ['python_logfile'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+        'telegram': {
+            'handlers': ['telegram_logfile'],
+            'level': 'DEBUG',
+        },
+    },
+}
 
-CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
-BROKER_URL = 'django://'
-
+CELERY_TIMEZONE = TIME_ZONE
 
 SITE_DOMAIN = ""
 
 try:
-    from .local_settings import *
+    from . local_settings import *
 except ImportError:
     pass

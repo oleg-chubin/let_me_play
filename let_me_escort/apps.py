@@ -5,7 +5,8 @@ Created on Jul 5, 2015
 '''
 import json
 from django.apps import AppConfig
-from django.db.models import get_models, get_app, signals
+from django.apps import apps
+from django.db.models import signals
 from django.db.models.fields.related import RelatedField
 from django.dispatch import receiver
 from let_me_escort import persistence
@@ -20,7 +21,7 @@ class EscortAppConfig(AppConfig):
     def ready(self, *args, **kwargs):
         from let_me_app.models import Followable, Changelog
         followable_linked_models = []
-        for model in get_models(get_app('let_me_app')):
+        for model in apps.get_app_config('let_me_app').get_models():
             for field in model._meta.fields:
                 if not isinstance(field, RelatedField):
                     continue

@@ -37,6 +37,14 @@ def logout(request):
     return redirect('/')
 
 
+@render_to('registration/login.html')
+def login_user(request):
+    logout(request)
+    return context(
+        signup=True, facebook_app_id=settings.SOCIAL_AUTH_ACCOUNT_KIT_KEY
+    )
+
+
 @login_required
 @render_to('home.html')
 def done(request):
@@ -81,7 +89,9 @@ def require_email(request):
 
 @render_to('registration/login.html')
 def signup(request):
-    return context(signup=True)
+    return context(
+        signup=True, facebook_app_id=settings.SOCIAL_AUTH_ACCOUNT_KIT_KEY
+    )
 
 
 class ProfileDetailsView(DetailView):

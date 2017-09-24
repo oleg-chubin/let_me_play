@@ -34,9 +34,9 @@ def save_event_and_related_things(event, user, visitors=(), invitees=()):
     notification_context = {
         'reason': "create_event",
         'initiator_id': user.id,
-        'object_id': event
+        'object_id': event.id
     }
-    send_notification.delay(notification_context)
+    send_notification.apply_async((notification_context,), countdown=30)
 
     if proposals:
         notification_context = {
@@ -44,7 +44,7 @@ def save_event_and_related_things(event, user, visitors=(), invitees=()):
             'initiator_id': user.id,
             'object_ids': [i.id for i in proposals]
         }
-        send_notification.delay(notification_context)
+        send_notification.apply_async((notification_context,), countdown=30)
 
     if visits:
         notification_context = {
@@ -52,7 +52,7 @@ def save_event_and_related_things(event, user, visitors=(), invitees=()):
             'initiator_id': user.id,
             'object_ids': [i.id for i in visits]
         }
-        send_notification.delay(notification_context)
+        send_notification.apply_async((notification_context,), countdown=30)
 
     return event
 

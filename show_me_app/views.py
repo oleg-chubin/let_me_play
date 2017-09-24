@@ -3,13 +3,9 @@ Created on Jul 5, 2015
 
 @author: oleg
 '''
-import json
 from django import http
 from let_me_app import models
-from django.db.models import get_model
-from django.views.generic.base import View as BaseView
 from django.views.generic.list import ListView
-from django.db import transaction
 from django.db.models.aggregates import Count, Max, Min, Sum
 from let_me_auth.models import User
 import itertools

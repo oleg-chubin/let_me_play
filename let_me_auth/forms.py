@@ -103,7 +103,7 @@ class JcropWidget(floppyforms_widgets.FileInput):
     #              image is sent to the server without the user having
     #              to press the submit button.
     #
-    def get_context(self, name, value, attrs):
+    def get_context(self, name, value, attrs, **kwargs):
         context = super(JcropWidget, self).get_context(name, value, attrs)
         context['value'] = value and getattr(value, 'url', None)
         context['preview_height'] = self.preview_height
@@ -119,6 +119,26 @@ class JcropWidget(floppyforms_widgets.FileInput):
 
 class CustomPhoneNumberInput(floppyforms_widgets.PhoneNumberInput):
     template_name = 'floppyforms/phone_number_input.html'
+
+
+class BaseUserForm(forms.ModelForm):
+    class Meta:
+        model = models.User
+        fields = ('first_name', 'last_name')
+        widgets = {
+            'first_name': floppyforms_widgets.TextInput(),
+            'last_name': floppyforms_widgets.TextInput(),
+        }
+
+    def clean(self):
+        cleaned_data = super(BaseUserForm, self).clean()
+        first_name = cleaned_data.get("first_name")
+        last_name = cleaned_data.get("last_name")
+
+        if not (first_name or last_name):
+            raise forms.ValidationError("Please fill first name or last name")
+
+        return cleaned_data
 
 
 class UserDetailsForm(forms.ModelForm):

@@ -17,7 +17,7 @@ from django.forms.models import BaseInlineFormSet
 from django.forms.formsets import DELETION_FIELD_NAME
 import slugify
 from let_me_auth.models import User, FollowerGroup
-from let_me_auth.pipeline import ABSENT_MAIL_HOST
+from let_me_auth.social.pipeline import ABSENT_MAIL_HOST
 from embed_video.fields import EmbedVideoFormField
 
 
@@ -96,7 +96,7 @@ class EventProposalForm(forms.Form):
     users = forms.ModelMultipleChoiceField(
         queryset=auth_models.User.objects.all(),
         required=False,
-        widget=BootstrapMultipleChoiceWidget(url='user-autocomplete'))
+        widget=autocomplete.ModelSelect2Multiple(url='user-autocomplete'))
     comment = forms.CharField(
         required=False, widget=floppyforms_widgets.Textarea)
     known_users = forms.ModelMultipleChoiceField(
@@ -118,7 +118,7 @@ class InventoryForm(forms.ModelForm):
 class GroupAdminForm(forms.Form):
     users = forms.ModelMultipleChoiceField(
         queryset=auth_models.User.objects.all(),
-        widget=BootstrapMultipleChoiceWidget(url='user-autocomplete'))
+        widget=autocomplete.ModelSelect2Multiple(url='user-autocomplete'))
 
 
 class PublishEventForm(forms.ModelForm):
@@ -176,7 +176,7 @@ class SiteForm(forms.ModelForm):
 class GroupForm(forms.ModelForm):
     users = forms.ModelMultipleChoiceField(
         queryset=auth_models.User.objects.all(),
-        widget=BootstrapMultipleChoiceWidget(url='user-autocomplete'))
+        widget=autocomplete.ModelSelect2Multiple(url='user-autocomplete'))
 
     class Meta:
         model = FollowerGroup
@@ -269,7 +269,7 @@ class EventForm(PublishEventForm):
         js = ('js/moment.js', 'js/bootstrap-datetimepicker.js', 'js/forms.js')
 
 
-class UserCreateMultipleField(autocomplete.CreateModelMultipleField):
+class UserCreateMultipleField(autocomplete.QuerySetSequenceModelMultipleField):
     def create_value(self, value):
         parts = value.split(' ', 1)
         first_name = parts[0].strip()
@@ -288,14 +288,14 @@ class EventVisitForm(forms.Form):
     users = UserCreateMultipleField(
         queryset=auth_models.User.objects.all(),
         required=False,
-        widget=BootstrapMultipleChoiceWidget(url='user-autocomplete'))
+        widget=autocomplete.ModelSelect2Multiple(url='user-autocomplete'))
 
 
 class ExtendedEventVisitForm(forms.Form):
-    users = UserCreateMultipleField(
+    users = forms.ModelMultipleChoiceField(
         queryset=auth_models.User.objects.all(),
         required=False,
-        widget=BootstrapMultipleChoiceWidget(url='user-autocomplete'))
+        widget=autocomplete.ModelSelect2Multiple(url='user-autocomplete'))
     known_users = forms.ModelMultipleChoiceField(
         queryset=auth_models.User.objects.all(),
         required=False,
@@ -305,7 +305,7 @@ class ExtendedEventVisitForm(forms.Form):
 class EventVisitRoleForm(forms.Form):
     roles = forms.ModelMultipleChoiceField(
         queryset=models.StaffRole.objects.all(),
-        widget=BootstrapMultipleChoiceWidget(url='staffrole-autocomplete'))
+        widget=autocomplete.ModelSelect2Multiple(url='staffrole-autocomplete'))
 
 
 class GalleryImagesForm(forms.ModelForm):
