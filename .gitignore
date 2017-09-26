@@ -15,7 +15,9 @@ downloads/
 eggs/
 lib/
 /media/*
-/static/*
+static/
+node_modules/
+webpack_static/
 lib64/
 parts/
 sdist/
@@ -75,3 +77,4 @@ db.sqlite3
 
 .pydevproject
 .project
+.settings

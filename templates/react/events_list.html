@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% load staticfiles i18n %}
+
+{% block page_title %}{% trans "Welcome to let.me.play." %}{% endblock %}
+
+{% block main %}
+
+<div class="event-tableau" data-apiurl="{% url 'give_me_app:events_list' %}">
+
+
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+  <script src="{% static 'js/app.js' %}"></script>
+{% endblock %}
+
+

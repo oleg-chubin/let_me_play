@@ -230,6 +230,7 @@ class ActivityType(models.Model):
 
 
 class Court(Followable):
+    image = models.ImageField(_('image'), blank=True, null=True)
     followable_ptr = models.OneToOneField(
         Followable, primary_key=True, db_column="followable_ptr_id",
         parent_link=True, related_name='court_to_follow')

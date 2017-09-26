@@ -17,6 +17,8 @@ urlpatterns = [
     url(r'^', include(django.contrib.auth.urls)),
     url('^show/me/', include('show_me_app.urls', namespace='show_me_app')),
     url('^let/me/', include('let_me_app.urls.urls', namespace='let_me_app')),
+    url('^let/me/', include('let_me_app.urls.new_urls', namespace='new_let_me_app')),
+    url('^gimme/', include('give_me_app.urls', namespace='give_me_app')),
     url('^help/me/', include('let_me_app.urls.ajax_urls', namespace='let_me_help')),
     url('', include('let_me_app.urls.autocomplete_urls')),
 
