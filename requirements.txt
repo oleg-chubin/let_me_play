@@ -21,6 +21,7 @@ django-leaflet
 #django-floppyforms==1.8.0
 https://github.com/gregmuellegger/django-floppyforms/tarball/master#egg=django-floppyforms
 markdown==2.6.5
+celery==4.1.0
 django-celery
 requests
 vk
