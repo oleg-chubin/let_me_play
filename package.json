@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "description": "* [Roadmap](https://bitbucket.org/carpond/carpool/wiki/Roadmap) * [MFUs](https://bitbucket.org/carpond/carpool/wiki/MFUs) * [Шаблоны](https://bitbucket.org/carpond/carpool-html-templates/issues?status=new&status=open) * [API](https://bitbucket.org/carpond/carpool/wiki/API%20doc)",
   "main": "index.js",
+  "bin":{
+    "webpack": "./bin/webpack"
+  },
   "scripts": {
+    "postinstall": "webpack --config webpack.config.js"
     "dev": "./node_modules/.bin/webpack --progress --watch",
     "build": "./node_modules/.bin/webpack --progress --production --optimize-minimize"
   },
