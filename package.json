@@ -7,7 +7,7 @@
     "webpack": "./bin/webpack"
   },
   "scripts": {
-    "postinstall": "webpack --config webpack.config.js"
+    "postinstall": "webpack --config webpack.config.js",
     "dev": "./node_modules/.bin/webpack --progress --watch",
     "build": "./node_modules/.bin/webpack --progress --production --optimize-minimize"
   },
